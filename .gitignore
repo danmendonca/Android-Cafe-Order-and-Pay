@@ -1,0 +1,69 @@
+# Built application files
+CafeApp/*/build/
+CafeApp/build/
+
+ClientApp/*/build/
+ClientApp/build/
+
+
+# Crashlytics configuations
+CafeApp/com_crashlytics_export_strings.xml
+ClientApp/com_crashlytics_export_strings.xml
+
+# Local configuration file (sdk path, etc)
+CafeApp/local.properties
+ClientApp/local.properties
+
+# Gradle generated files
+CafeApp/.gradle/
+ClientApp/.gradle/
+
+# Signing files
+CafeApp/.signing/
+ClientApp/.signing/
+
+# User-specific configurations
+CafeApp/.idea/libraries/
+CafeApp/.idea/workspace.xml
+CafeApp/.idea/tasks.xml
+CafeApp/.idea/.name
+CafeApp/.idea/compiler.xml
+CafeApp/.idea/copyright/profiles_settings.xml
+CafeApp/.idea/encodings.xml
+CafeApp/.idea/misc.xml
+CafeApp/.idea/modules.xml
+CafeApp/.idea/scopes/scope_settings.xml
+CafeApp/.idea/vcs.xml
+CafeApp/*.iml
+CafeApp/*/*.iml
+
+ClientApp/.idea/libraries/
+ClientApp/.idea/workspace.xml
+ClientApp/.idea/tasks.xml
+ClientApp/.idea/.name
+ClientApp/.idea/compiler.xml
+ClientApp/.idea/copyright/profiles_settings.xml
+ClientApp/.idea/encodings.xml
+ClientApp/.idea/misc.xml
+ClientApp/.idea/modules.xml
+ClientApp/.idea/scopes/scope_settings.xml
+ClientApp/.idea/vcs.xml
+ClientApp/*.iml
+ClientApp/*/*.iml
+
+# OS-specific files
+CafeApp/.DS_Store
+CafeApp/.DS_Store?
+CafeApp/._*
+CafeApp/.Spotlight-V100
+CafeApp/.Trashes
+CafeApp/ehthumbs.db
+CafeApp/Thumbs.db
+
+ClientApp/.DS_Store
+ClientApp/.DS_Store?
+ClientApp/._*
+ClientApp/.Spotlight-V100
+ClientApp/.Trashes
+ClientApp/ehthumbs.db
+ClientApp/Thumbs.db
