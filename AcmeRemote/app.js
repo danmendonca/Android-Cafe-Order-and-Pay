@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var db = require('./models');
+
 var app = express();
 
 // view engine setup
@@ -56,5 +58,24 @@ app.use(function(err, req, res, next) {
   });
 });
 
+
+// db
+//   .sequelize
+//   .sync()
+//   .complete(function(err){
+// 	if (err) {
+// 		throw err[0]
+// 	} else {
+// 		db.User.find({where: {username: 'admin'}}).success(function (user){
+// 			if (!user) {
+// 				db.User.build({username: 'admin', password: 'admin'}).save();
+// 			};
+// 		});
+		
+// 		http.createServer(app).listen(app.get('port'), function(){
+// 			console.log('Express is listening on port ' + app.get('port'))
+// 		});
+// 	}
+// })
 
 module.exports = app;
