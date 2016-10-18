@@ -1,39 +1,34 @@
-/* jshint indent: 2 */
-module.exports = function(sequelize, DataTypes) {
-  var costumer = sequelize.define('costumer', {
-    costumerid: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
-    },
-    name: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    pin: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    creditcard: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    username: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    password: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    creditcardexpiration: {
-      type: DataTypes.TIME,
-      allowNull: true
-    }
-  }, {
-    tableName: 'costumer'
-  });
-  return costumer;
+module.exports = function (sequelize, DataTypes) {
+    var Costumer = sequelize.define('costumer', {
+        name: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        username: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        password: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        pin: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        creditcardnumber: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        creditcarddate: {
+            type: DataTypes.DATEONLY,
+            allowNull: true
+        },
+        uuid: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV1,
+            primaryKey: true
+        }
+    }, { tableName: 'costumer' });
+    return Costumer;
 };
-
-

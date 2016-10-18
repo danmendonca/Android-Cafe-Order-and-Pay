@@ -6,7 +6,7 @@ var db = require('../models');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  db.costumer.findAll({
+  db.Costumer.findAll({
     attributes: ['name', 'username']
   }).then(function(users) {
     res.setHeader('Content-Type', 'application/json');
