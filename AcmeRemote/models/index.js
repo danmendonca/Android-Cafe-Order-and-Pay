@@ -39,23 +39,24 @@ sequelize
     sequelize.models.request.hasMany(sequelize.models.voucher);
 
     //sync database and create tables if do not exist yet
-    // sequelize.sync({
-    //   force: true,
-    //   logging: console.log
-    // });
-
-    //workaround
     sequelize.sync({
       force: true,
       logging: console.log
-    })
-      .then(function () { })
-      .catch(function (err) {
-        console.log(err);
-        sequelize.sync({
-          logging: console.log
-        }).then(function () { })
-      });
+    });
+
+    //workaround -- for some reason db.fe.up.pt sets the user with no permissions when no table is set
+    //which causes an exception when dropping what isn't already there
+    // sequelize.sync({
+    //   force: true,
+    //   logging: console.log
+    // })
+    //   .then(function () { })
+    //   .catch(function (err) {
+    //     console.log(err);
+    //     sequelize.sync({
+    //       logging: console.log
+    //     }).then(function () { })
+    //   });
 
   })
 
