@@ -25,6 +25,9 @@ sequelize
         db[model.name] = model
       });
 
+    //1 to 0..1
+    sequelize.models.costumer.hasMany(sequelize.models.blacklist);
+
     //many to many
     sequelize.models.product.belongsToMany(sequelize.models.request, { through: sequelize.models.requestline });
     sequelize.models.request.belongsToMany(sequelize.models.product, { through: sequelize.models.requestline });
@@ -34,13 +37,29 @@ sequelize
     sequelize.models.costumer.hasMany(sequelize.models.voucher);
 
     sequelize.models.request.hasMany(sequelize.models.voucher);
-    sequelize.models.blacklist.hasMany(sequelize.models.costumer);
 
     //sync database and create tables if do not exist yet
+    // sequelize.sync({
+    //   force: true,
+    //   logging: console.log
+    // });
+
+    //workaround
     sequelize.sync({
+      force: true,
       logging: console.log
-    });
+    })
+      .then(function () { })
+      .catch(function (err) {
+        console.log(err);
+        sequelize.sync({
+          logging: console.log
+        }).then(function () { })
+      });
+
   })
+
+
   .catch(function (err) {
     console.log('Unable to connect to the database:', err);
   });
