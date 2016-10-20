@@ -1,0 +1,347 @@
+---
+swagger: "2.0"
+info:
+  description: "Easy Café Management"
+  version: "0.0.1"
+  title: "ACME CAFÉ API"
+host: "localhost:3000"
+basePath: "/api"
+schemes:
+- "https"
+produces:
+- "application/json"
+paths:
+  /blacklist:
+    post:
+      tags:
+      - "Blacklist"
+      - "Costumer"
+      summary: "Blacklist"
+      description: "The endpoint returns a list of Costumers uuid's that are banned\
+        \ from the system\n"
+      operationId: "blacklistPOST"
+      parameters: []
+      responses:
+        200:
+          description: "An array of Blacklisted costumers"
+          schema:
+            $ref: "#/definitions/Blacklist"
+        default:
+          description: "Invalid Login"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Blacklist"
+  /costumer/makerequest:
+    post:
+      tags:
+      - "Costumer"
+      - "Request"
+      summary: "Make Request"
+      description: "The Costumers endpoint processes a new request made by the costumer\n"
+      operationId: "costumerMakerequestPOST"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "user nickname"
+        required: true
+        type: "string"
+      - name: "pin"
+        in: "query"
+        description: "original pin given to costumer"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "requestLines"
+        description: "products and quantities"
+        required: false
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/RequestLine"
+      responses:
+        200:
+          description: "Request Success"
+          schema:
+            type: "string"
+        default:
+          description: "Invalid Login"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Costumer"
+  /costumer/requests:
+    post:
+      tags:
+      - "Costumers"
+      - "Requests"
+      summary: "Costumer requests"
+      description: "The Costumers endpoint returns a list of all requests from a user\n"
+      operationId: "costumerRequestsPOST"
+      parameters:
+      - name: "costumerUuid"
+        in: "query"
+        description: "costumer unique identifier"
+        required: true
+        type: "string"
+      - name: "pin"
+        in: "query"
+        description: "pin originally given to costumer"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "List of Costumer Requests"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Request"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Costumers"
+  /costumers:
+    get:
+      tags:
+      - "Costumers"
+      summary: "Costumers"
+      description: "The Costumers endpoint returns all registered costumers in the\
+        \ ACME CAFE database.\n"
+      operationId: "costumersGET"
+      parameters: []
+      responses:
+        200:
+          description: "An array of costumers"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Costumer"
+        default:
+          description: "Unexpected Error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Costumers"
+    post:
+      tags:
+      - "Costumers"
+      - "Login"
+      summary: "Costumer"
+      description: "The Costumers endpoint returns a costumer if its a valid login\n"
+      operationId: "costumersPOST"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "username registration"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "user password"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "A costumer"
+          schema:
+            $ref: "#/definitions/Costumer"
+        default:
+          description: "Invalid Login"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Costumers"
+  /costumers/register:
+    post:
+      tags:
+      - "Costumers"
+      - "Registration"
+      summary: "Costumer Registration"
+      description: "The costumers endpoint to register a new costumer into ACME CAFE\
+        \ platform\n"
+      operationId: "costumersRegisterPOST"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "user nickname"
+        required: true
+        type: "string"
+      - name: "name"
+        in: "query"
+        description: "first and last name"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "userd defined password"
+        required: true
+        type: "string"
+      - name: "creditCardNr"
+        in: "query"
+        description: "credit card number"
+        required: true
+        type: "string"
+      - name: "creditCardDate"
+        in: "query"
+        description: "creditcard expiration date"
+        required: true
+        type: "string"
+        format: "date"
+      responses:
+        200:
+          description: "A costumer"
+          schema:
+            $ref: "#/definitions/Costumer"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Costumers"
+  /products:
+    get:
+      tags:
+      - "Products"
+      summary: "Product Types"
+      description: "The Products endpoint returns information about the current available\
+        \ products amongst the AcmeCafe.\n"
+      operationId: "productsGET"
+      parameters: []
+      responses:
+        200:
+          description: "An array of products"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Product"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "Products"
+definitions:
+  Product:
+    type: "object"
+    properties:
+      product_id:
+        type: "integer"
+        format: "int32"
+        description: "Unique identifier representing a specific product"
+      active:
+        type: "boolean"
+        description: "Determines if product is in the menu or not"
+      name:
+        type: "string"
+        description: "Display name of product"
+      unitPrice:
+        type: "number"
+        format: "float"
+        description: "Unit price of product"
+  Costumer:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "User first and last name"
+      username:
+        type: "string"
+        description: "User defined display name"
+      password:
+        type: "string"
+        description: "user defined password"
+      pin:
+        type: "string"
+        description: "automatic generated pin"
+      uuid:
+        type: "string"
+        description: "automatic unique generated id"
+      creditCardNumber:
+        type: "string"
+        description: "costumer creditcard number from wich payments are done"
+      creditCardDate:
+        type: "string"
+        format: "date"
+        description: "creditcard expiration date"
+      vouchers:
+        type: "array"
+        items:
+          $ref: "#/definitions/Voucher"
+      requests:
+        type: "array"
+        items:
+          $ref: "#/definitions/Request"
+  Voucher:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+        format: "byte"
+        description: "type 1 coffee, 2 popcorn, 3 5% discount"
+      isUsed:
+        type: "boolean"
+      key:
+        type: "string"
+        description: "unique encrypted key"
+      number:
+        type: "integer"
+        format: "int32"
+      costumerUuid:
+        type: "string"
+        description: "user unique identifier that owns this voucher"
+      requestId:
+        type: "integer"
+        format: "int32"
+  Request:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      number:
+        type: "integer"
+        format: "int32"
+      costumerUuid:
+        type: "string"
+      vouchers:
+        type: "array"
+        items:
+          $ref: "#/definitions/Voucher"
+      requestLines:
+        type: "array"
+        items:
+          $ref: "#/definitions/RequestLine"
+  RequestLine:
+    type: "object"
+    properties:
+      productId:
+        type: "integer"
+        format: "int32"
+      requestId:
+        type: "integer"
+        format: "int32"
+      quantity:
+        type: "integer"
+        format: "int32"
+      unitPrice:
+        type: "number"
+        format: "float"
+  Blacklist:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int32"
+      costumerUuid:
+        type: "string"
+      timestamp:
+        type: "string"
+        format: "date-time"
+  Error:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      message:
+        type: "string"
+      fields:
+        type: "string"
