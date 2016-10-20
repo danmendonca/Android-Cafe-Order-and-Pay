@@ -11,7 +11,7 @@ var serverPort = 3000;
 // swaggerRouter configuration
 var options = {
   swaggerUi: '/swagger.json',
-  controllers: './controllers',
+  controllers: './api/controllers',
   useStubs: process.env.NODE_ENV === 'development' ? true : false // Conditionally turn on stubs (mock mode)
 };
 
