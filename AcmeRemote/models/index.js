@@ -4,7 +4,6 @@ var fs = require('fs')
   , Sequelize = require('sequelize'),
   db = {};
 var env = process.env.NODE_ENV || "development";
-console.log("DB ENV = " + env);
 var config = require(__dirname + '/../config/config.json')[env];
 
 // var sequelize = new Sequelize('postgres://user:password@localhost:5432/AcmeCafeDB');
