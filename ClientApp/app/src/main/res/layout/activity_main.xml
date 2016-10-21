@@ -11,7 +11,92 @@
     tools:context="pt.up.fe.cmov16.client.clientapp.MainActivity">
 
     <TextView
+        android:id="@+id/inscricao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:paddingBottom="10dp"
+        android:text="Inscrição"
+        android:textSize="24sp"
+        android:textStyle="normal|bold" />
+
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/inscricao"
+        android:hint="Name"
+        android:paddingTop="10dp"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/name"
+        android:hint="Username"
+        android:paddingTop="10dp"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/username"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:paddingTop="10dp"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/cardNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/password"
+        android:hint="Número de cartão de crédito"
+        android:paddingTop="10dp"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/cardVal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/cardNum"
+        android:background="#ffffff"
+        android:paddingTop="10dp"
+        android:text="Validade cartão de crédito"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/cardVal"
+        android:background="#ffffff"
+        android:text="Registar" />
+
+
 </RelativeLayout>

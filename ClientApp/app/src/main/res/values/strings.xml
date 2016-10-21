@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ClientApp</string>
+    <string name="preference_file_key">pt.up.fe.cmov16.client.clientapp</string>
 </resources>
