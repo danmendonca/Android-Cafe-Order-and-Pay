@@ -74,6 +74,38 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /products:
+    x-swagger-router-controller: products
+    get:
+      description: Returns an array of products
+      operationId: getProducts
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Products"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Creates a product
+      operationId: createProduct
+      parameters:
+        - name: product
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -82,7 +114,6 @@ definitions:
     type: object
     required:
       - uuid
-      - username
     properties:
       uuid:
         type: string
@@ -99,12 +130,22 @@ definitions:
         format: date-time
       password:
         type: string
-      createdAt:
-        type: string
-        format: date-time
-      updateAt:
-        type: string
-        format: date-time
+  Product:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: integer
+        format: int32
+      active:
+        type: "boolean"
+      name:
+        type: "string"
+      unitprice:
+        type: "number"
+        format: "double"
+        description: "Unit price of product"
   Costumers:
     required:
       - costumers
@@ -113,6 +154,14 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Costumer'
+  Products:
+    required:
+      - products
+    properties:
+      products:
+        type: array
+        items:
+          $ref: '#/definitions/Product'
   HelloWorldResponse:
     required:
       - message
