@@ -51,7 +51,25 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/CostumersRes"
+            $ref: "#/definitions/Costumers"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Creation of new user
+      operationId: createUser
+      parameters:
+        - name: costumer
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Costumer'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumer"
         default:
           description: Error
           schema:
@@ -60,7 +78,7 @@ paths:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
-  CostumerRes:
+  Costumer:
     type: object
     required:
       - uuid
@@ -70,14 +88,25 @@ definitions:
         type: string
       username:
         type: string
-  CostumersRes:
+      pin:
+        type: string
+      name:
+        type: string
+      creditcardnumber:
+        type: string
+      creditcarddate:
+        type: string
+        format: 
+      password:
+        type: string
+  Costumers:
     required:
       - costumers
     properties:
       costumers:
         type: array
         items:
-          $ref: '#/definitions/CostumerRes'
+          $ref: '#/definitions/Costumer'
   HelloWorldResponse:
     required:
       - message
