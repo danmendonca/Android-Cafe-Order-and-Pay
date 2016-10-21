@@ -96,9 +96,15 @@ definitions:
         type: string
       creditcarddate:
         type: string
-        format: 
+        format: date-time
       password:
         type: string
+      createdAt:
+        type: string
+        format: date-time
+      updateAt:
+        type: string
+        format: date-time
   Costumers:
     required:
       - costumers

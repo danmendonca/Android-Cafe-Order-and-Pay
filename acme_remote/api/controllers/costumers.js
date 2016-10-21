@@ -29,7 +29,11 @@ function createUser(req, res) {
         creditcardnumber: req.swagger.params.costumer.value.creditcardnumber,
         creditcarddate: req.swagger.params.costumer.value.creditcarddate
     }).then(function (value) {
-        res.json(value);
+        res.setHeader('Content-Type', 'application/json');
+        var jsonCostumer = JSON.stringify(value);
+        console.log(jsonCostumer);
+        res.send(jsonCostumer);
+        //res.json(value);
     })
         .catch(function (err) {
             console.log(err);
