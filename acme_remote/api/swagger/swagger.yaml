@@ -106,6 +106,22 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /requests:
+    x-swagger-router-controller: requests
+    post:
+      description: Returns a request collection of a costumer given its uuid and pin
+      operationId: getCostumerRequests
+      parameters:
+        - name: costumer
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Costumer'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Consult'
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -265,6 +281,19 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Blacklist'
+  Consult:
+    required:
+      - requests
+      - vouchers
+    properties:
+      requests:
+        type: array
+        items:
+          $ref: '#/definitions/Requests'
+      vouchers:
+        type: array
+        items:
+          $ref: '#/definitions/Vouchers'
   HelloWorldResponse:
     required:
       - message
