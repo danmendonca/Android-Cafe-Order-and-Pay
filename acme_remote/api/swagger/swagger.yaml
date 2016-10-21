@@ -1,0 +1,308 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Acme Cafe App
+# during dev, should point to your local machine
+host: localhost:3000
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /hello:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    get:
+      description: Returns 'Hello' to the caller
+      # used as the method name of the controller
+      operationId: hello
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /costumers:
+    x-swagger-router-controller: costumers
+    get:
+      description: Returns an array of users
+      operationId: getCostumers
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumers"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Creation of new user
+      operationId: createUser
+      parameters:
+        - name: costumer
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Costumer'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /products:
+    x-swagger-router-controller: products
+    get:
+      description: Returns an array of products
+      operationId: getProducts
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Products"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Creates a product
+      operationId: createProduct
+      parameters:
+        - name: product
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /requests:
+    x-swagger-router-controller: requests
+    post:
+      description: Returns a request collection of a costumer given its uuid and pin
+      operationId: getCostumerRequests
+      parameters:
+        - name: costumer
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Costumer'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Consult'
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  Costumer:
+    type: object
+    required:
+      - uuid
+    properties:
+      uuid:
+        type: string
+      username:
+        type: string
+      pin:
+        type: string
+      name:
+        type: string
+      creditcardnumber:
+        type: string
+      creditcarddate:
+        type: string
+        format: date-time
+      password:
+        type: string
+  Product:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: integer
+        format: int32
+      active:
+        type: "boolean"
+      name:
+        type: "string"
+      unitprice:
+        type: "number"
+        format: "double"
+        description: "Unit price of product"
+  RequestLine:
+    type: object
+    required:
+      - product
+      - quantity
+    properties:
+      product:
+          $ref: '#/definitions/Product'
+      quantity:
+        type: integer
+        format: int32
+      productId:
+        type: integer
+        format: int32
+      requestId:
+        type: integer
+        format: int32
+  Voucher:
+    type: object
+    required:
+      - id
+      - type
+      - key
+      - isused
+    properties:
+      id:
+        type: integer
+        format: int32
+      type:
+        type: string
+        format: byte
+      key:
+        type: string
+      costumerUuid:
+        type: string
+      requestId:
+        type: integer
+        format: int32
+      isused:
+        type: boolean
+      number:
+        type: integer
+        format: int32
+  Request:
+    type: object
+    required:
+      - costumerUuid
+    properties:
+      costumerUuid:
+        type: string
+      id:
+        type: "integer"
+        format: "int32"
+      number:
+        type: "integer"
+        format: "int32"
+      vouchers:
+        $ref: '#/definitions/Vouchers'
+      requestlines:
+        $ref: '#/definitions/RequestLines'
+  Blacklist:
+    type: object
+    required:
+      - costumerUuid
+      - id
+    properties:
+      costumerUuid:
+        type: string
+      id:
+        type: integer
+        format: int32
+  Costumers:
+    required:
+      - costumers
+    properties:
+      costumers:
+        type: array
+        items:
+          $ref: '#/definitions/Costumer'
+  Products:
+    required:
+      - products
+    properties:
+      products:
+        type: array
+        items:
+          $ref: '#/definitions/Product'
+  RequestLines:
+    required:
+      - requestlines
+    properties:
+      requestlines:
+        type: array
+        items:
+          $ref: '#/definitions/RequestLine'
+  Vouchers:
+    required:
+      - vouchers
+    properties:
+      vouchers:
+        type: array
+        items:
+          $ref: '#/definitions/Voucher'
+  Requests:
+    required:
+      - requests
+    properties:
+      requests:
+        type: array
+        items:
+          $ref: '#/definitions/Request'
+  Blacklists:
+    required:
+      - blacklists
+    properties:
+      blacklists:
+        type: array
+        items:
+          $ref: '#/definitions/Blacklist'
+  Consult:
+    required:
+      - requests
+      - vouchers
+    properties:
+      requests:
+        type: array
+        items:
+          $ref: '#/definitions/Requests'
+      vouchers:
+        type: array
+        items:
+          $ref: '#/definitions/Vouchers'
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string

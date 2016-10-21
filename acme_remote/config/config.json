@@ -1,0 +1,35 @@
+{
+  "production": {
+    "username": "username",
+    "password": "password",
+    "database": "AcmeCafeDb",
+    "host": "ip.address.com",
+    "dialect": "postgres",
+    "port":"5432",
+    "dialectOptions": {
+      "ssl": false
+    }
+  },
+  "test": {
+    "username": "username",
+    "password": "password",
+    "database": "AcmeCafeDb",
+    "host": "ip.address.com",
+    "dialect": "postgres",
+    "port":"5432",
+    "dialectOptions": {
+      "ssl": false
+    }
+  },
+  "development": {
+    "username": "postgres",
+    "password": "admin",
+    "database": "AcmeCafeDB",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port":"5432",
+    "dialectOptions": {
+      "ssl": false
+    }
+  }
+}
