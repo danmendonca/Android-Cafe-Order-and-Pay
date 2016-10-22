@@ -146,8 +146,6 @@ paths:
 definitions:
   Costumer:
     type: object
-    required:
-      - uuid
     properties:
       uuid:
         type: string
@@ -166,8 +164,6 @@ definitions:
         type: string
   Product:
     type: object
-    required:
-      - id
     properties:
       id:
         type: integer
@@ -221,6 +217,7 @@ definitions:
     type: object
     required:
       - costumerUuid
+      - pin
     properties:
       costumerUuid:
         type: string
