@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var Sequelize = require('sequelize');
-var  db = {};
+var db = {};
 var env = process.env.NODE_ENV || "development";
 var config = require(__dirname + '/../config/config.json')[env];
 
@@ -19,7 +19,7 @@ fs
     db[model.name] = model
   });
 
-Object.keys(db).forEach(function(modelName) {
+Object.keys(db).forEach(function (modelName) {
   if ("associate" in db[modelName]) {
     db[modelName].associate(db);
   }
@@ -40,7 +40,7 @@ sequelize
     sequelize.models.request.hasMany(sequelize.models.voucher);
     //sync database and create tables if do not exist yet
     sequelize.sync({
-      // force: true,
+      //force: true,
       // logging: console.log
     });
   })

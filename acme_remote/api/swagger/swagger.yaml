@@ -199,8 +199,8 @@ definitions:
         type: integer
         format: int32
       type:
-        type: string
-        format: byte
+        type: integer
+        format: int32
       key:
         type: string
       costumerUuid:
