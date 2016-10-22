@@ -122,14 +122,30 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Consult'
+    put:
+      description: Creates a new request for a costumer
+      operationId: createRequest
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Request'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Request'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
 definitions:
   Costumer:
     type: object
-    required:
-      - uuid
     properties:
       uuid:
         type: string
@@ -148,8 +164,6 @@ definitions:
         type: string
   Product:
     type: object
-    required:
-      - id
     properties:
       id:
         type: integer
@@ -173,12 +187,6 @@ definitions:
       quantity:
         type: integer
         format: int32
-      productId:
-        type: integer
-        format: int32
-      requestId:
-        type: integer
-        format: int32
   Voucher:
     type: object
     required:
@@ -191,8 +199,8 @@ definitions:
         type: integer
         format: int32
       type:
-        type: string
-        format: byte
+        type: integer
+        format: int32
       key:
         type: string
       costumerUuid:
@@ -209,8 +217,11 @@ definitions:
     type: object
     required:
       - costumerUuid
+      - pin
     properties:
       costumerUuid:
+        type: string
+      pin:
         type: string
       id:
         type: "integer"

@@ -1,7 +1,8 @@
 module.exports = function (sequelize, DataTypes) {
     var Voucher = sequelize.define('voucher', {
         type: {
-            type: 'BYTEA'
+            type: DataTypes.INTEGER,
+            allowNull: false
         },
         isused: {
             type: DataTypes.BOOLEAN,
