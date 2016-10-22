@@ -55,9 +55,9 @@ function createRequest(req, res) {
                         where: {
                             requestId: oldR.id
                         }
-                    }).then(function (oldRlines) {
+                    }).then(function (oldRLines) {
                         for (var i = 0; i < oldRLines.length; i++) {
-                            oldLines.push(oldRlines[i]);
+                            oldLines.push(oldRLines[i]);
                         }
                     })
                 });
