@@ -224,15 +224,19 @@ definitions:
       pin:
         type: string
       id:
-        type: "integer"
-        format: "int32"
+        type: integer
+        format: int32
       number:
-        type: "integer"
-        format: "int32"
+        type: integer
+        format: int32
       vouchers:
-        $ref: '#/definitions/Vouchers'
+        type: array
+        items:
+          $ref: '#/definitions/Voucher'
       requestlines:
-        $ref: '#/definitions/RequestLines'
+        type: array
+        items:
+          $ref: '#/definitions/RequestLine'
   Blacklist:
     type: object
     required:
@@ -300,11 +304,11 @@ definitions:
       requests:
         type: array
         items:
-          $ref: '#/definitions/Requests'
+          $ref: '#/definitions/Request'
       vouchers:
         type: array
         items:
-          $ref: '#/definitions/Vouchers'
+          $ref: '#/definitions/Voucher'
   HelloWorldResponse:
     required:
       - message

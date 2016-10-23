@@ -6,6 +6,7 @@ var Costumer = models.costumer;
 var Voucher = models.voucher;
 var Request = models.request;
 var RequestLine = models.requestline;
+var BlackList = models.blacklist;
 
 var voucherType3Price = 100;
 
@@ -35,15 +36,18 @@ function getCostumerRequests(req, res) {
 function createRequest(req, res) {
     var cUuid = req.swagger.params.request.value.costumerUuid;
     var cPin = req.swagger.params.request.value.pin;
+    var reqVouchers = req.swagger.params.request.value.vouchers;
+    var rls = req.swagger.params.request.value.requestlines;
     var ErrorResponse;
+    var answered = false;
 
     //TODO costumer validation
     //TODO generate voucher for every 100€ spent
-    if (cUuid && cPin) {
-        var rls = req.swagger.params.request.value.requestlines;
+    if (cUuid && cPin && reqVouchers.length <= 3) {
         var rlines = [];
         var oldLines = [];
 
+        //Find costumer requests
         Request.findAll({
             where: {
                 costumerUuid: cUuid
@@ -69,9 +73,24 @@ function createRequest(req, res) {
                         number: 0
                     })
                         .then(function (request) {
-                            //request.dataValues.requestlines = [];
-                            //new way
-                            var newLinesPromises = rls.requestlines.map(function (rl) {
+                            var voucherPromises = reqVouchers.map(function (rvoucher) {
+                                return Voucher.findOne({
+                                    where: {
+                                        costumerUuid: cUuid,
+                                        isused: false,
+                                        id: rvoucher.id
+                                    }
+                                }).then(function (validVoucher) {
+                                    if (validVoucher) {
+                                        validVoucher.update({
+                                            isused: true,
+                                            requestId: request.id
+                                        })
+                                    }
+                                })
+                            }); //end voucherPromises
+
+                            var newLinesPromises = rls.map(function (rl) {
                                 return RequestLine.create({
                                     quantity: rl.quantity,
                                     unitprice: rl.product.unitprice,
@@ -81,10 +100,10 @@ function createRequest(req, res) {
                                     .then(function (rl_) {
                                         rlines.push(rl_);
                                     })
-                            });
+                            }); //end newLinesPromises
 
                             Promise.all(newLinesPromises).then(function () {
-                                var totalCost = rls.requestlines.reduce(function (acc, cur) {
+                                var totalCost = rls.reduce(function (acc, cur) {
                                     return acc + cur.quantity * cur.product.unitprice;
                                 }, 0);
                                 console.log("totalCost: " + totalCost.toString());
@@ -92,8 +111,8 @@ function createRequest(req, res) {
                                 if (totalCost > 20) {
                                     //new voucher
                                     var vKey = Math.random().toString();
-                                    var vType = Math.floor(Math.random() + 1);
-                                    //var byteA = getInt64Bytes(vType);
+                                    var vType = getRandomizer(1, 2);
+                                    //var byteA = getInt32Bytes(vType);
                                     Voucher.create({
                                         costumerUuid: cUuid,
                                         type: vType,
@@ -120,22 +139,27 @@ function createRequest(req, res) {
                                     })
                                 }
 
-                                request.dataValues.pin = cPin;
-                                console.log(JSON.stringify(request));
-                                res.json(request);
+                                Promise.all(voucherPromises).then(function () {
+                                    //stuff?
+                                    answered = true;
+                                    request.dataValues.pin = cPin;
+                                    console.log(JSON.stringify(request));
+                                    res.json(request);
+                                })
                             })
                         });
                 })
-            })
+            });
     }
-    else {
+
+    else if (!answered) {
         ErrorResponse.message = "Cannot complete operation";
         res.statusCode = 403;
         res.end(JSON.stringify(ErrorResponse));
     }
 }
 
-function getInt64Bytes(x) {
+function getInt32Bytes(x) {
     var bytes = [];
     var i = 4;
     do {
@@ -143,4 +167,8 @@ function getInt64Bytes(x) {
         x = x >> 8;
     } while (i)
     return bytes;
+}
+
+function getRandomizer(bottom, top) {
+        return Math.floor( Math.random() * ( 1 + top - bottom ) ) + bottom;
 }
