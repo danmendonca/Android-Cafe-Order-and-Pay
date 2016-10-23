@@ -1,1 +1,2 @@
 include ':app'
+include ':android-client-generated:android-client'

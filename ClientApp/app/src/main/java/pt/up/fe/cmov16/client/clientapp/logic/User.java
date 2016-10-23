@@ -7,19 +7,19 @@ import android.content.SharedPreferences;
 import pt.up.fe.cmov16.client.clientapp.R;
 
 
-public class Costumer {
+public class User {
 
-    private static Costumer instance = null;
+    private static User instance = null;
     private String name, username, password, creditCardNum, creditCardDate, PIN, costumerID;
 
     /* ***************************************************************************************** */
-    private Costumer(Context context) {
+    private User(Context context) {
         loadCostumerData(context);
     }
 
-    public static Costumer getInstance(Context context) {
+    public static User getInstance(Context context) {
         if (instance == null) {
-            instance = new Costumer(context);
+            instance = new User(context);
         }
         return instance;
     }
@@ -94,5 +94,20 @@ public class Costumer {
 
     public String getCostumerID() {
         return costumerID;
+    }
+
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("User {\n");
+
+        sb.append("  costumerID: ").append(costumerID).append("\n");
+        sb.append("  username: ").append(username).append("\n");
+        sb.append("  pin: ").append(PIN).append("\n");
+        sb.append("  name: ").append(name).append("\n");
+        sb.append("  creditcardnumber: ").append(creditCardNum).append("\n");
+        sb.append("  creditcarddate: ").append(creditCardDate).append("\n");
+        sb.append("  password: ").append(password).append("\n");
+        sb.append("}\n");
+        return sb.toString();
     }
 }

@@ -68,3 +68,6 @@ ClientApp/.Trashes
 ClientApp/ehthumbs.db
 ClientApp/Thumbs.db
 AcmeRemote/config/config.json
+AcmeRemote/node_modules/
+ClientApp/android-client-generated/android-client/.idea/libraries/icu4j_53_1.xml
+ClientApp/android-client-generated/android-client/.idea/

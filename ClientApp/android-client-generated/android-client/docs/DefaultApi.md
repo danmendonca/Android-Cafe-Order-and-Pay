@@ -1,0 +1,308 @@
+# DefaultApi
+
+All URIs are relative to *http://localhost:3000/api*
+
+Method | HTTP request | Description
+------------- | ------------- | -------------
+[**createProduct**](DefaultApi.md#createProduct) | **PUT** /products | 
+[**createRequest**](DefaultApi.md#createRequest) | **PUT** /requests | 
+[**createUser**](DefaultApi.md#createUser) | **PUT** /costumers | 
+[**getCostumerRequests**](DefaultApi.md#getCostumerRequests) | **POST** /requests | 
+[**getCostumers**](DefaultApi.md#getCostumers) | **GET** /costumers | 
+[**getProducts**](DefaultApi.md#getProducts) | **GET** /products | 
+[**hello**](DefaultApi.md#hello) | **GET** /hello | 
+
+
+<a name="createProduct"></a>
+# **createProduct**
+> Product createProduct(product)
+
+
+
+Creates a product
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+Product product = new Product(); // Product | 
+try {
+    Product result = apiInstance.createProduct(product);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#createProduct");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **product** | [**Product**](Product.md)|  |
+
+### Return type
+
+[**Product**](Product.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="createRequest"></a>
+# **createRequest**
+> Request createRequest(request)
+
+
+
+Creates a new request for a costumer
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+Request request = new Request(); // Request | 
+try {
+    Request result = apiInstance.createRequest(request);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#createRequest");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **request** | [**Request**](Request.md)|  |
+
+### Return type
+
+[**Request**](Request.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="createUser"></a>
+# **createUser**
+> Costumer createUser(costumer)
+
+
+
+Creation of new user
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+Costumer costumer = new Costumer(); // Costumer | 
+try {
+    Costumer result = apiInstance.createUser(costumer);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#createUser");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **costumer** | [**Costumer**](Costumer.md)|  |
+
+### Return type
+
+[**Costumer**](Costumer.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="getCostumerRequests"></a>
+# **getCostumerRequests**
+> Consult getCostumerRequests(costumer)
+
+
+
+Returns a request collection of a costumer given its uuid and pin
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+Costumer costumer = new Costumer(); // Costumer | 
+try {
+    Consult result = apiInstance.getCostumerRequests(costumer);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#getCostumerRequests");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **costumer** | [**Costumer**](Costumer.md)|  |
+
+### Return type
+
+[**Consult**](Consult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="getCostumers"></a>
+# **getCostumers**
+> Costumers getCostumers()
+
+
+
+Returns an array of users
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+try {
+    Costumers result = apiInstance.getCostumers();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#getCostumers");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**Costumers**](Costumers.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="getProducts"></a>
+# **getProducts**
+> Products getProducts()
+
+
+
+Returns an array of products
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+try {
+    Products result = apiInstance.getProducts();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#getProducts");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**Products**](Products.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="hello"></a>
+# **hello**
+> HelloWorldResponse hello(name)
+
+
+
+Returns &#39;Hello&#39; to the caller
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+String name = "name_example"; // String | The name of the person to whom to say hello
+try {
+    HelloWorldResponse result = apiInstance.hello(name);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#hello");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **String**| The name of the person to whom to say hello | [optional]
+
+### Return type
+
+[**HelloWorldResponse**](HelloWorldResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
