@@ -58,20 +58,35 @@ sequelize
         sequelize.models.costumer.create({
           username: 'mnunes',
           name: 'Miguel',
-          pin: '0001',
+          pin: '0000',
           password: 'admin',
           uuid: '487d7210-9882-11e6-9d39-f7b6026b4be6',
           creditcardnumber: '12345678',
           creditcarddate: '2016-10-30T00:00:00.000Z',
         }).then(() => { });
+        sequelize.models.costumer.create({
+          username: 'listed',
+          name: 'Black',
+          pin: '0001',
+          password: 'admin',
+          uuid: '487d7210-9882-11e6-9d39-f7b6026b4be7',
+          creditcardnumber: '12345678',
+          creditcarddate: '2015-10-30T00:00:00.000Z',
+        }).then(() => {
+          //blacklist
+          sequelize.models.blacklist.create({
+            costumerUuid: '487d7210-9882-11e6-9d39-f7b6026b4be7',
+            //timestamp: '2016-01-01'
+          }).then(() => { });
+        });
         //products
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'Popcorn',
           unitprice: 1.5
         }).then(() => { });
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'Coffee',
           unitprice: 0.8
         }).then(() => { });
