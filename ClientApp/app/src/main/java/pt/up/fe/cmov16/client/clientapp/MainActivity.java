@@ -2,13 +2,14 @@ package pt.up.fe.cmov16.client.clientapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -21,6 +22,7 @@ import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Costumer;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
+import pt.up.fe.cmov16.client.clientapp.ui.MenuActivity;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -32,10 +34,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
         ApiInvoker.initializeInstance();
 
-        if (User.getInstance(this).isFirstTime())
+        if (User.getInstance(this).isFirstTime()) {
             setFirstTimeScreen();
-        else{
-            Intent i = new Intent(this,MenuActivity.class);
+        } else {
+            Intent i = new Intent(this, MenuActivity.class);
             startActivity(i);
         }
 
@@ -43,6 +45,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     private void setFirstTimeScreen() {
         setContentView(R.layout.activity_main);
+
+        TextView info = (TextView) findViewById(R.id.infoView);
+        info.setText("Atenção: A app quer o server em: "
+                + (new DefaultApi()).getBasePath()
+                + " se tens o server noutro endereço altera isto em:\n" +
+                "android-client > java > io.swagger.client.api > DefaultApi > var \"basePath\"");
+
         dateTextView = (Button) findViewById(R.id.cardVal);
 
         dateTextView.setOnClickListener(new View.OnClickListener() {
@@ -84,12 +93,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                     user.setName(name);
                     String cardDate = "";
                     String dateInput = dateTextView.getText().toString();
-                    cardDate+=dateInput.split("/")[2];
-                    cardDate+="-";
-                    cardDate+=dateInput.split("/")[1];
-                    cardDate+="-";
-                    cardDate+=dateInput.split("/")[0];
-                    cardDate+="T23:59:59.000Z";
+                    cardDate += dateInput.split("/")[2];
+                    cardDate += "-";
+                    cardDate += dateInput.split("/")[1];
+                    cardDate += "-";
+                    cardDate += dateInput.split("/")[0];
+                    cardDate += "T23:59:59.000Z";
                     user.setCreditcarddate(cardDate);
                     user.setCreditcardnumber(cardNum);
                     user.setPassword(password);
@@ -119,14 +128,14 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     private void saveUserDataAndShowPIN(Costumer response) {
         User user = User.getInstance(this);
-        user.createUserData(response.getName(),response.getUsername(),
-                response.getPassword(),response.getCreditcardnumber(),
-                response.getCreditcarddate(),response.getPin(),
-                response.getUuid(),this);
-        Log.e("MainActivity","created user: "+response.toString());
+        user.createUserData(response.getName(), response.getUsername(),
+                response.getPassword(), response.getCreditcardnumber(),
+                response.getCreditcarddate(), response.getPin(),
+                response.getUuid(), this);
+        Log.e("MainActivity", "created user: " + response.toString());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("PIN: "+response.getPin()+"\n Guarde num local seguro")
+        builder.setMessage("PIN: " + response.getPin() + "\n Guarde num local seguro")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 

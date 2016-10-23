@@ -1,9 +1,10 @@
-package pt.up.fe.cmov16.client.clientapp;
+package pt.up.fe.cmov16.client.clientapp.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
 
 public class MenuActivity extends AppCompatActivity {
