@@ -189,11 +189,6 @@ definitions:
         format: int32
   Voucher:
     type: object
-    required:
-      - id
-      - type
-      - key
-      - isused
     properties:
       id:
         type: integer
@@ -215,9 +210,6 @@ definitions:
         format: int32
   Request:
     type: object
-    required:
-      - costumerUuid
-      - pin
     properties:
       costumerUuid:
         type: string
@@ -297,9 +289,6 @@ definitions:
         items:
           $ref: '#/definitions/Blacklist'
   Consult:
-    required:
-      - requests
-      - vouchers
     properties:
       requests:
         type: array
