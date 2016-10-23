@@ -39,10 +39,56 @@ sequelize
     sequelize.models.costumer.hasMany(sequelize.models.voucher);
     sequelize.models.request.hasMany(sequelize.models.voucher);
     //sync database and create tables if do not exist yet
-    sequelize.sync({
-      //force: true,
-      // logging: console.log
-    });
+
+    if (env.localeCompare("development") == 0) {
+      sequelize.sync({
+        force: true,
+        // logging: console.log
+      }).then(() => {
+        //costumers
+        sequelize.models.costumer.create({
+          username: 'dmendonca',
+          name: 'Daniel',
+          pin: '0000',
+          password: 'admin',
+          uuid: '487d7210-9882-11e6-9d39-f7b6026b4be5',
+          creditcardnumber: '12345678',
+          creditcarddate: '2016-12-19T00:00:00.000Z',
+        }).then(() => { });
+        sequelize.models.costumer.create({
+          username: 'mnunes',
+          name: 'Miguel',
+          pin: '0001',
+          password: 'admin',
+          uuid: '487d7210-9882-11e6-9d39-f7b6026b4be6',
+          creditcardnumber: '12345678',
+          creditcarddate: '2016-10-30T00:00:00.000Z',
+        }).then(() => { });
+        //products
+        sequelize.models.product.create({
+          active: false,
+          name: 'Popcorn',
+          unitprice: 1.5
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: false,
+          name: 'Coffee',
+          unitprice: 0.8
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: false,
+          name: 'Francesinha',
+          unitprice: 10.0
+        }).then(() => { });
+      })
+    }
+    else {
+      sequelize.sync({
+        //force: true,
+        // logging: console.log
+      }).then(() => { });
+    }
+
   })
   .catch(function (err) {
     console.log('Unable to connect to the database:', err);
