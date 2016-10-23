@@ -122,6 +122,10 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Consult'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     put:
       description: Creates a new request for a costumer
       operationId: createRequest

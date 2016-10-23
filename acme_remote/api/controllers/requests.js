@@ -17,31 +17,48 @@ module.exports = {
 
 function getCostumerRequests(req, res) {
     var cUuid = req.swagger.params.costumer.value.uuid;
-    if (req.swagger.params.costumer.value.uuid && req.swagger.params.costumer.value.pin) {
-        Request.findAll({
+    var cPin = req.swagger.params.costumer.value.pin;
+    if (cUuid && cPin) {
+        var isValid = false;
+        Costumer.count({
             where: {
-                costumerUuid: cUuid
+                uuid: cUuid,
+                pin: cPin
             }
-        }).then(function (requests) {
-            Voucher.findAll({
-                attributes: ['id', 'type', 'isused']
-                ,
-                where: {
-                    costumerUuid: cUuid,
-                    isused: false
-                }
-            }).then(function (unusedVouchers) {
-                var Consult = {};
-                Consult.requests = requests;
-                if (unusedVouchers && unusedVouchers.length > 0)
-                    Consult.vouchers = unusedVouchers;
-                res.json(Consult);
-                //console.log(JSON.stringify(Consult));
-            })
-        });
+        }).then(function (c) {
+            if (c == 1) {
+                Request.findAll({
+                    where: {
+                        costumerUuid: cUuid
+                    }
+                }).then(function (requests) {
+                    Voucher.findAll({
+                        attributes: ['id', 'type', 'isused']
+                        ,
+                        where: {
+                            costumerUuid: cUuid,
+                            isused: false
+                        }
+                    }).then(function (unusedVouchers) {
+                        var Consult = {};
+                        Consult.requests = requests;
+                        if (unusedVouchers && unusedVouchers.length > 0)
+                            Consult.vouchers = unusedVouchers;
+                        res.json(Consult);
+                        //console.log(JSON.stringify(Consult));
+                    })
+                });
+            }
+            else {
+                var ErrorResponse = {};
+                ErrorResponse.message = "Invalid User";
+                res.statusCode = 403;
+                res.json(ErrorResponse);
+            }
+        })
     }
     else {
-        var error;
+        var error = {};
         error.message = "Invalid User";
         res.statusCode = 403;
         res.end(JSON.stringify(error));
@@ -186,4 +203,31 @@ function getInt32Bytes(x) {
 
 function getRandomizer(bottom, top) {
     return Math.floor(Math.random() * (1 + top - bottom)) + bottom;
+}
+
+function costumerPinValidation(costumerUuid, pin, isValid) {
+    return Costumer.count({
+        where: {
+            uuid: costumerUuid,
+            pin: pin
+        }
+    }).then((c) => {
+        if (c == 1)
+            isValid = true;
+        else
+            isValid = false;
+    })
+}
+
+function costumerPwValidation(costumerUuid, pw) {
+    Costumer.count({
+        where: {
+            uuid: costumerUuid,
+            password: pw
+        }
+    }).then((c) => {
+        if (c == 1)
+            return true;
+        return false;
+    })
 }
