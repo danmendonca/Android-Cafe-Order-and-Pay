@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         });
     }
 
-    private void login(){
+    private void login() {
         setContentView(R.layout.form_login);
         final EditText usernameEditText = (EditText) findViewById(R.id.username);
         final EditText passwordEditText = (EditText) findViewById(R.id.password);
@@ -77,10 +77,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 costumer.setUsername(usernameEditText.getText().toString());
                 costumer.setPassword(passwordEditText.getText().toString());
 
-//                costumer.setCreditcarddate("asdasd");
-//                costumer.setCreditcardnumber("asdasd");
-//                costumer.setPin("pin");
-//                costumer.setUuid("uuid");
+                costumer.setCreditcarddate("asdasd");
+                costumer.setCreditcardnumber("asdasd");
+                costumer.setPin("pin");
+                costumer.setUuid("uuid");
+                costumer.setName("name");
 
                 api.logMe(costumer, new Response.Listener<Costumer>() {
                     @Override
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         showError(error);
-                        Toast.makeText(MainActivity.this,"Invalid username/password",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Invalid username/password", Toast.LENGTH_SHORT).show();
                     }
                 });
 //                try {
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         });
 
     }
+
     private void register() {
         setContentView(R.layout.form_register);
         TextView info = (TextView) findViewById(R.id.infoView);
@@ -210,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         dateTextView.setText(date);
     }
 
-    private void showError(VolleyError error){
+    private void showError(VolleyError error) {
         VolleyError volleyError = (VolleyError) error.getCause();
         if (volleyError.networkResponse != null) {
             Log.e("MainActivity", "" + volleyError.networkResponse.statusCode + ":" + volleyError.getMessage());
