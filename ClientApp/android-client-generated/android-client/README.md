@@ -64,12 +64,12 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        Product product = new Product(); // Product | 
+        Blacklist blacklist = new Blacklist(); // Blacklist | 
         try {
-            Product result = apiInstance.createProduct(product);
+            Blacklist result = apiInstance.addToBlacklist(blacklist);
             System.out.println(result);
         } catch (ApiException e) {
-            System.err.println("Exception when calling DefaultApi#createProduct");
+            System.err.println("Exception when calling DefaultApi#addToBlacklist");
             e.printStackTrace();
         }
     }
@@ -79,17 +79,20 @@ public class DefaultApiExample {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *http://localhost:3000/api*
+All URIs are relative to *https://cmov1.herokuapp.com/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DefaultApi* | [**addToBlacklist**](docs/DefaultApi.md#addToBlacklist) | **PUT** /blacklists | 
 *DefaultApi* | [**createProduct**](docs/DefaultApi.md#createProduct) | **PUT** /products | 
 *DefaultApi* | [**createRequest**](docs/DefaultApi.md#createRequest) | **PUT** /requests | 
 *DefaultApi* | [**createUser**](docs/DefaultApi.md#createUser) | **PUT** /costumers | 
+*DefaultApi* | [**getBlacklisted**](docs/DefaultApi.md#getBlacklisted) | **GET** /blacklists | 
 *DefaultApi* | [**getCostumerRequests**](docs/DefaultApi.md#getCostumerRequests) | **POST** /requests | 
 *DefaultApi* | [**getCostumers**](docs/DefaultApi.md#getCostumers) | **GET** /costumers | 
 *DefaultApi* | [**getProducts**](docs/DefaultApi.md#getProducts) | **GET** /products | 
 *DefaultApi* | [**hello**](docs/DefaultApi.md#hello) | **GET** /hello | 
+*DefaultApi* | [**logMe**](docs/DefaultApi.md#logMe) | **POST** /costumers | 
 
 
 ## Documentation for Models

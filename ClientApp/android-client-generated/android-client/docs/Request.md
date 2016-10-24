@@ -4,12 +4,12 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**costumerUuid** | **String** |  | 
-**pin** | **String** |  | 
+**costumerUuid** | **String** |  |  [optional]
+**pin** | **String** |  |  [optional]
 **id** | **Integer** |  |  [optional]
 **number** | **Integer** |  |  [optional]
-**vouchers** | [**Vouchers**](Vouchers.md) |  |  [optional]
-**requestlines** | [**RequestLines**](RequestLines.md) |  |  [optional]
+**vouchers** | [**List&lt;Voucher&gt;**](Voucher.md) |  |  [optional]
+**requestlines** | [**List&lt;RequestLine&gt;**](RequestLine.md) |  |  [optional]
 
 
 

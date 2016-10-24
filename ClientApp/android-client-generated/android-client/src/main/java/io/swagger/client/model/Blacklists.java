@@ -39,7 +39,7 @@ public class Blacklists  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public List<Blacklist> getBlacklists() {
     return blacklists;
   }

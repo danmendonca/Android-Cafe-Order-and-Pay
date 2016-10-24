@@ -4,12 +4,12 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **Integer** |  | 
-**type** | **Integer** |  | 
-**key** | **String** |  | 
+**id** | **Integer** |  |  [optional]
+**type** | **Integer** |  |  [optional]
+**key** | **String** |  |  [optional]
 **costumerUuid** | **String** |  |  [optional]
 **requestId** | **Integer** |  |  [optional]
-**isused** | **Boolean** |  | 
+**isused** | **Boolean** |  |  [optional]
 **number** | **Integer** |  |  [optional]
 
 

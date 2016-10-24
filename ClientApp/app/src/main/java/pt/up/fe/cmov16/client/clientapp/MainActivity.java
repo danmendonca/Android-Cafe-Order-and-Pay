@@ -17,7 +17,10 @@ import com.android.volley.VolleyError;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
+import io.swagger.client.ApiException;
 import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Costumer;
@@ -28,11 +31,14 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     private Button dateTextView;
 
+    private DefaultApi api;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ApiInvoker.initializeInstance();
+        api = new DefaultApi();
 
         if (User.getInstance(this).isFirstTime()) {
             setFirstTimeScreen();
@@ -44,8 +50,67 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     private void setFirstTimeScreen() {
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.login_register_menu);
+        findViewById(R.id.register).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                register();
+            }
+        });
+        findViewById(R.id.login).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login();
+            }
+        });
+    }
 
+    private void login(){
+        setContentView(R.layout.form_login);
+        final EditText usernameEditText = (EditText) findViewById(R.id.username);
+        final EditText passwordEditText = (EditText) findViewById(R.id.password);
+
+        findViewById(R.id.loginBtn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Costumer costumer = new Costumer();
+                costumer.setUsername(usernameEditText.getText().toString());
+                costumer.setPassword(passwordEditText.getText().toString());
+
+//                costumer.setCreditcarddate("asdasd");
+//                costumer.setCreditcardnumber("asdasd");
+//                costumer.setPin("pin");
+//                costumer.setUuid("uuid");
+
+                api.logMe(costumer, new Response.Listener<Costumer>() {
+                    @Override
+                    public void onResponse(Costumer response) {
+                        saveUserDataAndShowPIN(response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        showError(error);
+                        Toast.makeText(MainActivity.this,"Invalid username/password",Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                try {
+//                    api.logMe(costumer);
+//                } catch (TimeoutException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ApiException e) {
+//                    e.printStackTrace();
+//                }
+            }
+        });
+
+    }
+    private void register() {
+        setContentView(R.layout.form_register);
         TextView info = (TextView) findViewById(R.id.infoView);
         info.setText("Atenção: A app quer o server em: "
                 + (new DefaultApi()).getBasePath()
@@ -69,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         });
 
 
-        Button registar = (Button) findViewById(R.id.registar);
+        Button registar = (Button) findViewById(R.id.registerBtn);
         final EditText nameEditText = (EditText) findViewById(R.id.name);
         final EditText usernameEditText = (EditText) findViewById(R.id.username);
         final EditText passwordEditText = (EditText) findViewById(R.id.password);
@@ -78,7 +143,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         registar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DefaultApi api = new DefaultApi();
                 String name = nameEditText.getText().toString();
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
@@ -114,16 +178,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            VolleyError volleyError = (VolleyError) error.getCause();
-                            if (volleyError.networkResponse != null) {
-                                Log.e("MainActivity", "" + volleyError.networkResponse.statusCode + ":" + volleyError.getMessage());
-                            }
+                            showError(error);
                         }
                     });
                 }
             }
         });
-
     }
 
     private void saveUserDataAndShowPIN(Costumer response) {
@@ -148,6 +208,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
         String date = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
         dateTextView.setText(date);
+    }
+
+    private void showError(VolleyError error){
+        VolleyError volleyError = (VolleyError) error.getCause();
+        if (volleyError.networkResponse != null) {
+            Log.e("MainActivity", "" + volleyError.networkResponse.statusCode + ":" + volleyError.getMessage());
+        }
     }
 
 }

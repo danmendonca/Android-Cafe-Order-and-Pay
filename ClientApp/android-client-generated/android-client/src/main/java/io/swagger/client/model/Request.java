@@ -24,8 +24,9 @@
 
 package io.swagger.client.model;
 
-import io.swagger.client.model.RequestLines;
-import io.swagger.client.model.Vouchers;
+import io.swagger.client.model.RequestLine;
+import io.swagger.client.model.Voucher;
+import java.util.*;
 
 import io.swagger.annotations.*;
 import com.google.gson.annotations.SerializedName;
@@ -43,13 +44,13 @@ public class Request  {
   @SerializedName("number")
   private Integer number = null;
   @SerializedName("vouchers")
-  private Vouchers vouchers = null;
+  private List<Voucher> vouchers = null;
   @SerializedName("requestlines")
-  private RequestLines requestlines = null;
+  private List<RequestLine> requestlines = null;
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public String getCostumerUuid() {
     return costumerUuid;
   }
@@ -59,7 +60,7 @@ public class Request  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public String getPin() {
     return pin;
   }
@@ -90,20 +91,20 @@ public class Request  {
   /**
    **/
   @ApiModelProperty(value = "")
-  public Vouchers getVouchers() {
+  public List<Voucher> getVouchers() {
     return vouchers;
   }
-  public void setVouchers(Vouchers vouchers) {
+  public void setVouchers(List<Voucher> vouchers) {
     this.vouchers = vouchers;
   }
 
   /**
    **/
   @ApiModelProperty(value = "")
-  public RequestLines getRequestlines() {
+  public List<RequestLine> getRequestlines() {
     return requestlines;
   }
-  public void setRequestlines(RequestLines requestlines) {
+  public void setRequestlines(List<RequestLine> requestlines) {
     this.requestlines = requestlines;
   }
 

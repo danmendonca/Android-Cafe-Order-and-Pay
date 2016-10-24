@@ -1,17 +1,63 @@
 # DefaultApi
 
-All URIs are relative to *http://localhost:3000/api*
+All URIs are relative to *https://cmov1.herokuapp.com/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**addToBlacklist**](DefaultApi.md#addToBlacklist) | **PUT** /blacklists | 
 [**createProduct**](DefaultApi.md#createProduct) | **PUT** /products | 
 [**createRequest**](DefaultApi.md#createRequest) | **PUT** /requests | 
 [**createUser**](DefaultApi.md#createUser) | **PUT** /costumers | 
+[**getBlacklisted**](DefaultApi.md#getBlacklisted) | **GET** /blacklists | 
 [**getCostumerRequests**](DefaultApi.md#getCostumerRequests) | **POST** /requests | 
 [**getCostumers**](DefaultApi.md#getCostumers) | **GET** /costumers | 
 [**getProducts**](DefaultApi.md#getProducts) | **GET** /products | 
 [**hello**](DefaultApi.md#hello) | **GET** /hello | 
+[**logMe**](DefaultApi.md#logMe) | **POST** /costumers | 
 
+
+<a name="addToBlacklist"></a>
+# **addToBlacklist**
+> Blacklist addToBlacklist(blacklist)
+
+
+
+Adds a costumer to the blacklist
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+Blacklist blacklist = new Blacklist(); // Blacklist | 
+try {
+    Blacklist result = apiInstance.addToBlacklist(blacklist);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#addToBlacklist");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **blacklist** | [**Blacklist**](Blacklist.md)|  |
+
+### Return type
+
+[**Blacklist**](Blacklist.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
 
 <a name="createProduct"></a>
 # **createProduct**
@@ -132,6 +178,45 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**Costumer**](Costumer.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="getBlacklisted"></a>
+# **getBlacklisted**
+> Blacklists getBlacklisted()
+
+
+
+Returns a collection
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+try {
+    Blacklists result = apiInstance.getBlacklisted();
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#getBlacklisted");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+This endpoint does not need any parameter.
+
+### Return type
+
+[**Blacklists**](Blacklists.md)
 
 ### Authorization
 
@@ -296,6 +381,49 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**HelloWorldResponse**](HelloWorldResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="logMe"></a>
+# **logMe**
+> Costumer logMe(costumer)
+
+
+
+Login
+
+### Example
+```java
+// Import classes:
+//import io.swagger.client.api.DefaultApi;
+
+DefaultApi apiInstance = new DefaultApi();
+Costumer costumer = new Costumer(); // Costumer | 
+try {
+    Costumer result = apiInstance.logMe(costumer);
+    System.out.println(result);
+} catch (ApiException e) {
+    System.err.println("Exception when calling DefaultApi#logMe");
+    e.printStackTrace();
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **costumer** | [**Costumer**](Costumer.md)|  |
+
+### Return type
+
+[**Costumer**](Costumer.md)
 
 ### Authorization
 

@@ -49,7 +49,7 @@ public class Voucher  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public Integer getId() {
     return id;
   }
@@ -59,7 +59,7 @@ public class Voucher  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public Integer getType() {
     return type;
   }
@@ -69,7 +69,7 @@ public class Voucher  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public String getKey() {
     return key;
   }
@@ -99,7 +99,7 @@ public class Voucher  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public Boolean getIsused() {
     return isused;
   }

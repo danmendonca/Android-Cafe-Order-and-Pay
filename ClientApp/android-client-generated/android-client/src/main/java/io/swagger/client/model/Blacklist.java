@@ -49,7 +49,7 @@ public class Blacklist  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public Integer getId() {
     return id;
   }

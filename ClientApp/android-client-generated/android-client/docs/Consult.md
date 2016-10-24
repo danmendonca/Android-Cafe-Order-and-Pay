@@ -4,8 +4,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**requests** | [**List&lt;Requests&gt;**](Requests.md) |  | 
-**vouchers** | [**List&lt;Vouchers&gt;**](Vouchers.md) |  | 
+**requests** | [**List&lt;Request&gt;**](Request.md) |  |  [optional]
+**vouchers** | [**List&lt;Voucher&gt;**](Voucher.md) |  |  [optional]
 
 
 

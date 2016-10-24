@@ -5,7 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **costumerUuid** | **String** |  | 
-**id** | **Integer** |  | 
+**id** | **Integer** |  |  [optional]
 
 
 

@@ -24,8 +24,8 @@
 
 package io.swagger.client.model;
 
-import io.swagger.client.model.Requests;
-import io.swagger.client.model.Vouchers;
+import io.swagger.client.model.Request;
+import io.swagger.client.model.Voucher;
 import java.util.*;
 
 import io.swagger.annotations.*;
@@ -36,27 +36,27 @@ import com.google.gson.annotations.SerializedName;
 public class Consult  {
   
   @SerializedName("requests")
-  private List<Requests> requests = null;
+  private List<Request> requests = null;
   @SerializedName("vouchers")
-  private List<Vouchers> vouchers = null;
+  private List<Voucher> vouchers = null;
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
-  public List<Requests> getRequests() {
+  @ApiModelProperty(value = "")
+  public List<Request> getRequests() {
     return requests;
   }
-  public void setRequests(List<Requests> requests) {
+  public void setRequests(List<Request> requests) {
     this.requests = requests;
   }
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
-  public List<Vouchers> getVouchers() {
+  @ApiModelProperty(value = "")
+  public List<Voucher> getVouchers() {
     return vouchers;
   }
-  public void setVouchers(List<Vouchers> vouchers) {
+  public void setVouchers(List<Voucher> vouchers) {
     this.vouchers = vouchers;
   }
 

@@ -4,7 +4,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**blacklists** | [**List&lt;Blacklist&gt;**](Blacklist.md) |  | 
+**blacklists** | [**List&lt;Blacklist&gt;**](Blacklist.md) |  |  [optional]
 
 
 

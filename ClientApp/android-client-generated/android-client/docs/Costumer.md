@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **pin** | **String** |  |  [optional]
 **name** | **String** |  |  [optional]
 **creditcardnumber** | **String** |  |  [optional]
-**creditcarddate** | [**Date**](Date.md) |  |  [optional]
+**creditcarddate** | **String** |  |  [optional]
 **password** | **String** |  |  [optional]
 
 
