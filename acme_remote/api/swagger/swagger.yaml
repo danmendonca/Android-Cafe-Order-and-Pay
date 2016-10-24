@@ -74,6 +74,24 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Login
+      operationId: logMe
+      parameters:
+        - name: costumer
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Costumer'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /products:
     x-swagger-router-controller: products
     get:
