@@ -9,7 +9,11 @@ module.exports = {
 };
 
 function getProducts(req, res) {
-    Product.findAll().then(function (values) {
+    Product.findAll({
+        where: {
+            active: true
+        }
+    }).then(function (values) {
         res.json(values);
     });
 }

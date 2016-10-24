@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: Acme Cafe App
 # during dev, should point to your local machine
-host: localhost:3000
+host: localhost:8080
 # basePath prefixes all resource paths 
 basePath: /api
 # 
@@ -122,6 +122,10 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Consult'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     put:
       description: Creates a new request for a costumer
       operationId: createRequest
@@ -136,6 +140,38 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Request'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /blacklists:
+    x-swagger-router-controller: blacklists
+    get:
+      description: Returns a collection
+      operationId: getBlacklisted
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Blacklists'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Adds a costumer to the blacklist
+      operationId: addToBlacklist
+      parameters:
+        - name: blacklist
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Blacklist'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Blacklist'
         default:
           description: Error
           schema:
@@ -189,11 +225,6 @@ definitions:
         format: int32
   Voucher:
     type: object
-    required:
-      - id
-      - type
-      - key
-      - isused
     properties:
       id:
         type: integer
@@ -215,29 +246,29 @@ definitions:
         format: int32
   Request:
     type: object
-    required:
-      - costumerUuid
-      - pin
     properties:
       costumerUuid:
         type: string
       pin:
         type: string
       id:
-        type: "integer"
-        format: "int32"
+        type: integer
+        format: int32
       number:
-        type: "integer"
-        format: "int32"
+        type: integer
+        format: int32
       vouchers:
-        $ref: '#/definitions/Vouchers'
+        type: array
+        items:
+          $ref: '#/definitions/Voucher'
       requestlines:
-        $ref: '#/definitions/RequestLines'
+        type: array
+        items:
+          $ref: '#/definitions/RequestLine'
   Blacklist:
     type: object
     required:
       - costumerUuid
-      - id
     properties:
       costumerUuid:
         type: string
@@ -285,26 +316,21 @@ definitions:
         items:
           $ref: '#/definitions/Request'
   Blacklists:
-    required:
-      - blacklists
     properties:
       blacklists:
         type: array
         items:
           $ref: '#/definitions/Blacklist'
   Consult:
-    required:
-      - requests
-      - vouchers
     properties:
       requests:
         type: array
         items:
-          $ref: '#/definitions/Requests'
+          $ref: '#/definitions/Request'
       vouchers:
         type: array
         items:
-          $ref: '#/definitions/Vouchers'
+          $ref: '#/definitions/Voucher'
   HelloWorldResponse:
     required:
       - message
