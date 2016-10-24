@@ -68,3 +68,4 @@ ClientApp/.Trashes
 ClientApp/ehthumbs.db
 ClientApp/Thumbs.db
 AcmeRemote/config/config.json
+AcmeRemote/node_modules/
