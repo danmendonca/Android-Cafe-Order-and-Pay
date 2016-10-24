@@ -213,7 +213,6 @@ definitions:
         type: string
       creditcarddate:
         type: string
-        format: date-time
       password:
         type: string
   Product:
