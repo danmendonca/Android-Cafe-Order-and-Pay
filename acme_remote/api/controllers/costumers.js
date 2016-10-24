@@ -5,7 +5,8 @@ var Costumer = models.costumer;
 
 module.exports = {
     getCostumers: getCostumers,
-    createUser: createUser
+    createUser: createUser,
+    logMe: logMe
 };
 
 //sql costumer insertion INSERT INTO public.costumer VALUES ('daniel', 'dm', 'pass', '1234', '123456789', current_date, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', now(), now());
@@ -40,4 +41,25 @@ function createUser(req, res) {
             res.statusCode = 403;
             res.end(JSON.stringify(err));
         })
+}
+
+function logMe(req, res) {
+    var uname = req.swagger.params.costumer.value.username;
+    var pw = req.swagger.params.costumer.value.password;
+    Costumer.findOne({
+        where: {
+            username: uname,
+            password: pw
+        }
+    }).then((validC) => {
+        if (validC)
+            res.json(validC);
+        else {
+            var ErrorResponse = {};
+            ErrorResponse.message = "Invalid Login";
+            res.statusCode = 403;
+            res.json(ErrorResponse);
+        }
+    });
+
 }
