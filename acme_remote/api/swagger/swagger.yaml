@@ -3,13 +3,12 @@ info:
   version: "0.0.1"
   title: Acme Cafe App
 # during dev, should point to your local machine
-host: localhost:8080
+host: cmov1.herokuapp.com
 # basePath prefixes all resource paths 
 basePath: /api
 # 
 schemes:
   # tip: remove http to make production-grade
-  - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
