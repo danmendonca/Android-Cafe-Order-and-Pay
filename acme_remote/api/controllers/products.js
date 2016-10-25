@@ -14,7 +14,9 @@ function getProducts(req, res) {
             active: true
         }
     }).then(function (values) {
-        res.json(values);
+    	var prods = {};
+    	prods['products'] = values;
+        res.json(prods);
     });
 }
 
