@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     private void showError(VolleyError error) {
-        if (error == null) {
+        if (error == null || error.getCause()==null) {
             Toast.makeText(MainActivity.this, "Connection failed, please try again", Toast.LENGTH_SHORT).show();
             return;
         }

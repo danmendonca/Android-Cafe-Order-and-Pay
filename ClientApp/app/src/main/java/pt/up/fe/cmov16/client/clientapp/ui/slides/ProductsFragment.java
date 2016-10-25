@@ -60,7 +60,7 @@ public class ProductsFragment extends NamedFragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Products",error.getMessage());
+                        //Api always print errors in the Log.e
                     }
                 });
 
