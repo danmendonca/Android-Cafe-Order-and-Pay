@@ -17,20 +17,16 @@ import com.android.volley.VolleyError;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
-import io.swagger.client.ApiException;
 import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Costumer;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
-import pt.up.fe.cmov16.client.clientapp.ui.MenuActivity;
+import pt.up.fe.cmov16.client.clientapp.ui.SlideActivity;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private Button dateTextView;
-
     private DefaultApi api;
 
     @Override
@@ -43,8 +39,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         if (User.getInstance(this).isFirstTime()) {
             setFirstTimeScreen();
         } else {
-            Intent i = new Intent(this, MenuActivity.class);
-            startActivity(i);
+            startSlideActivity();
         }
 
     }
@@ -77,11 +72,11 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 costumer.setUsername(usernameEditText.getText().toString());
                 costumer.setPassword(passwordEditText.getText().toString());
 
-                costumer.setCreditcarddate("asdasd");
-                costumer.setCreditcardnumber("asdasd");
-                costumer.setPin("pin");
-                costumer.setUuid("uuid");
-                costumer.setName("name");
+                costumer.setCreditcarddate("");
+                costumer.setCreditcardnumber("");
+                costumer.setPin("");
+                costumer.setUuid("");
+                costumer.setName("");
 
                 api.logMe(costumer, new Response.Listener<Costumer>() {
                     @Override
@@ -95,17 +90,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                         Toast.makeText(MainActivity.this, "Invalid username/password", Toast.LENGTH_SHORT).show();
                     }
                 });
-//                try {
-//                    api.logMe(costumer);
-//                } catch (TimeoutException e) {
-//                    e.printStackTrace();
-//                } catch (ExecutionException e) {
-//                    e.printStackTrace();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                } catch (ApiException e) {
-//                    e.printStackTrace();
-//                }
             }
         });
 
@@ -136,13 +120,13 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         });
 
 
-        Button registar = (Button) findViewById(R.id.registerBtn);
+        Button register = (Button) findViewById(R.id.registerBtn);
         final EditText nameEditText = (EditText) findViewById(R.id.name);
         final EditText usernameEditText = (EditText) findViewById(R.id.username);
         final EditText passwordEditText = (EditText) findViewById(R.id.password);
         final EditText cardNumEditText = (EditText) findViewById(R.id.cardNum);
 
-        registar.setOnClickListener(new View.OnClickListener() {
+        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String name = nameEditText.getText().toString();
@@ -200,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         builder.setMessage("PIN: " + response.getPin() + "\n Guarde num local seguro")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-
+                        startSlideActivity();
                     }
                 });
         builder.create().show();
@@ -213,10 +197,19 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     private void showError(VolleyError error) {
+        if (error == null) {
+            Toast.makeText(MainActivity.this, "Connection failed, please try again", Toast.LENGTH_SHORT).show();
+            return;
+        }
         VolleyError volleyError = (VolleyError) error.getCause();
         if (volleyError.networkResponse != null) {
             Log.e("MainActivity", "" + volleyError.networkResponse.statusCode + ":" + volleyError.getMessage());
         }
+    }
+
+    private void startSlideActivity() {
+        Intent i = new Intent(this, SlideActivity.class);
+        startActivity(i);
     }
 
 }
