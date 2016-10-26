@@ -19,6 +19,8 @@ import io.swagger.client.model.Product;
 import io.swagger.client.model.Products;
 import pt.up.fe.cmov16.client.clientapp.MainActivity;
 import pt.up.fe.cmov16.client.clientapp.R;
+import pt.up.fe.cmov16.client.clientapp.database.ProductContract;
+import pt.up.fe.cmov16.client.clientapp.util.IFunction;
 
 public class ProductsFragment extends NamedFragment {
 
@@ -46,28 +48,46 @@ public class ProductsFragment extends NamedFragment {
         adapter = new RVAdapter();
         rv.setAdapter(adapter);
 
-        //TODO just to test
+        loadProducts();
+
+        return rootView;
+    }
+
+    private void loadProducts() {
         (new Thread(new Runnable() {
             @Override
             public void run() {
                 DefaultApi api = new DefaultApi();
+                final ProductContract prodsDb = new ProductContract();
                 api.getProducts(new Response.Listener<Products>() {
                     @Override
                     public void onResponse(Products response) {
+                        //Get products from server and update local db
                         PRODUCTS.addAll(response.getProducts());
+                        prodsDb.replaceProducts(getContext(), PRODUCTS);
                         adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         //Api always print errors in the Log.e
+                        //Load products from db
+                        prodsDb.loadProducts(getContext(), new IFunction() {
+                            @Override
+                            public void execute(Object s) {
+                                if (s != null) {
+                                    ArrayList<Product> prods = (ArrayList<Product>) s;
+                                    PRODUCTS.addAll(prods);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+
                     }
                 });
 
             }
         })).start();
-
-        return rootView;
     }
 
     public class RVAdapter extends RecyclerView.Adapter {
@@ -93,7 +113,8 @@ public class ProductsFragment extends NamedFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int i) {
             if (holder instanceof ProductViewHolder) {
                 ((ProductViewHolder) holder).productName.setText(PRODUCTS.get(i).getName());
-                ((ProductViewHolder) holder).productPrice.setText(String.valueOf(PRODUCTS.get(i).getUnitprice()));
+                String p = PRODUCTS.get(i).getUnitprice() + "€";
+                ((ProductViewHolder) holder).productPrice.setText(p);
             }
         }
 
