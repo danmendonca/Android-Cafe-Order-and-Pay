@@ -23,18 +23,18 @@ public final class ProductContract {
     }
 
     /* Inner class that defines the table contents */
-    public static abstract class ProductEntry implements BaseColumns {
-        public static final String TABLE_NAME = "products";
-        public static final String COLUMN_NAME_ID = "id";
-        public static final String COLUMN_NAME_NAME = "name";
-        public static final String COLUMN_NAME_UNITPRICE = "unitprice";
+    static abstract class ProductEntry implements BaseColumns {
+        static final String TABLE_NAME = "products";
+        static final String COLUMN_NAME_ID = "id";
+        static final String COLUMN_NAME_NAME = "name";
+        static final String COLUMN_NAME_UNITPRICE = "unitprice";
     }
 
-    public static final String SELECT_ALL_PRODUCTS =
+    private static final String SELECT_ALL_PRODUCTS =
             "SELECT * FROM " + ProductEntry.TABLE_NAME
                     + " order by " + ProductEntry.COLUMN_NAME_NAME + " asc";
 
-    public static final String DELETE_ALL_PRODUCTS = "DELETE FROM " + ProductEntry.TABLE_NAME;
+    private static final String DELETE_ALL_PRODUCTS = "DELETE FROM " + ProductEntry.TABLE_NAME;
 
     public void replaceProducts(Context context, ArrayList<Product> products) {
         if (products == null || products.isEmpty()) {

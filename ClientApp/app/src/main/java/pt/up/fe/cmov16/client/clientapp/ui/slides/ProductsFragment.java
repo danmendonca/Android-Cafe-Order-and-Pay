@@ -62,6 +62,8 @@ public class ProductsFragment extends NamedFragment {
                 api.getProducts(new Response.Listener<Products>() {
                     @Override
                     public void onResponse(Products response) {
+                        //TODO verificar a data da ultima atualização(last product updated or created date) da tabela para
+                        //TODO verificar se vale a pena pedir os produtos todos e atualizar a db
                         //Get products from server and update local db
                         PRODUCTS.addAll(response.getProducts());
                         prodsDb.replaceProducts(getContext(), PRODUCTS);
