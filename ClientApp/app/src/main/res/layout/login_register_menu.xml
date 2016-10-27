@@ -12,7 +12,7 @@
 
     <Button
         android:paddingTop="10dp"
-        android:text="@string/password"
+        android:text="@string/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/register" />

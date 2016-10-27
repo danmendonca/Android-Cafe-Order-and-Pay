@@ -24,27 +24,37 @@
 
 package io.swagger.client.model;
 
-import io.swagger.client.model.Request;
-import java.util.*;
 
 import io.swagger.annotations.*;
 import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class Requests  {
+public class VoucherParam  {
   
-  @SerializedName("requests")
-  private List<Request> requests = null;
+  @SerializedName("id")
+  private Integer id = null;
+  @SerializedName("key")
+  private String key = null;
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
-  public List<Request> getRequests() {
-    return requests;
+  @ApiModelProperty(value = "")
+  public Integer getId() {
+    return id;
   }
-  public void setRequests(List<Request> requests) {
-    this.requests = requests;
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public String getKey() {
+    return key;
+  }
+  public void setKey(String key) {
+    this.key = key;
   }
 
 
@@ -56,23 +66,26 @@ public class Requests  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Requests requests = (Requests) o;
-    return (requests == null ? requests.requests == null : requests.equals(requests.requests));
+    VoucherParam voucherParam = (VoucherParam) o;
+    return (id == null ? voucherParam.id == null : id.equals(voucherParam.id)) &&
+        (key == null ? voucherParam.key == null : key.equals(voucherParam.key));
   }
 
   @Override
   public int hashCode() {
     int result = 17;
-    result = 31 * result + (requests == null ? 0: requests.hashCode());
+    result = 31 * result + (id == null ? 0: id.hashCode());
+    result = 31 * result + (key == null ? 0: key.hashCode());
     return result;
   }
 
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Requests {\n");
+    sb.append("class VoucherParam {\n");
     
-    sb.append("  requests: ").append(requests).append("\n");
+    sb.append("  id: ").append(id).append("\n");
+    sb.append("  key: ").append(key).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

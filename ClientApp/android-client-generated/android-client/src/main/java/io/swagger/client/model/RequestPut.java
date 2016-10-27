@@ -24,8 +24,8 @@
 
 package io.swagger.client.model;
 
-import io.swagger.client.model.Requestline;
-import io.swagger.client.model.Voucher;
+import io.swagger.client.model.RequestlineParam;
+import io.swagger.client.model.VoucherParam;
 import java.util.*;
 
 import io.swagger.annotations.*;
@@ -33,24 +33,20 @@ import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class Request  {
+public class RequestPut  {
   
   @SerializedName("costumerUuid")
   private String costumerUuid = null;
   @SerializedName("pin")
   private String pin = null;
-  @SerializedName("id")
-  private Integer id = null;
-  @SerializedName("number")
-  private Integer number = null;
-  @SerializedName("vouchers")
-  private List<Voucher> vouchers = null;
   @SerializedName("requestlines")
-  private List<Requestline> requestlines = null;
+  private List<RequestlineParam> requestlines = null;
+  @SerializedName("requestvouchers")
+  private List<VoucherParam> requestvouchers = null;
 
   /**
    **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getCostumerUuid() {
     return costumerUuid;
   }
@@ -60,7 +56,7 @@ public class Request  {
 
   /**
    **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(required = true, value = "")
   public String getPin() {
     return pin;
   }
@@ -71,41 +67,21 @@ public class Request  {
   /**
    **/
   @ApiModelProperty(value = "")
-  public Integer getId() {
-    return id;
-  }
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  /**
-   **/
-  @ApiModelProperty(value = "")
-  public Integer getNumber() {
-    return number;
-  }
-  public void setNumber(Integer number) {
-    this.number = number;
-  }
-
-  /**
-   **/
-  @ApiModelProperty(value = "")
-  public List<Voucher> getVouchers() {
-    return vouchers;
-  }
-  public void setVouchers(List<Voucher> vouchers) {
-    this.vouchers = vouchers;
-  }
-
-  /**
-   **/
-  @ApiModelProperty(value = "")
-  public List<Requestline> getRequestlines() {
+  public List<RequestlineParam> getRequestlines() {
     return requestlines;
   }
-  public void setRequestlines(List<Requestline> requestlines) {
+  public void setRequestlines(List<RequestlineParam> requestlines) {
     this.requestlines = requestlines;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public List<VoucherParam> getRequestvouchers() {
+    return requestvouchers;
+  }
+  public void setRequestvouchers(List<VoucherParam> requestvouchers) {
+    this.requestvouchers = requestvouchers;
   }
 
 
@@ -117,13 +93,11 @@ public class Request  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Request request = (Request) o;
-    return (costumerUuid == null ? request.costumerUuid == null : costumerUuid.equals(request.costumerUuid)) &&
-        (pin == null ? request.pin == null : pin.equals(request.pin)) &&
-        (id == null ? request.id == null : id.equals(request.id)) &&
-        (number == null ? request.number == null : number.equals(request.number)) &&
-        (vouchers == null ? request.vouchers == null : vouchers.equals(request.vouchers)) &&
-        (requestlines == null ? request.requestlines == null : requestlines.equals(request.requestlines));
+    RequestPut requestPut = (RequestPut) o;
+    return (costumerUuid == null ? requestPut.costumerUuid == null : costumerUuid.equals(requestPut.costumerUuid)) &&
+        (pin == null ? requestPut.pin == null : pin.equals(requestPut.pin)) &&
+        (requestlines == null ? requestPut.requestlines == null : requestlines.equals(requestPut.requestlines)) &&
+        (requestvouchers == null ? requestPut.requestvouchers == null : requestvouchers.equals(requestPut.requestvouchers));
   }
 
   @Override
@@ -131,24 +105,20 @@ public class Request  {
     int result = 17;
     result = 31 * result + (costumerUuid == null ? 0: costumerUuid.hashCode());
     result = 31 * result + (pin == null ? 0: pin.hashCode());
-    result = 31 * result + (id == null ? 0: id.hashCode());
-    result = 31 * result + (number == null ? 0: number.hashCode());
-    result = 31 * result + (vouchers == null ? 0: vouchers.hashCode());
     result = 31 * result + (requestlines == null ? 0: requestlines.hashCode());
+    result = 31 * result + (requestvouchers == null ? 0: requestvouchers.hashCode());
     return result;
   }
 
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Request {\n");
+    sb.append("class RequestPut {\n");
     
     sb.append("  costumerUuid: ").append(costumerUuid).append("\n");
     sb.append("  pin: ").append(pin).append("\n");
-    sb.append("  id: ").append(id).append("\n");
-    sb.append("  number: ").append(number).append("\n");
-    sb.append("  vouchers: ").append(vouchers).append("\n");
     sb.append("  requestlines: ").append(requestlines).append("\n");
+    sb.append("  requestvouchers: ").append(requestvouchers).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

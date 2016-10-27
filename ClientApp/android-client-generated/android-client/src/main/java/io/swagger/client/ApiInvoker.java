@@ -80,7 +80,7 @@ public class ApiInvoker {
 
   /**
    * ISO 8601 date time format.
-   * @see http://en.wikipedia.org/wiki/ISO_8601
+   * @see https://en.wikipedia.org/wiki/ISO_8601
    */
   public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 

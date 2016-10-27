@@ -68,28 +68,21 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         findViewById(R.id.loginBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Costumer costumer = new Costumer();
-                costumer.setUsername(usernameEditText.getText().toString());
-                costumer.setPassword(passwordEditText.getText().toString());
-
-                costumer.setCreditcarddate("");
-                costumer.setCreditcardnumber("");
-                costumer.setPin("");
-                costumer.setUuid("");
-                costumer.setName("");
-
-                api.logMe(costumer, new Response.Listener<Costumer>() {
-                    @Override
-                    public void onResponse(Costumer response) {
-                        saveUserDataAndShowPIN(response);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        showError(error);
-                        Toast.makeText(MainActivity.this, "Invalid username/password", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                api.logMe(usernameEditText.getText().toString(),
+                        passwordEditText.getText().toString(),
+                        new Response.Listener<Costumer>() {
+                            @Override
+                            public void onResponse(Costumer response) {
+                                saveUserDataAndShowPIN(response);
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                showError(error);
+                                Toast.makeText(MainActivity.this,
+                                        "Invalid username/password", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 
@@ -139,8 +132,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 } else if (!Character.isDigit(dateTextView.getText().toString().charAt(0))) {
                     Toast.makeText(MainActivity.this, "Inserir data de validade", Toast.LENGTH_SHORT).show();
                 } else {
-                    Costumer user = new Costumer();
-                    user.setName(name);
                     String cardDate = "";
                     String dateInput = dateTextView.getText().toString();
                     cardDate += dateInput.split("/")[2];
@@ -149,24 +140,19 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                     cardDate += "-";
                     cardDate += dateInput.split("/")[0];
                     cardDate += "T23:59:59.000Z";
-                    user.setCreditcarddate(cardDate);
-                    user.setCreditcardnumber(cardNum);
-                    user.setPassword(password);
-                    user.setPin("pin");
-                    user.setUsername(username);
-                    user.setUuid("uuid");
 
-                    api.createUser(user, new Response.Listener<Costumer>() {
-                        @Override
-                        public void onResponse(Costumer response) {
-                            saveUserDataAndShowPIN(response);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            showError(error);
-                        }
-                    });
+                    api.createUser(name, username, password, cardNum, cardDate,
+                            new Response.Listener<Costumer>() {
+                                @Override
+                                public void onResponse(Costumer response) {
+                                    saveUserDataAndShowPIN(response);
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    showError(error);
+                                }
+                            });
                 }
             }
         });
@@ -197,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     private void showError(VolleyError error) {
-        if (error == null || error.getCause()==null) {
+        if (error == null || error.getCause() == null) {
             Toast.makeText(MainActivity.this, "Connection failed, please try again", Toast.LENGTH_SHORT).show();
             return;
         }

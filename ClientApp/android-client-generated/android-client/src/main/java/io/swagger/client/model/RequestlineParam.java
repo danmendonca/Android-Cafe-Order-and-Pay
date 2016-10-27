@@ -24,17 +24,16 @@
 
 package io.swagger.client.model;
 
-import io.swagger.client.model.Product;
 
 import io.swagger.annotations.*;
 import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class Requestline  {
+public class RequestlineParam  {
   
-  @SerializedName("productid")
-  private Product productid = null;
+  @SerializedName("productId")
+  private Integer productId = null;
   @SerializedName("quantity")
   private Integer quantity = null;
   @SerializedName("unitprice")
@@ -42,17 +41,17 @@ public class Requestline  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
-  public Product getProductid() {
-    return productid;
+  @ApiModelProperty(value = "")
+  public Integer getProductId() {
+    return productId;
   }
-  public void setProductid(Product productid) {
-    this.productid = productid;
+  public void setProductId(Integer productId) {
+    this.productId = productId;
   }
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public Integer getQuantity() {
     return quantity;
   }
@@ -62,7 +61,7 @@ public class Requestline  {
 
   /**
    **/
-  @ApiModelProperty(required = true, value = "")
+  @ApiModelProperty(value = "")
   public Float getUnitprice() {
     return unitprice;
   }
@@ -79,16 +78,16 @@ public class Requestline  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Requestline requestline = (Requestline) o;
-    return (productid == null ? requestline.productid == null : productid.equals(requestline.productid)) &&
-        (quantity == null ? requestline.quantity == null : quantity.equals(requestline.quantity)) &&
-        (unitprice == null ? requestline.unitprice == null : unitprice.equals(requestline.unitprice));
+    RequestlineParam requestlineParam = (RequestlineParam) o;
+    return (productId == null ? requestlineParam.productId == null : productId.equals(requestlineParam.productId)) &&
+        (quantity == null ? requestlineParam.quantity == null : quantity.equals(requestlineParam.quantity)) &&
+        (unitprice == null ? requestlineParam.unitprice == null : unitprice.equals(requestlineParam.unitprice));
   }
 
   @Override
   public int hashCode() {
     int result = 17;
-    result = 31 * result + (productid == null ? 0: productid.hashCode());
+    result = 31 * result + (productId == null ? 0: productId.hashCode());
     result = 31 * result + (quantity == null ? 0: quantity.hashCode());
     result = 31 * result + (unitprice == null ? 0: unitprice.hashCode());
     return result;
@@ -97,9 +96,9 @@ public class Requestline  {
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Requestline {\n");
+    sb.append("class RequestlineParam {\n");
     
-    sb.append("  productid: ").append(productid).append("\n");
+    sb.append("  productId: ").append(productId).append("\n");
     sb.append("  quantity: ").append(quantity).append("\n");
     sb.append("  unitprice: ").append(unitprice).append("\n");
     sb.append("}\n");

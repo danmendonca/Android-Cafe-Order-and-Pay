@@ -1,32 +1,31 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Product;
 import io.swagger.client.model.Products;
-import pt.up.fe.cmov16.client.clientapp.MainActivity;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.database.ProductContract;
-import pt.up.fe.cmov16.client.clientapp.util.IFunction;
 
 public class ProductsFragment extends NamedFragment {
 
     private ArrayList<Product> PRODUCTS;
     private RVAdapter adapter;
-
     public static ProductsFragment newInstance(int page) {
         Bundle args = new Bundle();
         // if necessary add arguments here
@@ -40,7 +39,8 @@ public class ProductsFragment extends NamedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_products, container, false);
-        PRODUCTS = new ArrayList<>();
+        PRODUCTS = new ArrayList<>();// NEVER REPLACE THIS REFERENCE, if needed clear it.
+
         //PREPARE LIST VIEW
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_products);
         rv.setHasFixedSize(true);
@@ -54,42 +54,34 @@ public class ProductsFragment extends NamedFragment {
     }
 
     private void loadProducts() {
-        (new Thread(new Runnable() {
-            @Override
-            public void run() {
-                DefaultApi api = new DefaultApi();
-                final ProductContract prodsDb = new ProductContract();
-                api.getProducts(new Response.Listener<Products>() {
-                    @Override
-                    public void onResponse(Products response) {
-                        //TODO verificar a data da ultima atualização(last product updated or created date) da tabela para
-                        //TODO verificar se vale a pena pedir os produtos todos e atualizar a db
-                        //Get products from server and update local db
-                        PRODUCTS.addAll(response.getProducts());
-                        prodsDb.replaceProducts(getContext(), PRODUCTS);
-                        adapter.notifyDataSetChanged();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //Api always print errors in the Log.e
-                        //Load products from db
-                        prodsDb.loadProducts(getContext(), new IFunction() {
-                            @Override
-                            public void execute(Object s) {
-                                if (s != null) {
-                                    ArrayList<Product> prods = (ArrayList<Product>) s;
-                                    PRODUCTS.addAll(prods);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            }
-                        });
+        final ProductContract productContract = new ProductContract();
+        String lastDate = productContract.lastUpdatedProductDate(getContext());
 
-                    }
-                });
+        DefaultApi api = new DefaultApi();
+        if (lastDate == null || lastDate.equals("null") || lastDate.isEmpty()){
+            api.getProducts(new Response.Listener<Products>() {
+                @Override
+                public void onResponse(Products response) {
+                    updateListItems(response.getProducts());
+                    productContract.updateProducts(getContext(),PRODUCTS);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getContext(),
+                            "Connection failed, loading local products", Toast.LENGTH_SHORT).show();
+                    updateListItems(productContract.loadProducts(getContext()));
+                }
+            });
+        }else {
+            //TODO pedir produtos a partir desta data
+        }
+    }
 
-            }
-        })).start();
+    private void updateListItems(List<Product> products) {
+        PRODUCTS.clear();
+        PRODUCTS.addAll(products);
+        adapter.notifyDataSetChanged();
     }
 
     public class RVAdapter extends RecyclerView.Adapter {

@@ -99,24 +99,24 @@ public class JsonUtil {
       return new TypeToken<List<Request>>(){}.getType();
     }
     
-    if ("RequestLine".equalsIgnoreCase(className)) {
-      return new TypeToken<List<RequestLine>>(){}.getType();
+    if ("RequestPut".equalsIgnoreCase(className)) {
+      return new TypeToken<List<RequestPut>>(){}.getType();
     }
     
-    if ("RequestLines".equalsIgnoreCase(className)) {
-      return new TypeToken<List<RequestLines>>(){}.getType();
+    if ("Requestline".equalsIgnoreCase(className)) {
+      return new TypeToken<List<Requestline>>(){}.getType();
     }
     
-    if ("Requests".equalsIgnoreCase(className)) {
-      return new TypeToken<List<Requests>>(){}.getType();
+    if ("RequestlineParam".equalsIgnoreCase(className)) {
+      return new TypeToken<List<RequestlineParam>>(){}.getType();
     }
     
     if ("Voucher".equalsIgnoreCase(className)) {
       return new TypeToken<List<Voucher>>(){}.getType();
     }
     
-    if ("Vouchers".equalsIgnoreCase(className)) {
-      return new TypeToken<List<Vouchers>>(){}.getType();
+    if ("VoucherParam".equalsIgnoreCase(className)) {
+      return new TypeToken<List<VoucherParam>>(){}.getType();
     }
     
     return new TypeToken<List<Object>>(){}.getType();
@@ -165,24 +165,24 @@ public class JsonUtil {
       return new TypeToken<Request>(){}.getType();
     }
     
-    if ("RequestLine".equalsIgnoreCase(className)) {
-      return new TypeToken<RequestLine>(){}.getType();
+    if ("RequestPut".equalsIgnoreCase(className)) {
+      return new TypeToken<RequestPut>(){}.getType();
     }
     
-    if ("RequestLines".equalsIgnoreCase(className)) {
-      return new TypeToken<RequestLines>(){}.getType();
+    if ("Requestline".equalsIgnoreCase(className)) {
+      return new TypeToken<Requestline>(){}.getType();
     }
     
-    if ("Requests".equalsIgnoreCase(className)) {
-      return new TypeToken<Requests>(){}.getType();
+    if ("RequestlineParam".equalsIgnoreCase(className)) {
+      return new TypeToken<RequestlineParam>(){}.getType();
     }
     
     if ("Voucher".equalsIgnoreCase(className)) {
       return new TypeToken<Voucher>(){}.getType();
     }
     
-    if ("Vouchers".equalsIgnoreCase(className)) {
-      return new TypeToken<Vouchers>(){}.getType();
+    if ("VoucherParam".equalsIgnoreCase(className)) {
+      return new TypeToken<VoucherParam>(){}.getType();
     }
     
     return new TypeToken<Object>(){}.getType();

@@ -64,9 +64,11 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        Blacklist blacklist = new Blacklist(); // Blacklist | 
+        String costumerUuid = "costumerUuid_example"; // String | 
+        String myId = "myId_example"; // String | 
+        String myPw = "myPw_example"; // String | 
         try {
-            Blacklist result = apiInstance.addToBlacklist(blacklist);
+            Blacklist result = apiInstance.addToBlacklist(costumerUuid, myId, myPw);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#addToBlacklist");
@@ -79,7 +81,7 @@ public class DefaultApiExample {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://cmov1.herokuapp.com/api*
+All URIs are relative to *http://localhost:8080/api*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -107,11 +109,11 @@ Class | Method | HTTP request | Description
  - [Product](docs/Product.md)
  - [Products](docs/Products.md)
  - [Request](docs/Request.md)
- - [RequestLine](docs/RequestLine.md)
- - [RequestLines](docs/RequestLines.md)
- - [Requests](docs/Requests.md)
+ - [RequestPut](docs/RequestPut.md)
+ - [Requestline](docs/Requestline.md)
+ - [RequestlineParam](docs/RequestlineParam.md)
  - [Voucher](docs/Voucher.md)
- - [Vouchers](docs/Vouchers.md)
+ - [VoucherParam](docs/VoucherParam.md)
 
 
 ## Documentation for Authorization

@@ -8,6 +8,8 @@ Name | Type | Description | Notes
 **active** | **Boolean** |  |  [optional]
 **name** | **String** |  |  [optional]
 **unitprice** | **Double** | Unit price of product |  [optional]
+**createdat** | **String** |  |  [optional]
+**updatedat** | **String** |  |  [optional]
 
 
 

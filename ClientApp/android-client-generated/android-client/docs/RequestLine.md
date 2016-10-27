@@ -1,11 +1,12 @@
 
-# RequestLine
+# Requestline
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**product** | [**Product**](Product.md) |  | 
+**productid** | [**Product**](Product.md) |  | 
 **quantity** | **Integer** |  | 
+**unitprice** | **Float** |  | 
 
 
 

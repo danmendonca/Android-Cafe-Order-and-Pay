@@ -40,6 +40,10 @@ public class Product  {
   private String name = null;
   @SerializedName("unitprice")
   private Double unitprice = null;
+  @SerializedName("createdat")
+  private String createdat = null;
+  @SerializedName("updatedat")
+  private String updatedat = null;
 
   /**
    **/
@@ -82,6 +86,26 @@ public class Product  {
     this.unitprice = unitprice;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public String getCreatedat() {
+    return createdat;
+  }
+  public void setCreatedat(String createdat) {
+    this.createdat = createdat;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public String getUpdatedat() {
+    return updatedat;
+  }
+  public void setUpdatedat(String updatedat) {
+    this.updatedat = updatedat;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -95,7 +119,9 @@ public class Product  {
     return (id == null ? product.id == null : id.equals(product.id)) &&
         (active == null ? product.active == null : active.equals(product.active)) &&
         (name == null ? product.name == null : name.equals(product.name)) &&
-        (unitprice == null ? product.unitprice == null : unitprice.equals(product.unitprice));
+        (unitprice == null ? product.unitprice == null : unitprice.equals(product.unitprice)) &&
+        (createdat == null ? product.createdat == null : createdat.equals(product.createdat)) &&
+        (updatedat == null ? product.updatedat == null : updatedat.equals(product.updatedat));
   }
 
   @Override
@@ -105,6 +131,8 @@ public class Product  {
     result = 31 * result + (active == null ? 0: active.hashCode());
     result = 31 * result + (name == null ? 0: name.hashCode());
     result = 31 * result + (unitprice == null ? 0: unitprice.hashCode());
+    result = 31 * result + (createdat == null ? 0: createdat.hashCode());
+    result = 31 * result + (updatedat == null ? 0: updatedat.hashCode());
     return result;
   }
 
@@ -117,6 +145,8 @@ public class Product  {
     sb.append("  active: ").append(active).append("\n");
     sb.append("  name: ").append(name).append("\n");
     sb.append("  unitprice: ").append(unitprice).append("\n");
+    sb.append("  createdat: ").append(createdat).append("\n");
+    sb.append("  updatedat: ").append(updatedat).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

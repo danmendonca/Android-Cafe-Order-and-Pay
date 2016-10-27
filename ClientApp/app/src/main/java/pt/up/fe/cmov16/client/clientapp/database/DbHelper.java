@@ -9,12 +9,12 @@ import pt.up.fe.cmov16.client.clientapp.database.ProductContract.ProductEntry;
 /**
  * Database model
  */
-public class DbHelper extends SQLiteOpenHelper {
+class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "acme_cafe.db";
+    private static final int DATABASE_VERSION = 2;
+    private static final String DATABASE_NAME = "acme_cafe.db";
 
-    public DbHelper(Context context) {
+    DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -34,7 +34,9 @@ public class DbHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + ProductEntry.TABLE_NAME + " (" +
                     ProductEntry.COLUMN_NAME_ID + " INTEGER PRIMARY KEY," +
                     ProductEntry.COLUMN_NAME_NAME + TEXT_TYPE + "," +
-                    ProductEntry.COLUMN_NAME_UNITPRICE + TEXT_TYPE +
+                    ProductEntry.COLUMN_NAME_UNIT_PRICE + TEXT_TYPE + "," +
+                    ProductEntry.COLUMN_NAME_ACTIVE + TEXT_TYPE + "," +
+                    ProductEntry.COLUMN_NAME_UPDATED_AT + TEXT_TYPE +
                     " )";
 
     private static final String SQL_DELETE_PRODUCTS =

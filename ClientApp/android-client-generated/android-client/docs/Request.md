@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **id** | **Integer** |  |  [optional]
 **number** | **Integer** |  |  [optional]
 **vouchers** | [**List&lt;Voucher&gt;**](Voucher.md) |  |  [optional]
-**requestlines** | [**List&lt;RequestLine&gt;**](RequestLine.md) |  |  [optional]
+**requestlines** | [**List&lt;Requestline&gt;**](Requestline.md) |  |  [optional]
 
 
 
