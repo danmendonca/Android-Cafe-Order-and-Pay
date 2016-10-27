@@ -198,11 +198,16 @@ paths:
       description: Adds a costumer to the blacklist
       operationId: addToBlacklist
       parameters:
-        - name: blacklist
-          in: body
+        - name: costumerUuid
+          in: formData
           required: true
-          schema:
-            $ref: '#/definitions/Blacklist'
+          type: string
+        - name: whoIs
+          in: formData
+          type: string
+        - name: whoIsPw
+          in: formData
+          type: string
       responses:
         "200":
           description: Success

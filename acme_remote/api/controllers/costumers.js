@@ -15,7 +15,9 @@ function getCostumers(req, res) {
     Costumer.findAll({
         attributes: ["username", "uuid"]
     }).then(function (costumers) {
-        res.json(costumers);
+        var ctmrs = {};
+        ctmrs['costumers'] = costumers;
+        res.json(ctmrs);
     });
 }
 

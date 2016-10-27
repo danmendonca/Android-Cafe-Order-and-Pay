@@ -41,9 +41,9 @@ function getCostumerRequests(req, res) {
                         }
                     }).then(function (unusedVouchers) {
                         var Consult = {};
-                        Consult.requests = requests;
+                        Consult['requests'] = requests;
                         if (unusedVouchers && unusedVouchers.length > 0)
-                            Consult.vouchers = unusedVouchers;
+                            Consult['vouchers'] = unusedVouchers;
                         res.json(Consult);
                         //console.log(JSON.stringify(Consult));
                     })
