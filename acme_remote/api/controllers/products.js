@@ -8,6 +8,14 @@ module.exports = {
     createProduct: createProduct
 };
 
+
+/**
+ * returns an array of products in json format, with all products if no lastUpdatedAt param with date is given,
+ * or all modified/added products since that date
+ * 
+ * @param {any} req
+ * @param {any} res
+ */
 function getProducts(req, res) {
     var lastUpdatedAt = req.swagger.params.lastUpdatedAt.value;
     if(!lastUpdatedAt){
@@ -26,10 +34,19 @@ function getProducts(req, res) {
     });
 }
 
+
+/**
+ * 
+ * 
+ * @param {any} req
+ * @param {any} res
+ */
 function createProduct(req, res) {
-    var uprice = req.swagger.params.unitprice.value;
-    var name = req.swagger.params.name.value;
-    var active =req.swagger.params.active.value;   
+
+    var productParam = req.swagger.params.productParam.value;
+    var uprice = productParam.unitprice
+    var name = productParam.name;
+    var active = productParam.active;   
     if (!name){
         res.status(403);
         throw "invalid product name";

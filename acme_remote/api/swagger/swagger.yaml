@@ -267,11 +267,6 @@ definitions:
       unitprice:
         type: "number"
         format: "double"
-        description: "Unit price of product"
-      createdat:
-        type: "string"
-      updatedat:
-        type: "string"
   ProductParam:
     required:
       - name
