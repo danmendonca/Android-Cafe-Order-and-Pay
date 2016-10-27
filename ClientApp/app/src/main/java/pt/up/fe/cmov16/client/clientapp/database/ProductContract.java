@@ -2,6 +2,7 @@ package pt.up.fe.cmov16.client.clientapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
@@ -10,6 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import io.swagger.client.model.Product;
+import pt.up.fe.cmov16.client.clientapp.R;
 
 /**
  * Product model and related db operations
@@ -29,15 +31,11 @@ public final class ProductContract {
         static final String COLUMN_NAME_NAME = "name";
         static final String COLUMN_NAME_UNIT_PRICE = "unitPrice";
         static final String COLUMN_NAME_ACTIVE = "active";
-        static final String COLUMN_NAME_UPDATED_AT = "updatedAt";
     }
 
-    private static final String SELECT_LAST_UPDATED_PRODUCT =
-            "SELECT " + ProductEntry.COLUMN_NAME_UPDATED_AT + " FROM " + ProductEntry.TABLE_NAME
-                    + " order by " + ProductEntry.COLUMN_NAME_UPDATED_AT + " desc";
-
-    private static final String SELECT_ALL_PRODUCTS =
+    private static final String SELECT_ALL_ACTIVE_PRODUCTS =
             "SELECT * FROM " + ProductEntry.TABLE_NAME
+                    + " where " + ProductEntry.COLUMN_NAME_ACTIVE + "='true'"
                     + " order by " + ProductEntry.COLUMN_NAME_NAME + " asc";
 
     //private static final String DELETE_ALL_PRODUCTS = "DELETE FROM " + ProductEntry.TABLE_NAME;
@@ -65,7 +63,6 @@ public final class ProductContract {
             values.put(ProductEntry.COLUMN_NAME_NAME, product.getName());
             values.put(ProductEntry.COLUMN_NAME_ACTIVE, product.getActive());
             values.put(ProductEntry.COLUMN_NAME_UNIT_PRICE, product.getUnitprice());
-            values.put(ProductEntry.COLUMN_NAME_UPDATED_AT, product.getUpdatedat());
 
             if (c.getCount() > 0) {
                 //UPDATE
@@ -100,7 +97,7 @@ public final class ProductContract {
         if (db == null)
             return products;
 
-        Cursor cursor = db.rawQuery(ProductContract.SELECT_ALL_PRODUCTS, null);
+        Cursor cursor = db.rawQuery(ProductContract.SELECT_ALL_ACTIVE_PRODUCTS, null);
         // if Cursor is contains results
         if (cursor != null) {
             // move cursor to first row
@@ -125,26 +122,17 @@ public final class ProductContract {
         db.close();
         return products;
     }
-
+    public void saveUpdatedProductDate(Context context,String date) {
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("lastUpdatedProductDate", date);
+        editor.apply();
+    }
     public String lastUpdatedProductDate(Context context) {
-        DbHelper mDbHelper = new DbHelper(context);
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery(SELECT_LAST_UPDATED_PRODUCT, null);
-        if (cursor == null) {
-            db.close();
-            return null;
-        }
-
-        if (cursor.getCount() == 0) {
-            db.close();
-            return null;
-        }
-        String date;
-        cursor.moveToFirst();
-        date = cursor.getString(cursor.getColumnIndex(ProductEntry.COLUMN_NAME_UPDATED_AT));
-        cursor.close();
-        db.close();
-        return date;
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        return sharedPref.getString("lastUpdatedProductDate", "");
     }
 
     private void LogError(String msg) {

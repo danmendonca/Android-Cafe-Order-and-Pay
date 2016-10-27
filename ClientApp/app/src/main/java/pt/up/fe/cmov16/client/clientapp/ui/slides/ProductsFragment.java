@@ -1,5 +1,6 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.swagger.client.api.DefaultApi;
@@ -58,19 +60,27 @@ public class ProductsFragment extends NamedFragment {
         String lastDate = productContract.lastUpdatedProductDate(getContext());
 
         DefaultApi api = new DefaultApi();
-        if (lastDate == null || lastDate.equals("null") || lastDate.isEmpty()){
+        final Context context = getContext();
+        if (lastDate == null || lastDate.isEmpty()){
             api.getProducts(new Response.Listener<Products>() {
                 @Override
                 public void onResponse(Products response) {
                     updateListItems(response.getProducts());
-                    productContract.updateProducts(getContext(),PRODUCTS);
+                    productContract.updateProducts(context,PRODUCTS);
+                    Calendar c = Calendar.getInstance();
+                    String date = String.valueOf(c.get(Calendar.YEAR)) + "-" +
+                            c.get(Calendar.MONTH) +
+                            "-" +
+                            c.get(Calendar.DAY_OF_MONTH) +
+                            "T00:00:00.000Z";
+                    productContract.saveUpdatedProductDate(context, date);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(getContext(),
                             "Connection failed, loading local products", Toast.LENGTH_SHORT).show();
-                    updateListItems(productContract.loadProducts(getContext()));
+                    updateListItems(productContract.loadProducts(context));
                 }
             });
         }else {
