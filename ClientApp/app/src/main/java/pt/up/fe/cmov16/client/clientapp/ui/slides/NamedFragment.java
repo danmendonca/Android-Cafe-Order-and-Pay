@@ -9,4 +9,6 @@ public class NamedFragment extends Fragment {
     public String toString(){
         return (tittle!=null)? tittle : "NoTittleDefined";
     }
+
+    public void focusObtained(){}
 }

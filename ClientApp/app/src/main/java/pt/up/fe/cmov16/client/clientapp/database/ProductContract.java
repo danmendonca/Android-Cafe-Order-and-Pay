@@ -35,7 +35,7 @@ public final class ProductContract {
 
     private static final String SELECT_ALL_ACTIVE_PRODUCTS =
             "SELECT * FROM " + ProductEntry.TABLE_NAME
-                    + " where " + ProductEntry.COLUMN_NAME_ACTIVE + "='true'"
+                    + " where " + ProductEntry.COLUMN_NAME_ACTIVE + " = 1"
                     + " order by " + ProductEntry.COLUMN_NAME_NAME + " asc";
 
     //private static final String DELETE_ALL_PRODUCTS = "DELETE FROM " + ProductEntry.TABLE_NAME;

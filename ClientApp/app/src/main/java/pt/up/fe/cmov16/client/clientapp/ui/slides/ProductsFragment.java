@@ -1,10 +1,10 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +55,11 @@ public class ProductsFragment extends NamedFragment {
         return rootView;
     }
 
+    @Override
+    public void focusObtained(){
+        loadProducts();
+    }
+
     private void loadProducts() {
         final ProductContract productContract = new ProductContract();
         String lastDate = productContract.lastUpdatedProductDate(getContext());
@@ -85,6 +90,8 @@ public class ProductsFragment extends NamedFragment {
             });
         }else {
             //TODO pedir produtos a partir desta data
+            updateListItems(productContract.loadProducts(context));
+            Log.e("prods","update com base na data: "+lastDate);
         }
     }
 

@@ -14,13 +14,14 @@ import android.widget.TextView;
 
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.HistoricFragment;
+import pt.up.fe.cmov16.client.clientapp.ui.slides.NamedFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.ProductsFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.VouchersFragment;
 
 public class SlideActivity extends FragmentActivity {
 
     private ViewPager mPager;
-    private Fragment[] fragments;
+    private NamedFragment[] fragments;
     private TextView tittle;
 
     @Override
@@ -28,7 +29,7 @@ public class SlideActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide);
 
-        fragments = new Fragment[]{
+        fragments = new NamedFragment[]{
                 ProductsFragment.newInstance(0),
                 HistoricFragment.newInstance(1),
                 VouchersFragment.newInstance(2)
@@ -37,6 +38,7 @@ public class SlideActivity extends FragmentActivity {
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        mPager.setOffscreenPageLimit(3);
 
         //The pager adapter, which provides the pages to the view pager widget.
         ScreenSlidePagerAdapter mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
@@ -51,6 +53,7 @@ public class SlideActivity extends FragmentActivity {
                 //change tittle when page change
                 tittle.setText(fragments[position].toString());
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true, true);
+                fragments[position].focusObtained();
             }
 
             @Override
