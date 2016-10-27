@@ -3,12 +3,13 @@ info:
   version: "0.0.1"
   title: Acme Cafe App
 # during dev, should point to your local machine
-host: cmov1.herokuapp.com
+host: localhost:8080
 # basePath prefixes all resource paths 
 basePath: /api
 # 
 schemes:
   # tip: remove http to make production-grade
+  - http
   - https
 # format of bodies a client can send (Content-Type)
 consumes:
@@ -59,11 +60,26 @@ paths:
       description: Creation of new user
       operationId: createUser
       parameters:
-        - name: costumer
-          in: body
+        - name: name
+          in: formData
           required: true
-          schema:
-            $ref: '#/definitions/Costumer'
+          type: string
+        - name: username
+          in: formData
+          required: true
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
+        - name: creditcardnumber
+          in: formData
+          required: true
+          type: string
+        - name: creditcarddate
+          in: formData
+          required: true
+          type: string
       responses:
         "200":
           description: Success
@@ -77,11 +93,14 @@ paths:
       description: Login
       operationId: logMe
       parameters:
-        - name: costumer
-          in: body
+        - name: username
+          in: formData
           required: true
-          schema:
-            $ref: '#/definitions/Costumer'
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
       responses:
         "200":
           description: Success
