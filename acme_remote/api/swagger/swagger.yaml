@@ -97,6 +97,10 @@ paths:
     get:
       description: Returns an array of products
       operationId: getProducts
+      parameters:
+        - name: lastUpdatedAt
+          in: query
+          type: string
       responses:
         "200":
           description: Success
@@ -110,7 +114,7 @@ paths:
       description: Creates a product
       operationId: createProduct
       parameters:
-        - name: product
+        - name: productParam
           in: body
           schema:
             $ref: '#/definitions/ProductParam'

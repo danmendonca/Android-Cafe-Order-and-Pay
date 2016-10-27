@@ -9,9 +9,15 @@ module.exports = {
 };
 
 function getProducts(req, res) {
+    var lastUpdatedAt = req.swagger.params.lastUpdatedAt.value;
+    if(!lastUpdatedAt){
+        lastUpdatedAt = new Date(1900, 1);
+    }
     Product.findAll({
         where: {
-            active: true
+            updatedAt: {
+                $gt: lastUpdatedAt
+            }
         }
     }).then(function (values) {
     	var prods = {};

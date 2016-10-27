@@ -93,7 +93,8 @@ sequelize
         sequelize.models.product.create({
           active: false,
           name: 'Francesinha',
-          unitprice: 10.0
+          unitprice: 10.0,
+          updatedAt: new Date(1899, 1, 1)
         }).then(() => { });
       })
     }
