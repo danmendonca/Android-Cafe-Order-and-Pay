@@ -78,7 +78,7 @@ paths:
       description: Login
       operationId: logMe
       parameters:
-        - name: login
+        - name: loginParam
           in: body
           required: true
           schema:
@@ -216,10 +216,10 @@ definitions:
         type: string
   LoginParam:
     required:
-      - uuid
+      - username
       - password
     properties:
-      uuid:
+      username:
         type: string
       password:
         type: string

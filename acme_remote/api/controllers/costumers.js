@@ -46,12 +46,11 @@ function createUser(req, res) {
 }
 
 function logMe(req, res) {
-    var uname = req.swagger.params.username.value;
-    var pw = req.swagger.params.password.value;
+    var login = req.swagger.params.loginParam.value;
     Costumer.findOne({
         where: {
-            username: uname,
-            password: pw
+            username: login.username,
+            password: login.password
         }
     }).then((validC) => {
         if (validC)
