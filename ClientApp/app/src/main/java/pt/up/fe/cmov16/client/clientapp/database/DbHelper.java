@@ -35,7 +35,7 @@ class DbHelper extends SQLiteOpenHelper {
                     ProductEntry.COLUMN_NAME_ID + " INTEGER PRIMARY KEY," +
                     ProductEntry.COLUMN_NAME_NAME + TEXT_TYPE + "," +
                     ProductEntry.COLUMN_NAME_UNIT_PRICE + TEXT_TYPE + "," +
-                    ProductEntry.COLUMN_NAME_ACTIVE + TEXT_TYPE + 
+                    ProductEntry.COLUMN_NAME_ACTIVE + TEXT_TYPE +
                     " )";
 
     private static final String SQL_DELETE_PRODUCTS =
