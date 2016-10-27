@@ -68,5 +68,6 @@
 /ClientApp/ehthumbs.db
 /ClientApp/Thumbs.db
 /acme_remote/node_modules/
-/acme_remote/config
+/acme_remote/config/config.json
+acme_remote/config/config.json
 AcmeRemote/node_modules/
