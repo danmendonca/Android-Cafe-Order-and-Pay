@@ -1,0 +1,35 @@
+{
+  "production": {
+    "username": "fjssxgprkgobwy",
+    "password": "yEv9I1sFiwWR9RCmSqf93Oh5SX",
+    "database": "d7dm7i0kodglrk",
+    "host": "ec2-54-246-89-122.eu-west-1.compute.amazonaws.com",
+    "dialect": "postgres",
+    "port":"5432",
+    "dialectOptions": {
+      "ssl": true
+    }
+  },
+  "test": {
+    "username": "username",
+    "password": "password",
+    "database": "AcmeCafeDb",
+    "host": "ip.address.com",
+    "dialect": "postgres",
+    "port":"5432",
+    "dialectOptions": {
+      "ssl": false
+    }
+  },
+  "development": {
+    "username": "fjssxgprkgobwy",
+    "password": "yEv9I1sFiwWR9RCmSqf93Oh5SX",
+    "database": "d7dm7i0kodglrk",
+    "host": "ec2-54-246-89-122.eu-west-1.compute.amazonaws.com",
+    "dialect": "postgres",
+    "port":"5432",
+    "dialectOptions": {
+      "ssl": true
+    }
+  }
+}
