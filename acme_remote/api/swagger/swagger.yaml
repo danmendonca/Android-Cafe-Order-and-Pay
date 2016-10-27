@@ -128,11 +128,23 @@ paths:
       description: Creates a product
       operationId: createProduct
       parameters:
-        - name: product
-          in: body
+        - name: myId
+          in: formData
+          type: string
+        - name: myPw
+          in: formData
+          type: string
+        - name: name
+          in: formData
           required: true
-          schema:
-            $ref: '#/definitions/Product'
+          type: string
+        - name: unitprice
+          in: formData
+          type: number
+          format: float
+        - name: active
+          in: formData
+          type: boolean
       responses:
         "200":
           description: Success
@@ -148,11 +160,14 @@ paths:
       description: Returns a request collection of a costumer given its uuid and pin
       operationId: getCostumerRequests
       parameters:
-        - name: costumer
-          in: body
+        - name: costumerUuid
+          in: formData
           required: true
-          schema:
-            $ref: '#/definitions/Costumer'
+          type: string
+        - name: pin
+          in: formData
+          required: true
+          type: string
       responses:
         "200":
           description: Success
@@ -170,7 +185,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/Request'
+            $ref: '#/definitions/RequestPut'
       responses:
         "200":
           description: Success
@@ -202,10 +217,10 @@ paths:
           in: formData
           required: true
           type: string
-        - name: whoIs
+        - name: myId
           in: formData
           type: string
-        - name: whoIsPw
+        - name: myPw
           in: formData
           type: string
       responses:
@@ -252,17 +267,32 @@ definitions:
         type: "number"
         format: "double"
         description: "Unit price of product"
-  RequestLine:
+  Requestline:
     type: object
     required:
-      - product
+      - productid
       - quantity
+      - unitprice
     properties:
-      product:
+      productid:
           $ref: '#/definitions/Product'
       quantity:
         type: integer
         format: int32
+      unitprice:
+        type: number
+        format: float
+  RequestlineParam:
+    properties:
+      productId:
+        type: integer
+        format: int32
+      quantity:
+        type: integer
+        format: int32
+      unitprice:
+        type: number
+        format: float
   Voucher:
     type: object
     properties:
@@ -284,6 +314,13 @@ definitions:
       number:
         type: integer
         format: int32
+  VoucherParam:
+    properties:
+      id:
+        type: integer
+        format: int32
+      key:
+        type: string
   Request:
     type: object
     properties:
@@ -304,7 +341,7 @@ definitions:
       requestlines:
         type: array
         items:
-          $ref: '#/definitions/RequestLine'
+          $ref: '#/definitions/Requestline'
   Blacklist:
     type: object
     required:
@@ -331,30 +368,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Product'
-  RequestLines:
-    required:
-      - requestlines
-    properties:
-      requestlines:
-        type: array
-        items:
-          $ref: '#/definitions/RequestLine'
-  Vouchers:
-    required:
-      - vouchers
-    properties:
-      vouchers:
-        type: array
-        items:
-          $ref: '#/definitions/Voucher'
-  Requests:
-    required:
-      - requests
-    properties:
-      requests:
-        type: array
-        items:
-          $ref: '#/definitions/Request'
   Blacklists:
     properties:
       blacklists:
@@ -371,6 +384,23 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Voucher'
+  RequestPut:
+    required:
+      - costumerUuid
+      - pin
+    properties:
+      costumerUuid:
+        type: string
+      pin:
+        type: string
+      requestlines:
+        type: array
+        items:
+          $ref: '#/definitions/RequestlineParam'
+      requestvouchers:
+        type: array
+        items:
+          $ref: '#/definitions/VoucherParam'
   HelloWorldResponse:
     required:
       - message
