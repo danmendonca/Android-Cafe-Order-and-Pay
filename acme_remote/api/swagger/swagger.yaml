@@ -290,9 +290,6 @@ definitions:
       quantity:
         type: integer
         format: int32
-      unitprice:
-        type: number
-        format: float
   Voucher:
     type: object
     properties:

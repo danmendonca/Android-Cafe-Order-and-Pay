@@ -6,6 +6,7 @@ var Costumer = models.costumer;
 var Voucher = models.voucher;
 var Request = models.request;
 var RequestLine = models.requestline;
+var Product = models.product;
 var BlackList = models.blacklist;
 
 var voucherType3Price = 100;
@@ -94,18 +95,7 @@ function createRequest(req, res) {
                     }
                 })
                     .then(function (cRequestHistory) { //get lines from old requests
-                        var oldLinesPromises = cRequestHistory.map(function (oldR) {
-                            return RequestLine.findAll({
-                                where: {
-                                    requestId: oldR.id
-                                }
-                            }).then(function (oldRLines) {
-                                for (var i = 0; i < oldRLines.length; i++) {
-                                    oldLines.push(oldRLines[i]);
-                                }
-                            })
-                        });
-
+                        var oldLinesPromises = getOldRequestLines(cRequestHistory, oldLines);
                         Promise.all(oldLinesPromises).then(function () {
                             //create the new request
                             Request.create({
@@ -113,90 +103,44 @@ function createRequest(req, res) {
                                 number: 0
                             })
                                 .then(function (request) {
-                                    var voucherPromises = reqVouchers.map(function (rvoucher) {
-                                        return Voucher.findOne({
+                                    var voucherPromises = useVouchers(request, reqVouchers);
+
+                                    Promise.all(voucherPromises).then(function () {
+                                        //stuff?
+                                        answered = true;
+                                        request.dataValues.pin = cPin;
+                                        console.log(JSON.stringify(request));
+
+                                        BlackList.count({
                                             where: {
-                                                costumerUuid: cUuid,
-                                                isused: false,
-                                                id: rvoucher.id
+                                                costumerUuid: request.costumerUuid
                                             }
-                                        }).then(function (validVoucher) {
-                                            if (validVoucher) {
-                                                validVoucher.update({
-                                                    isused: true,
-                                                    requestId: request.id
-                                                })
+                                        }).then((isListed) => {
+                                            if (isListed == 0) {
+                                                var newLinesPromises = makeRequestLine(request, rls, rlines);
+                                                Promise.all(newLinesPromises).then(function (param) {
+                                                    voucherCreation(cUuid, oldLines, rlines);
+                                                    res.json(request);
+                                                });
+                                            }
+                                            else {
+                                                ErrorResponse.message = "BlackList Costumer";
+                                                res.statusCode = 403;
+                                                res.json(ErrorResponse);
                                             }
                                         })
-                                    }); //end voucherPromises
-
-                                    var newLinesPromises = rls.map(function (rl) {
-                                        return RequestLine.create({
-                                            quantity: rl.quantity,
-                                            unitprice: rl.unitprice,
-                                            productId: rl.productId,
-                                            requestId: request.id
-                                        })
-                                            .then(function (rl_) {
-                                                rlines.push(rl_);
+                                            .catch(() => {
+                                                ErrorResponse.message = "BlackList Costumer";
+                                                res.statusCode = 403;
+                                                res.json(ErrorResponse);
                                             })
-                                    }); //end newLinesPromises
-
-                                    Promise.all(newLinesPromises).then(function () {
-                                        var totalCost = rls.reduce(function (acc, cur) {
-                                            return acc + cur.quantity * cur.unitprice;
-                                        }, 0);
-                                        console.log("totalCost: " + totalCost.toString());
-
-                                        if (totalCost > 20) {
-                                            //new voucher
-                                            var vKey = Math.random().toString();
-                                            var vType = getRandomizer(1, 2);
-                                            //var byteA = getInt32Bytes(vType);
-                                            Voucher.create({
-                                                costumerUuid: cUuid,
-                                                type: vType,
-                                                key: vKey,
-                                                isused: false,
-                                                number: 0
-                                            }).then(function (result) { });
-                                        }
-
-                                        var spentBefore = oldLines.reduce(function (acc, cur) {
-                                            return acc + cur.quantity * cur.unitprice;
-                                        }, 0);
-                                        var spentSinceLast100 = spentBefore % voucherType3Price;
-
-                                        while (spentSinceLast100 >= voucherType3Price) {
-                                            spentSinceLast100 = spentSinceLast100 % voucherType3Price;
-                                        }
-
-                                        spentSinceLast100 += totalCost;
-                                        if (spentSinceLast100 > voucherType3Price) {
-                                            var vKey = Math.random().toString();
-                                            Voucher.create({
-                                                costumerUuid: cUuid,
-                                                type: 3,
-                                                key: vKey,
-                                                isused: false,
-                                                number: 0
-                                            })
-                                        }
-
-                                        Promise.all(voucherPromises).then(function () {
-                                            //stuff?
-                                            answered = true;
-                                            request.dataValues.pin = cPin;
-                                            console.log(JSON.stringify(request));
-                                            res.json(request);
-                                        })
-                                    })
+                                    });
                                 });
-                        })
+                        });
                     });
             }
             else {
-                var ErrorResponse = {};
+                ErrorResponse = {};
                 ErrorResponse.message = "Invalid User";
                 res.statusCode = 403;
                 res.json(ErrorResponse);
@@ -212,43 +156,168 @@ function createRequest(req, res) {
     }
 }
 
-function getInt32Bytes(x) {
-    var bytes = [];
-    var i = 4;
-    do {
-        bytes[--i] = x & (255);
-        x = x >> 8;
-    } while (i)
-    return bytes;
-}
-
+/**
+ * generates a number between @bottom and @top
+ * 
+ * @param {number} bottom - inclusive integer that is the lowest possible
+ * @param {number} top - inclusive integer that is the highest possible
+ * @returns an integer
+ */
 function getRandomizer(bottom, top) {
     return Math.floor(Math.random() * (1 + top - bottom)) + bottom;
 }
 
-function costumerPinValidation(costumerUuid, pin, isValid) {
-    return Costumer.count({
-        where: {
-            uuid: costumerUuid,
-            pin: pin
-        }
-    }).then((c) => {
-        if (c == 1)
-            isValid = true;
-        else
-            isValid = false;
-    })
+
+/**
+ * 
+ * 
+ * @param {any} oldRequests
+ * @param {any} oldLines
+ * @returns
+ */
+function getOldRequestLines(oldRequests, oldLines) {
+    return oldRequests.map(function (oldR) {
+        return new Promise(function (resolve, reject) {
+            RequestLine.findAll({
+                where: {
+                    requestId: oldR.id
+                }
+            }).then(function (rls) {
+                for (var i = 0; i < rls.length; i++) {
+                    oldLines.push(rls[i]);
+                }
+                resolve(rls);
+            })
+        });
+    });
 }
 
-function costumerPwValidation(costumerUuid, pw) {
-    Costumer.count({
-        where: {
-            uuid: costumerUuid,
-            password: pw
-        }
-    }).then((c) => {
-        if (c == 1)
-            return true;
-        return false;
+/**
+ * adds in the db, the request lines of a new request
+ * 
+ * @param {any} request - a request to associate the request lines
+ * @param {any} rls - an array of request lines to add
+ * @param {any} addedLines - an array to store the promises
+ * @returns [Promise]
+ */
+function makeRequestLine(request, rls, addedLines) {
+    return rls.map(function (rl) {
+
+        return new Promise(function (resolve, reject) {
+
+            Product.findOne({
+                where: {
+                    id: rl.productId,
+                    active: true
+                }
+            })
+                .then(function (value) {
+                    if (value) {
+                        var prdct = value.dataValues;
+                        RequestLine.create({
+                            quantity: rl.quantity,
+                            unitprice: prdct.unitprice,
+                            productId: prdct.id,
+                            requestId: request.id
+                        })
+                            .then((added) => {
+                                addedLines.push(added);
+                                resolve(added);
+                            })
+                    }
+                    else
+                        reject(value);
+                });
+        });
+    });
+}
+
+function useVouchers(request, rvs) {
+    return rvs.map(function (rvoucher) {
+        return new Promise(function (resolve, reject) {
+            Voucher.findOne({
+                where: {
+                    costumerUuid: request.costumerUuid,
+                    isused: false,
+                    id: rvoucher.id
+                }
+            }).then(function (validVoucher) {
+                if (validVoucher) {
+                    validVoucher.update({
+                        isused: true,
+                        requestId: request.id
+                    }).then((updated) => {
+                        resolve(updated);
+                    })
+                }
+                else {
+                    //blacklist
+                    BlackList.create({
+                        costumerUuid: request.costumerUuid
+                    }).then(function (blacklist) {
+                        reject(blacklist);
+                        //throw "Invalid Voucher usage causes ban";
+                    })
+                }
+            })
+        })
+    }); //end voucherPromises
+}
+
+/**
+ * creates and add the vouchers of a new request, if there's need to
+ * 
+ * @param {any} cUuid - costumer Uuid
+ * @param {any} oldLines - request lines from older requests
+ * @param {any} newLines - the lines of the recent added request
+ */
+function voucherCreation(cUuid, oldLines, newLines) {
+    var totalCost = newLines.reduce(function (acc, cur) {
+        return acc + cur.quantity * cur.unitprice;
+    }, 0);
+
+    //random voucher creation
+    if (totalCost > 20) createRandomVoucher(cUuid);
+
+    var spentBefore = oldLines.reduce(function (acc, cur) {
+        return acc + cur.quantity * cur.unitprice;
+    }, 0);
+    var spentSinceLast100 = spentBefore % voucherType3Price;
+
+    if (spentSinceLast100 > voucherType3Price) createDiscountVoucher(cUuid);
+}
+
+
+/**
+ * creates a voucher of type 1 or 2
+ * 
+ * @param {any} cUuid - costumer uuid to associate the voucher with
+ */
+function createRandomVoucher(cUuid) {
+    var vKey = Math.random().toString();
+    var vType = getRandomizer(1, 2);
+    //var byteA = getInt32Bytes(vType);
+    Voucher.create({
+        costumerUuid: cUuid,
+        type: vType,
+        key: vKey,
+        isused: false,
+        number: 0
+    });
+}
+
+/**
+ * Creates a voucher of type 3 and associates it with a costumer
+ * 
+ * @param {any} cUuid - costumer uuid to associate the voucher with
+ */
+function createDiscountVoucher(cUuid) {
+    var vKey = Math.random().toString();
+    Voucher.create({
+        costumerUuid: cUuid,
+        type: 3,
+        key: vKey,
+        isused: false,
+        number: 0
     })
 }
