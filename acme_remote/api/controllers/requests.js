@@ -16,8 +16,8 @@ module.exports = {
 };
 
 function getCostumerRequests(req, res) {
-    var cUuid = req.swagger.params.costumer.value.uuid;
-    var cPin = req.swagger.params.costumer.value.pin;
+    var cUuid = req.swagger.params.costumerUuid.value;
+    var cPin = req.swagger.params.pin.value;
     if (cUuid && cPin) {
         var isValid = false;
         Costumer.count({
@@ -41,9 +41,9 @@ function getCostumerRequests(req, res) {
                         }
                     }).then(function (unusedVouchers) {
                         var Consult = {};
-                        Consult.requests = requests;
+                        Consult['requests'] = requests;
                         if (unusedVouchers && unusedVouchers.length > 0)
-                            Consult.vouchers = unusedVouchers;
+                            Consult['vouchers'] = unusedVouchers;
                         res.json(Consult);
                         //console.log(JSON.stringify(Consult));
                     })
@@ -68,9 +68,9 @@ function getCostumerRequests(req, res) {
 function createRequest(req, res) {
     var cUuid = req.swagger.params.request.value.costumerUuid;
     var cPin = req.swagger.params.request.value.pin;
-    var reqVouchers = req.swagger.params.request.value.vouchers;
+    var reqVouchers = req.swagger.params.request.value.requestvouchers;
     var rls = req.swagger.params.request.value.requestlines;
-    var ErrorResponse;
+    var ErrorResponse = {};
     var answered = false;
 
     //TODO costumer validation
@@ -133,8 +133,8 @@ function createRequest(req, res) {
                                     var newLinesPromises = rls.map(function (rl) {
                                         return RequestLine.create({
                                             quantity: rl.quantity,
-                                            unitprice: rl.product.unitprice,
-                                            productId: rl.product.id,
+                                            unitprice: rl.unitprice,
+                                            productId: rl.productId,
                                             requestId: request.id
                                         })
                                             .then(function (rl_) {
@@ -144,7 +144,7 @@ function createRequest(req, res) {
 
                                     Promise.all(newLinesPromises).then(function () {
                                         var totalCost = rls.reduce(function (acc, cur) {
-                                            return acc + cur.quantity * cur.product.unitprice;
+                                            return acc + cur.quantity * cur.unitprice;
                                         }, 0);
                                         console.log("totalCost: " + totalCost.toString());
 

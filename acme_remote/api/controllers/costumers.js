@@ -15,7 +15,9 @@ function getCostumers(req, res) {
     Costumer.findAll({
         attributes: ["username", "uuid"]
     }).then(function (costumers) {
-        res.json(costumers);
+        var ctmrs = {};
+        ctmrs['costumers'] = costumers;
+        res.json(ctmrs);
     });
 }
 
@@ -23,12 +25,12 @@ function createUser(req, res) {
     var generatedPin = Math.floor(1000 + Math.random() * 9000);
 
     Costumer.create({
-        name: req.swagger.params.costumer.value.name,
-        username: req.swagger.params.costumer.value.username,
-        password: req.swagger.params.costumer.value.password,
+        name: req.swagger.params.name.value,
+        username: req.swagger.params.username.value,
+        password: req.swagger.params.password.value,
         pin: generatedPin.toString(),
-        creditcardnumber: req.swagger.params.costumer.value.creditcardnumber,
-        creditcarddate: req.swagger.params.costumer.value.creditcarddate
+        creditcardnumber: req.swagger.params.creditcardnumber.value,
+        creditcarddate: req.swagger.params.creditcarddate.value
     }).then(function (value) {
         //res.setHeader('Content-Type', 'application/json');
         //var jsonCostumer = JSON.stringify(value);
@@ -44,8 +46,8 @@ function createUser(req, res) {
 }
 
 function logMe(req, res) {
-    var uname = req.swagger.params.costumer.value.username;
-    var pw = req.swagger.params.costumer.value.password;
+    var uname = req.swagger.params.username.value;
+    var pw = req.swagger.params.password.value;
     Costumer.findOne({
         where: {
             username: uname,

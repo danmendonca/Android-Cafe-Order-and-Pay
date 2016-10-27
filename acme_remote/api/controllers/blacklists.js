@@ -11,13 +11,15 @@ module.exports = {
 };
 
 function getBlacklisted(req, res) {
-    BlackList.findAll().then((blacklisted) => {
+    BlackList.findAll().then((values) => {
+        var blacklisted = {};
+        blacklisted['blacklisted'] = values;
         res.json(blacklisted);
     });
 }
 
 function addToBlacklist(req, res) {
-    var cUuid = req.swagger.params.blacklist.value.costumerUuid;
+    var cUuid = req.swagger.params.costumerUuid.value;
     BlackList.count({
         where: {
             costumerUuid: cUuid
