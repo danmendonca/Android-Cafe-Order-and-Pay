@@ -23,14 +23,14 @@ function getCostumers(req, res) {
 
 function createUser(req, res) {
     var generatedPin = Math.floor(1000 + Math.random() * 9000);
-
+    var myCostumer = req.swagger.params.registerParam.value; 
     Costumer.create({
-        name: req.swagger.params.name.value,
-        username: req.swagger.params.username.value,
-        password: req.swagger.params.password.value,
+        name: myCostumer.name,
+        username: myCostumer.username,
+        password: myCostumer.password,
         pin: generatedPin.toString(),
-        creditcardnumber: req.swagger.params.creditcardnumber.value,
-        creditcarddate: req.swagger.params.creditcarddate.value
+        creditcardnumber: myCostumer.creditcardnumber,
+        creditcarddate: myCostumer.creditcarddate
     }).then(function (value) {
         //res.setHeader('Content-Type', 'application/json');
         //var jsonCostumer = JSON.stringify(value);
