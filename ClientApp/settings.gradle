@@ -1,0 +1,2 @@
+include ':app', ':android-client'
+project(':android-client').projectDir = new File('libs/android-client-generated/android-client')

@@ -1,0 +1,438 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Acme Cafe App
+# during dev, should point to your local machine
+host: localhost:8080
+# basePath prefixes all resource paths 
+basePath: /api
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /hello:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    get:
+      description: Returns 'Hello' to the caller
+      # used as the method name of the controller
+      operationId: hello
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /costumers:
+    x-swagger-router-controller: costumers
+    get:
+      description: Returns an array of users
+      operationId: getCostumers
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumers"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Creation of new user
+      operationId: createUser
+      parameters:
+        - name: registerParam
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RegisterParam'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Login
+      operationId: logMe
+      parameters:
+        - name: loginParam
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/LoginParam'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /products:
+    x-swagger-router-controller: products
+    get:
+      description: Returns an array of products
+      operationId: getProducts
+      parameters:
+        - name: lastUpdatedAt
+          in: query
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Products"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Creates a product
+      operationId: createProduct
+      parameters:
+        - name: productParam
+          in: body
+          schema:
+            $ref: '#/definitions/ProductParam'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /requests:
+    x-swagger-router-controller: requests
+    post:
+      description: Returns a request collection of a costumer given its uuid and pin
+      operationId: getCostumerRequests
+      parameters:
+        - name: pinLogin
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PinLoginParam'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Consult'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Creates a new request for a costumer
+      operationId: createRequest
+      parameters:
+        - name: request
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RequestPut'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Request'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /blacklists:
+    x-swagger-router-controller: blacklists
+    get:
+      description: Returns a collection
+      operationId: getBlacklisted
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Blacklists'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Adds a costumer to the blacklist
+      operationId: addToBlacklist
+      parameters:
+        - name: blacklist
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/BlacklistParam'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Blacklist'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  Costumer:
+    type: object
+    properties:
+      uuid:
+        type: string
+      username:
+        type: string
+      pin:
+        type: string
+      name:
+        type: string
+      creditcardnumber:
+        type: string
+      creditcarddate:
+        type: string
+      password:
+        type: string
+  LoginParam:
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  PinLoginParam:
+    required:
+      - uuid
+      - pin
+    properties:
+      uuid:
+        type: string
+      pin:
+        type: string
+  RegisterParam:
+    required:
+      - name
+      - username
+      - password
+      - creditcardnumber
+      - creditcarddate
+    properties:
+      username:
+        type: string
+      name:
+        type: string
+      creditcardnumber:
+        type: string
+      creditcarddate:
+        type: string
+      password:
+        type: string
+  Product:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      active:
+        type: "boolean"
+      name:
+        type: "string"
+      unitprice:
+        type: "number"
+        format: "double"
+  ProductParam:
+    required:
+      - name
+      - active
+      - unitprice
+    properties:
+      name:
+        type: string
+      active:
+        type: boolean
+      unitprice:
+        type: number
+        format: float
+      myUser:
+        type: string
+      myPass:
+        type: string
+  Requestline:
+    type: object
+    required:
+      - productid
+      - quantity
+      - unitprice
+    properties:
+      productid:
+          $ref: '#/definitions/Product'
+      quantity:
+        type: integer
+        format: int32
+      unitprice:
+        type: number
+        format: float
+  RequestlineParam:
+    properties:
+      productId:
+        type: integer
+        format: int32
+      quantity:
+        type: integer
+        format: int32
+  Voucher:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      type:
+        type: integer
+        format: int32
+      key:
+        type: string
+      costumerUuid:
+        type: string
+      requestId:
+        type: integer
+        format: int32
+      isused:
+        type: boolean
+      number:
+        type: integer
+        format: int32
+  VoucherParam:
+    properties:
+      id:
+        type: integer
+        format: int32
+      key:
+        type: string
+  Request:
+    type: object
+    properties:
+      costumerUuid:
+        type: string
+      pin:
+        type: string
+      id:
+        type: integer
+        format: int32
+      number:
+        type: integer
+        format: int32
+      vouchers:
+        type: array
+        items:
+          $ref: '#/definitions/Voucher'
+      requestlines:
+        type: array
+        items:
+          $ref: '#/definitions/Requestline'
+  Blacklist:
+    type: object
+    required:
+      - costumerUuid
+    properties:
+      costumerUuid:
+        type: string
+      id:
+        type: integer
+        format: int32
+  BlacklistParam:
+    required:
+      - costumerUuid
+    properties:
+      costumerUuid:
+        type: string
+      myUser:
+        type: string
+      myPass:
+        type: string
+  Costumers:
+    required:
+      - costumers
+    properties:
+      costumers:
+        type: array
+        items:
+          $ref: '#/definitions/Costumer'
+  Products:
+    required:
+      - products
+    properties:
+      products:
+        type: array
+        items:
+          $ref: '#/definitions/Product'
+  Blacklists:
+    properties:
+      blacklists:
+        type: array
+        items:
+          $ref: '#/definitions/Blacklist'
+  Consult:
+    properties:
+      requests:
+        type: array
+        items:
+          $ref: '#/definitions/Request'
+      vouchers:
+        type: array
+        items:
+          $ref: '#/definitions/Voucher'
+  RequestPut:
+    required:
+      - costumerUuid
+      - pin
+    properties:
+      costumerUuid:
+        type: string
+      pin:
+        type: string
+      requestlines:
+        type: array
+        items:
+          $ref: '#/definitions/RequestlineParam'
+      requestvouchers:
+        type: array
+        items:
+          $ref: '#/definitions/VoucherParam'
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
