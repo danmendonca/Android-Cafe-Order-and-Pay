@@ -3,7 +3,13 @@ var path = require('path');
 var Sequelize = require('sequelize');
 var db = {};
 var env = process.env.NODE_ENV || "development";
-var config = require(__dirname + '/../config/config.json')[env];
+var config;
+try {
+   config = require(__dirname + '/../config/config.json')[env];
+    // do stuff
+} catch (ex) {
+    config = require(__dirname + '/../config/serverConfig.json')[env];
+}
 
 // var sequelize = new Sequelize('postgres://user:password@localhost:5432/AcmeCafeDB');
 var sequelize = new Sequelize(config.database, config.username, config.password, config);
