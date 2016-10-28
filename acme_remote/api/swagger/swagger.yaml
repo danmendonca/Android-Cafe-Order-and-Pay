@@ -3,7 +3,7 @@ info:
   version: "0.0.1"
   title: Acme Cafe App
 # during dev, should point to your local machine
-host: localhost:3000
+host: localhost:8080
 # basePath prefixes all resource paths 
 basePath: /api
 #

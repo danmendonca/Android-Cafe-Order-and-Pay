@@ -139,20 +139,24 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                     Toast.makeText(MainActivity.this, "Insert credit card expiration date", Toast.LENGTH_SHORT).show();
                 } else {
                     String cardDate = "";
-                    String dateInput = dateTextView.getText().toString();
-                    cardDate += dateInput.split("/")[2];
-                    cardDate += "-";
-                    cardDate += dateInput.split("/")[1];
-                    cardDate += "-";
-                    cardDate += dateInput.split("/")[0];
-                    cardDate += "T23:59:59.000Z";
+                    // 01-01-2019
+                    String dateInput = dateTextView.getText().subSequence(6,10).toString() + "-";
+                    dateInput += dateTextView.getText().subSequence(3,5).toString() + "-";
+                    dateInput+= dateTextView.getText().subSequence(0,2).toString();
+                    dateInput = dateInput.replace('/', '-');
+//                    cardDate += dateInput.split("/")[2];
+//                    cardDate += "-";
+//                    cardDate += dateInput.split("/")[1];
+//                    cardDate += "-";
+//                    cardDate += dateInput.split("/")[0];
+//                    cardDate += "T23:59:59.000Z";
 
                     RegisterParam registerParam = new RegisterParam();
                     registerParam.setUsername(username);
                     registerParam.setName(name);
                     registerParam.setPassword(password);
                     registerParam.setCreditcardnumber(cardNum);
-                    registerParam.setCreditcarddate(cardDate);
+                    registerParam.setCreditcarddate(dateInput);
                     api.createUser(registerParam,
                             new Response.Listener<Costumer>() {
                                 @Override
