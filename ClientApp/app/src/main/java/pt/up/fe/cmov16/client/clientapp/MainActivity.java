@@ -17,10 +17,6 @@ import com.android.volley.VolleyError;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
-
-import io.swagger.client.ApiException;
 import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Costumer;

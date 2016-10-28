@@ -82,10 +82,10 @@ public class SlideActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         if (fragments[mPager.getCurrentItem()].getChildFragmentManager().getBackStackEntryCount() > 0) {
-            //se há fragmentos abertos dentro do framento atual, fechar esse primeiro
+            //closes any open fragment if there's one in the current
             fragments[mPager.getCurrentItem()].getChildFragmentManager().popBackStack();
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            //se há fragmentos abertos por cima do fragmento principal, fechar esse primeiro
+            //fragment if there is a fragment above the main, closes it
             getSupportFragmentManager().popBackStack();
         } else if (mPager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
@@ -123,7 +123,7 @@ public class SlideActivity extends FragmentActivity {
     }
 
     /**
-     * class responsavel pela animacao entre slides/screens do viewPager
+     * Animation handler between screens of viewPager
      */
     public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
         private static final float MIN_SCALE = 0.85f;

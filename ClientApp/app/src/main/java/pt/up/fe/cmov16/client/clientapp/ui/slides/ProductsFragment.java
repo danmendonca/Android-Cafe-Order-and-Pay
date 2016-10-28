@@ -13,10 +13,13 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import io.swagger.client.api.DefaultApi;
@@ -64,17 +67,32 @@ public class ProductsFragment extends NamedFragment {
 
     private void loadProducts() {
         DefaultApi api = new DefaultApi();
-        //todo date when it was last made a request
-        final String lastDate = new Date(0).toString();
+
+        java.util.Date dateNow = new java.util.Date();
+        Timestamp tsNow = new Timestamp(dateNow.getTime());
+        final String updatedAt = tsNow.toString().replace(' ', 'T');
+
+
+        //if updatedAt was saved before, the skip this step and use its value in lastDate
+        String lastUpdated = new String();
+        boolean stored = false;
+        if(stored){
+            //lastUpdated = sharedPreferences.lastUpdated;
+        }
+        else{
+            lastUpdated = getDefaultTimestamp();
+        }
+
+        final String finalLastUpdated = lastUpdated;
         final Context context = getContext();
         final ProductContract productContract = new ProductContract();
 
-        api.getProducts(new Date().toString(),
+        api.getProducts(finalLastUpdated,
                 new Response.Listener<Products>() {
                     @Override
                     public void onResponse(Products response) {
                         if (response.getProducts().size() > 0) {
-                            productContract.saveUpdatedProductDate(context, new Date().toString());
+                            productContract.saveUpdatedProductDate(context, updatedAt);
                             updateListItems(response.getProducts());
                             productContract.updateProducts(context, PRODUCTS);
                         }
@@ -83,11 +101,29 @@ public class ProductsFragment extends NamedFragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d("Get-Products", error.toString());
                         Toast.makeText(getContext(),
                                 "Connection failed, loading local products", Toast.LENGTH_SHORT).show();
                         updateListItems(productContract.loadProducts(context));
                     }
                 });
+    }
+
+    private String getDefaultTimestamp() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        java.util.Date date;
+        Timestamp ts;
+        try {
+            date = dateFormat.parse("1900/01/01");
+            long time = date.getTime();
+            ts = new Timestamp(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            ts = new Timestamp(0);
+        }
+
+
+        return ts.toString().replace(' ', 'T');
     }
 
     private void updateListItems(List<Product> products) {
