@@ -19,7 +19,8 @@ function getBlacklisted(req, res) {
 }
 
 function addToBlacklist(req, res) {
-    var cUuid = req.swagger.params.costumerUuid.value;
+    var toBlacklist = req.swagger.params.blacklist.value; 
+    var cUuid = toBlacklist.costumerUuid;
     BlackList.count({
         where: {
             costumerUuid: cUuid
