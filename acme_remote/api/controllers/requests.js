@@ -17,8 +17,9 @@ module.exports = {
 };
 
 function getCostumerRequests(req, res) {
-    var cUuid = req.swagger.params.costumerUuid.value;
-    var cPin = req.swagger.params.pin.value;
+    var pinLogin = req.swagger.params.pinLogin.value;
+    var cUuid = pinLogin.uuid;
+    var cPin = pinLogin.pin;
     if (cUuid && cPin) {
         var isValid = false;
         Costumer.count({
@@ -134,7 +135,12 @@ function createRequest(req, res) {
                                                 res.statusCode = 403;
                                                 res.json(ErrorResponse);
                                             })
-                                    });
+                                    })
+                                        .catch(() => {
+                                            ErrorResponse.message = "BlackList Costumer";
+                                            res.statusCode = 403;
+                                            res.json(ErrorResponse);
+                                        })
                                 });
                         });
                     });
@@ -283,7 +289,8 @@ function voucherCreation(cUuid, oldLines, newLines) {
         return acc + cur.quantity * cur.unitprice;
     }, 0);
     var spentSinceLast100 = spentBefore % voucherType3Price;
-
+    spentSinceLast100 += totalCost;
+    
     if (spentSinceLast100 > voucherType3Price) createDiscountVoucher(cUuid);
 }
 

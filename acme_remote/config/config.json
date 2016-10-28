@@ -22,14 +22,14 @@
     }
   },
   "development": {
-    "username": "fjssxgprkgobwy",
-    "password": "yEv9I1sFiwWR9RCmSqf93Oh5SX",
-    "database": "d7dm7i0kodglrk",
-    "host": "ec2-54-246-89-122.eu-west-1.compute.amazonaws.com",
+    "username": "postgres",
+    "password": "admin",
+    "database": "AcmeCafeDB",
+    "host": "localhost",
     "dialect": "postgres",
     "port":"5432",
     "dialectOptions": {
-      "ssl": true
+      "ssl": false
     }
   }
 }
