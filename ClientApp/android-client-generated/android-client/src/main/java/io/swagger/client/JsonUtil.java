@@ -63,6 +63,10 @@ public class JsonUtil {
       return new TypeToken<List<Blacklist>>(){}.getType();
     }
     
+    if ("BlacklistParam".equalsIgnoreCase(className)) {
+      return new TypeToken<List<BlacklistParam>>(){}.getType();
+    }
+    
     if ("Blacklists".equalsIgnoreCase(className)) {
       return new TypeToken<List<Blacklists>>(){}.getType();
     }
@@ -87,12 +91,28 @@ public class JsonUtil {
       return new TypeToken<List<HelloWorldResponse>>(){}.getType();
     }
     
+    if ("LoginParam".equalsIgnoreCase(className)) {
+      return new TypeToken<List<LoginParam>>(){}.getType();
+    }
+    
+    if ("PinLoginParam".equalsIgnoreCase(className)) {
+      return new TypeToken<List<PinLoginParam>>(){}.getType();
+    }
+    
     if ("Product".equalsIgnoreCase(className)) {
       return new TypeToken<List<Product>>(){}.getType();
     }
     
+    if ("ProductParam".equalsIgnoreCase(className)) {
+      return new TypeToken<List<ProductParam>>(){}.getType();
+    }
+    
     if ("Products".equalsIgnoreCase(className)) {
       return new TypeToken<List<Products>>(){}.getType();
+    }
+    
+    if ("RegisterParam".equalsIgnoreCase(className)) {
+      return new TypeToken<List<RegisterParam>>(){}.getType();
     }
     
     if ("Request".equalsIgnoreCase(className)) {
@@ -129,6 +149,10 @@ public class JsonUtil {
       return new TypeToken<Blacklist>(){}.getType();
     }
     
+    if ("BlacklistParam".equalsIgnoreCase(className)) {
+      return new TypeToken<BlacklistParam>(){}.getType();
+    }
+    
     if ("Blacklists".equalsIgnoreCase(className)) {
       return new TypeToken<Blacklists>(){}.getType();
     }
@@ -153,12 +177,28 @@ public class JsonUtil {
       return new TypeToken<HelloWorldResponse>(){}.getType();
     }
     
+    if ("LoginParam".equalsIgnoreCase(className)) {
+      return new TypeToken<LoginParam>(){}.getType();
+    }
+    
+    if ("PinLoginParam".equalsIgnoreCase(className)) {
+      return new TypeToken<PinLoginParam>(){}.getType();
+    }
+    
     if ("Product".equalsIgnoreCase(className)) {
       return new TypeToken<Product>(){}.getType();
     }
     
+    if ("ProductParam".equalsIgnoreCase(className)) {
+      return new TypeToken<ProductParam>(){}.getType();
+    }
+    
     if ("Products".equalsIgnoreCase(className)) {
       return new TypeToken<Products>(){}.getType();
+    }
+    
+    if ("RegisterParam".equalsIgnoreCase(className)) {
+      return new TypeToken<RegisterParam>(){}.getType();
     }
     
     if ("Request".equalsIgnoreCase(className)) {

@@ -111,7 +111,7 @@ public final class ProductContract {
                             ProductEntry.COLUMN_NAME_UNIT_PRICE));
 
                     Product prod = new Product();
-                    prod.setUnitprice(Double.valueOf(unitPrice));
+                    prod.setUnitprice(Float.valueOf(unitPrice));
                     prod.setName(name);
                     products.add(prod);
                     // move to next row

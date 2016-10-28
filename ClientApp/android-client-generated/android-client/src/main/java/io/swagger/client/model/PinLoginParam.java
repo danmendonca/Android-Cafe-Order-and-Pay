@@ -30,31 +30,31 @@ import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class RequestlineParam  {
+public class PinLoginParam  {
   
-  @SerializedName("productId")
-  private Integer productId = null;
-  @SerializedName("quantity")
-  private Integer quantity = null;
+  @SerializedName("uuid")
+  private String uuid = null;
+  @SerializedName("pin")
+  private String pin = null;
 
   /**
    **/
-  @ApiModelProperty(value = "")
-  public Integer getProductId() {
-    return productId;
+  @ApiModelProperty(required = true, value = "")
+  public String getUuid() {
+    return uuid;
   }
-  public void setProductId(Integer productId) {
-    this.productId = productId;
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
   }
 
   /**
    **/
-  @ApiModelProperty(value = "")
-  public Integer getQuantity() {
-    return quantity;
+  @ApiModelProperty(required = true, value = "")
+  public String getPin() {
+    return pin;
   }
-  public void setQuantity(Integer quantity) {
-    this.quantity = quantity;
+  public void setPin(String pin) {
+    this.pin = pin;
   }
 
 
@@ -66,26 +66,26 @@ public class RequestlineParam  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RequestlineParam requestlineParam = (RequestlineParam) o;
-    return (productId == null ? requestlineParam.productId == null : productId.equals(requestlineParam.productId)) &&
-        (quantity == null ? requestlineParam.quantity == null : quantity.equals(requestlineParam.quantity));
+    PinLoginParam pinLoginParam = (PinLoginParam) o;
+    return (uuid == null ? pinLoginParam.uuid == null : uuid.equals(pinLoginParam.uuid)) &&
+        (pin == null ? pinLoginParam.pin == null : pin.equals(pinLoginParam.pin));
   }
 
   @Override
   public int hashCode() {
     int result = 17;
-    result = 31 * result + (productId == null ? 0: productId.hashCode());
-    result = 31 * result + (quantity == null ? 0: quantity.hashCode());
+    result = 31 * result + (uuid == null ? 0: uuid.hashCode());
+    result = 31 * result + (pin == null ? 0: pin.hashCode());
     return result;
   }
 
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RequestlineParam {\n");
+    sb.append("class PinLoginParam {\n");
     
-    sb.append("  productId: ").append(productId).append("\n");
-    sb.append("  quantity: ").append(quantity).append("\n");
+    sb.append("  uuid: ").append(uuid).append("\n");
+    sb.append("  pin: ").append(pin).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

@@ -17,10 +17,15 @@ import com.android.volley.VolleyError;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
+import io.swagger.client.ApiException;
 import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Costumer;
+import io.swagger.client.model.LoginParam;
+import io.swagger.client.model.RegisterParam;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
 import pt.up.fe.cmov16.client.clientapp.ui.SlideActivity;
 
@@ -68,14 +73,18 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         findViewById(R.id.loginBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                api.logMe(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString(),
+                LoginParam loginParam = new LoginParam();
+                loginParam.setPassword(passwordEditText.getText().toString());
+                loginParam.setUsername(usernameEditText.getText().toString());
+
+                api.logMe(loginParam,
                         new Response.Listener<Costumer>() {
                             @Override
                             public void onResponse(Costumer response) {
                                 saveUserDataAndShowPIN(response);
                             }
-                        }, new Response.ErrorListener() {
+                        },
+                        new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 showError(error);
@@ -91,10 +100,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private void register() {
         setContentView(R.layout.form_register);
         TextView info = (TextView) findViewById(R.id.infoView);
-        info.setText("Atenção: A app quer o server em: "
-                + (new DefaultApi()).getBasePath()
-                + " se tens o server noutro endereço altera isto em:\n" +
-                "android-client > java > io.swagger.client.api > DefaultApi > var \"basePath\"");
+        info.setText((new DefaultApi()).getBasePath());
 
         dateTextView = (Button) findViewById(R.id.cardVal);
 
@@ -113,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         });
 
 
-        Button register = (Button) findViewById(R.id.registerBtn);
+        final Button register = (Button) findViewById(R.id.registerBtn);
         final EditText nameEditText = (EditText) findViewById(R.id.name);
         final EditText usernameEditText = (EditText) findViewById(R.id.username);
         final EditText passwordEditText = (EditText) findViewById(R.id.password);
@@ -128,9 +134,9 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 String cardNum = cardNumEditText.getText().toString();
 
                 if (name.isEmpty() || username.isEmpty() || password.isEmpty() || cardNum.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Preencher tudo", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "All fields must be filled", Toast.LENGTH_SHORT).show();
                 } else if (!Character.isDigit(dateTextView.getText().toString().charAt(0))) {
-                    Toast.makeText(MainActivity.this, "Inserir data de validade", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Insert credit card expiration date", Toast.LENGTH_SHORT).show();
                 } else {
                     String cardDate = "";
                     String dateInput = dateTextView.getText().toString();
@@ -141,13 +147,20 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                     cardDate += dateInput.split("/")[0];
                     cardDate += "T23:59:59.000Z";
 
-                    api.createUser(name, username, password, cardNum, cardDate,
+                    RegisterParam registerParam = new RegisterParam();
+                    registerParam.setUsername(username);
+                    registerParam.setName(name);
+                    registerParam.setPassword(password);
+                    registerParam.setCreditcardnumber(cardNum);
+                    registerParam.setCreditcarddate(cardDate);
+                    api.createUser(registerParam,
                             new Response.Listener<Costumer>() {
                                 @Override
                                 public void onResponse(Costumer response) {
                                     saveUserDataAndShowPIN(response);
                                 }
-                            }, new Response.ErrorListener() {
+                            },
+                            new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
                                     showError(error);
@@ -167,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         Log.e("MainActivity", "created user: " + response.toString());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("PIN: " + response.getPin() + "\n Guarde num local seguro")
+        builder.setMessage("PIN: " + response.getPin() + "\n Don't forget this pin!")
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         startSlideActivity();

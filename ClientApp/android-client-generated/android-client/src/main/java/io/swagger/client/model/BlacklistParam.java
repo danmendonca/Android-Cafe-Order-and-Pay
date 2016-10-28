@@ -30,31 +30,43 @@ import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class RequestlineParam  {
+public class BlacklistParam  {
   
-  @SerializedName("productId")
-  private Integer productId = null;
-  @SerializedName("quantity")
-  private Integer quantity = null;
+  @SerializedName("costumerUuid")
+  private String costumerUuid = null;
+  @SerializedName("myUser")
+  private String myUser = null;
+  @SerializedName("myPass")
+  private String myPass = null;
+
+  /**
+   **/
+  @ApiModelProperty(required = true, value = "")
+  public String getCostumerUuid() {
+    return costumerUuid;
+  }
+  public void setCostumerUuid(String costumerUuid) {
+    this.costumerUuid = costumerUuid;
+  }
 
   /**
    **/
   @ApiModelProperty(value = "")
-  public Integer getProductId() {
-    return productId;
+  public String getMyUser() {
+    return myUser;
   }
-  public void setProductId(Integer productId) {
-    this.productId = productId;
+  public void setMyUser(String myUser) {
+    this.myUser = myUser;
   }
 
   /**
    **/
   @ApiModelProperty(value = "")
-  public Integer getQuantity() {
-    return quantity;
+  public String getMyPass() {
+    return myPass;
   }
-  public void setQuantity(Integer quantity) {
-    this.quantity = quantity;
+  public void setMyPass(String myPass) {
+    this.myPass = myPass;
   }
 
 
@@ -66,26 +78,29 @@ public class RequestlineParam  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RequestlineParam requestlineParam = (RequestlineParam) o;
-    return (productId == null ? requestlineParam.productId == null : productId.equals(requestlineParam.productId)) &&
-        (quantity == null ? requestlineParam.quantity == null : quantity.equals(requestlineParam.quantity));
+    BlacklistParam blacklistParam = (BlacklistParam) o;
+    return (costumerUuid == null ? blacklistParam.costumerUuid == null : costumerUuid.equals(blacklistParam.costumerUuid)) &&
+        (myUser == null ? blacklistParam.myUser == null : myUser.equals(blacklistParam.myUser)) &&
+        (myPass == null ? blacklistParam.myPass == null : myPass.equals(blacklistParam.myPass));
   }
 
   @Override
   public int hashCode() {
     int result = 17;
-    result = 31 * result + (productId == null ? 0: productId.hashCode());
-    result = 31 * result + (quantity == null ? 0: quantity.hashCode());
+    result = 31 * result + (costumerUuid == null ? 0: costumerUuid.hashCode());
+    result = 31 * result + (myUser == null ? 0: myUser.hashCode());
+    result = 31 * result + (myPass == null ? 0: myPass.hashCode());
     return result;
   }
 
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RequestlineParam {\n");
+    sb.append("class BlacklistParam {\n");
     
-    sb.append("  productId: ").append(productId).append("\n");
-    sb.append("  quantity: ").append(quantity).append("\n");
+    sb.append("  costumerUuid: ").append(costumerUuid).append("\n");
+    sb.append("  myUser: ").append(myUser).append("\n");
+    sb.append("  myPass: ").append(myPass).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

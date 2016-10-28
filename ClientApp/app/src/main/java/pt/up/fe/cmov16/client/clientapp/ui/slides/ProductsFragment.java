@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.swagger.client.api.DefaultApi;
@@ -28,6 +29,7 @@ public class ProductsFragment extends NamedFragment {
 
     private ArrayList<Product> PRODUCTS;
     private RVAdapter adapter;
+
     public static ProductsFragment newInstance(int page) {
         Bundle args = new Bundle();
         // if necessary add arguments here
@@ -56,43 +58,36 @@ public class ProductsFragment extends NamedFragment {
     }
 
     @Override
-    public void focusObtained(){
+    public void focusObtained() {
         loadProducts();
     }
 
     private void loadProducts() {
-        final ProductContract productContract = new ProductContract();
-        String lastDate = productContract.lastUpdatedProductDate(getContext());
-
         DefaultApi api = new DefaultApi();
+        //todo date when it was last made a request
+        final String lastDate = new Date(0).toString();
         final Context context = getContext();
-        if (lastDate == null || lastDate.isEmpty()){
-            api.getProducts(new Response.Listener<Products>() {
-                @Override
-                public void onResponse(Products response) {
-                    updateListItems(response.getProducts());
-                    productContract.updateProducts(context,PRODUCTS);
-                    Calendar c = Calendar.getInstance();
-                    String date = String.valueOf(c.get(Calendar.YEAR)) + "-" +
-                            c.get(Calendar.MONTH) +
-                            "-" +
-                            c.get(Calendar.DAY_OF_MONTH) +
-                            "T00:00:00.000Z";
-                    productContract.saveUpdatedProductDate(context, date);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getContext(),
-                            "Connection failed, loading local products", Toast.LENGTH_SHORT).show();
-                    updateListItems(productContract.loadProducts(context));
-                }
-            });
-        }else {
-            //TODO pedir produtos a partir desta data
-            updateListItems(productContract.loadProducts(context));
-            Log.e("prods","update com base na data: "+lastDate);
-        }
+        final ProductContract productContract = new ProductContract();
+
+        api.getProducts(new Date().toString(),
+                new Response.Listener<Products>() {
+                    @Override
+                    public void onResponse(Products response) {
+                        if (response.getProducts().size() > 0) {
+                            productContract.saveUpdatedProductDate(context, new Date().toString());
+                            updateListItems(response.getProducts());
+                            productContract.updateProducts(context, PRODUCTS);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getContext(),
+                                "Connection failed, loading local products", Toast.LENGTH_SHORT).show();
+                        updateListItems(productContract.loadProducts(context));
+                    }
+                });
     }
 
     private void updateListItems(List<Product> products) {

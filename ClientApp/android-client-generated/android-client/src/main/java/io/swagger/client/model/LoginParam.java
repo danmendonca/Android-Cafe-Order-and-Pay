@@ -30,31 +30,31 @@ import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class RequestlineParam  {
+public class LoginParam  {
   
-  @SerializedName("productId")
-  private Integer productId = null;
-  @SerializedName("quantity")
-  private Integer quantity = null;
+  @SerializedName("username")
+  private String username = null;
+  @SerializedName("password")
+  private String password = null;
 
   /**
    **/
-  @ApiModelProperty(value = "")
-  public Integer getProductId() {
-    return productId;
+  @ApiModelProperty(required = true, value = "")
+  public String getUsername() {
+    return username;
   }
-  public void setProductId(Integer productId) {
-    this.productId = productId;
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   /**
    **/
-  @ApiModelProperty(value = "")
-  public Integer getQuantity() {
-    return quantity;
+  @ApiModelProperty(required = true, value = "")
+  public String getPassword() {
+    return password;
   }
-  public void setQuantity(Integer quantity) {
-    this.quantity = quantity;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
 
@@ -66,26 +66,26 @@ public class RequestlineParam  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    RequestlineParam requestlineParam = (RequestlineParam) o;
-    return (productId == null ? requestlineParam.productId == null : productId.equals(requestlineParam.productId)) &&
-        (quantity == null ? requestlineParam.quantity == null : quantity.equals(requestlineParam.quantity));
+    LoginParam loginParam = (LoginParam) o;
+    return (username == null ? loginParam.username == null : username.equals(loginParam.username)) &&
+        (password == null ? loginParam.password == null : password.equals(loginParam.password));
   }
 
   @Override
   public int hashCode() {
     int result = 17;
-    result = 31 * result + (productId == null ? 0: productId.hashCode());
-    result = 31 * result + (quantity == null ? 0: quantity.hashCode());
+    result = 31 * result + (username == null ? 0: username.hashCode());
+    result = 31 * result + (password == null ? 0: password.hashCode());
     return result;
   }
 
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class RequestlineParam {\n");
+    sb.append("class LoginParam {\n");
     
-    sb.append("  productId: ").append(productId).append("\n");
-    sb.append("  quantity: ").append(quantity).append("\n");
+    sb.append("  username: ").append(username).append("\n");
+    sb.append("  password: ").append(password).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

@@ -41,7 +41,7 @@ function createUser(req, res) {
         .catch(function (err) {
             console.log(err);
             res.statusCode = 403;
-            res.end(JSON.stringify(err));
+            res.json(err)
         })
 }
 
