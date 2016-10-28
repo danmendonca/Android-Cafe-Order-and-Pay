@@ -65,10 +65,23 @@ public final class ProductContract {
             values.put(ProductEntry.COLUMN_NAME_UNIT_PRICE, product.getUnitprice());
 
             if (c.getCount() > 0) {
-                //UPDATE
-                String where = ProductEntry.COLUMN_NAME_ID + "=" + product.getId();
-                db.update(ProductEntry.TABLE_NAME, values, where, null);
-                updatedProducts++;
+                c.moveToFirst();
+                String name = c.getString(c.getColumnIndex(
+                        ProductEntry.COLUMN_NAME_NAME));
+
+                float unitPrice = Float.valueOf(c.getString(c.getColumnIndex(
+                        ProductEntry.COLUMN_NAME_UNIT_PRICE)));
+
+                boolean active = c.getString(c.getColumnIndex(
+                        ProductEntry.COLUMN_NAME_ACTIVE)).equals("1");
+
+                if (!name.equals(product.getName()) || unitPrice != product.getUnitprice()
+                        || active != product.getActive()) {
+                    //UPDATE
+                    String where = ProductEntry.COLUMN_NAME_ID + "=" + product.getId();
+                    db.update(ProductEntry.TABLE_NAME, values, where, null);
+                    updatedProducts++;
+                }
             } else {
                 //INSERT
                 if (db.insert(ProductEntry.TABLE_NAME, null, values) != -1)
@@ -122,13 +135,15 @@ public final class ProductContract {
         db.close();
         return products;
     }
-    public void saveUpdatedProductDate(Context context,String date) {
+
+    public void saveUpdatedProductDate(Context context, String date) {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("lastUpdatedProductDate", date);
         editor.apply();
     }
+
     public String lastUpdatedProductDate(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
