@@ -4,7 +4,11 @@ package pt.up.fe.cmov16.client.clientapp.logic;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+
 import pt.up.fe.cmov16.client.clientapp.R;
+
+import static pt.up.fe.cmov16.client.clientapp.util.ShPrefKeys.userSharedPreferencesKey;
 
 
 public class User {
@@ -46,6 +50,9 @@ public class User {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
+//        Gson gson = new Gson();
+//        String userStr = gson.toJson(this);
+//        editor.putString(userSharedPreferencesKey ,userStr);
         editor.putString("name", name);
         editor.putString("username", username);
         editor.putString("password", password);
@@ -59,6 +66,8 @@ public class User {
     private void loadCostumerData(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+//        Gson gson = new Gson();
+//        User myUser = gson.fromJson(sharedPref.getString(userSharedPreferencesKey, ""), User.class);
         name = sharedPref.getString("name", "");
         username = sharedPref.getString("username", "");
         password = sharedPref.getString("password", "");
