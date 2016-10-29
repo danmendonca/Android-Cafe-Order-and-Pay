@@ -29,7 +29,7 @@ import pt.up.fe.cmov16.client.clientapp.database.ProductContract;
 
 public class ProductsFragment extends NamedFragment {
 
-    private ArrayList<Product> PRODUCTS;
+    private ArrayList<Product> PRODUCTS = new ArrayList<>();
     private RVAdapter adapter;
 
     public static ProductsFragment newInstance(int page) {
@@ -45,10 +45,13 @@ public class ProductsFragment extends NamedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_products, container, false);
-        if (PRODUCTS == null) {
-            PRODUCTS = new ArrayList<>();// NEVER REPLACE THIS REFERENCE, if needed clear it.
+        if(PRODUCTS.size() == 0){
             loadProducts();
         }
+//        if (PRODUCTS == null) {
+//            PRODUCTS = new ArrayList<>();// NEVER REPLACE THIS REFERENCE, if needed clear it.
+//
+//        }
 
         //PREPARE LIST VIEW
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_products);
