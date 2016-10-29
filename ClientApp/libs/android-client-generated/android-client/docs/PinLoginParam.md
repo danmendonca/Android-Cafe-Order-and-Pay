@@ -1,11 +1,11 @@
 
-# RequestlineParam
+# PinLoginParam
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**productId** | **Integer** |  |  [optional]
-**quantity** | **Integer** |  |  [optional]
+**uuid** | **String** |  | 
+**pin** | **String** |  | 
 
 
 

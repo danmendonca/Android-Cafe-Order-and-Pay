@@ -18,7 +18,7 @@ Method | HTTP request | Description
 
 <a name="addToBlacklist"></a>
 # **addToBlacklist**
-> Blacklist addToBlacklist(costumerUuid, myId, myPw)
+> Blacklist addToBlacklist(blacklist)
 
 
 
@@ -30,11 +30,9 @@ Adds a costumer to the blacklist
 //import io.swagger.client.api.DefaultApi;
 
 DefaultApi apiInstance = new DefaultApi();
-String costumerUuid = "costumerUuid_example"; // String | 
-String myId = "myId_example"; // String | 
-String myPw = "myPw_example"; // String | 
+BlacklistParam blacklist = new BlacklistParam(); // BlacklistParam | 
 try {
-    Blacklist result = apiInstance.addToBlacklist(costumerUuid, myId, myPw);
+    Blacklist result = apiInstance.addToBlacklist(blacklist);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DefaultApi#addToBlacklist");
@@ -46,9 +44,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **costumerUuid** | **String**|  |
- **myId** | **String**|  | [optional]
- **myPw** | **String**|  | [optional]
+ **blacklist** | [**BlacklistParam**](BlacklistParam.md)|  |
 
 ### Return type
 
@@ -65,7 +61,7 @@ No authorization required
 
 <a name="createProduct"></a>
 # **createProduct**
-> Product createProduct(name, myId, myPw, unitprice, active)
+> Product createProduct(productParam)
 
 
 
@@ -77,13 +73,9 @@ Creates a product
 //import io.swagger.client.api.DefaultApi;
 
 DefaultApi apiInstance = new DefaultApi();
-String name = "name_example"; // String | 
-String myId = "myId_example"; // String | 
-String myPw = "myPw_example"; // String | 
-Float unitprice = 3.4F; // Float | 
-Boolean active = true; // Boolean | 
+ProductParam productParam = new ProductParam(); // ProductParam | 
 try {
-    Product result = apiInstance.createProduct(name, myId, myPw, unitprice, active);
+    Product result = apiInstance.createProduct(productParam);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DefaultApi#createProduct");
@@ -95,11 +87,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **name** | **String**|  |
- **myId** | **String**|  | [optional]
- **myPw** | **String**|  | [optional]
- **unitprice** | **Float**|  | [optional]
- **active** | **Boolean**|  | [optional]
+ **productParam** | [**ProductParam**](ProductParam.md)|  | [optional]
 
 ### Return type
 
@@ -159,7 +147,7 @@ No authorization required
 
 <a name="createUser"></a>
 # **createUser**
-> Costumer createUser(name, username, password, creditcardnumber, creditcarddate)
+> Costumer createUser(registerParam)
 
 
 
@@ -171,13 +159,9 @@ Creation of new user
 //import io.swagger.client.api.DefaultApi;
 
 DefaultApi apiInstance = new DefaultApi();
-String name = "name_example"; // String | 
-String username = "username_example"; // String | 
-String password = "password_example"; // String | 
-String creditcardnumber = "creditcardnumber_example"; // String | 
-String creditcarddate = "creditcarddate_example"; // String | 
+RegisterParam registerParam = new RegisterParam(); // RegisterParam | 
 try {
-    Costumer result = apiInstance.createUser(name, username, password, creditcardnumber, creditcarddate);
+    Costumer result = apiInstance.createUser(registerParam);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DefaultApi#createUser");
@@ -189,11 +173,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **name** | **String**|  |
- **username** | **String**|  |
- **password** | **String**|  |
- **creditcardnumber** | **String**|  |
- **creditcarddate** | **String**|  |
+ **registerParam** | [**RegisterParam**](RegisterParam.md)|  |
 
 ### Return type
 
@@ -249,7 +229,7 @@ No authorization required
 
 <a name="getCostumerRequests"></a>
 # **getCostumerRequests**
-> Consult getCostumerRequests(costumerUuid, pin)
+> Consult getCostumerRequests(pinLogin)
 
 
 
@@ -261,10 +241,9 @@ Returns a request collection of a costumer given its uuid and pin
 //import io.swagger.client.api.DefaultApi;
 
 DefaultApi apiInstance = new DefaultApi();
-String costumerUuid = "costumerUuid_example"; // String | 
-String pin = "pin_example"; // String | 
+PinLoginParam pinLogin = new PinLoginParam(); // PinLoginParam | 
 try {
-    Consult result = apiInstance.getCostumerRequests(costumerUuid, pin);
+    Consult result = apiInstance.getCostumerRequests(pinLogin);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DefaultApi#getCostumerRequests");
@@ -276,8 +255,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **costumerUuid** | **String**|  |
- **pin** | **String**|  |
+ **pinLogin** | [**PinLoginParam**](PinLoginParam.md)|  |
 
 ### Return type
 
@@ -333,7 +311,7 @@ No authorization required
 
 <a name="getProducts"></a>
 # **getProducts**
-> Products getProducts()
+> Products getProducts(lastUpdatedAt)
 
 
 
@@ -345,8 +323,9 @@ Returns an array of products
 //import io.swagger.client.api.DefaultApi;
 
 DefaultApi apiInstance = new DefaultApi();
+String lastUpdatedAt = "lastUpdatedAt_example"; // String | 
 try {
-    Products result = apiInstance.getProducts();
+    Products result = apiInstance.getProducts(lastUpdatedAt);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DefaultApi#getProducts");
@@ -355,7 +334,10 @@ try {
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **lastUpdatedAt** | **String**|  | [optional]
 
 ### Return type
 
@@ -415,7 +397,7 @@ No authorization required
 
 <a name="logMe"></a>
 # **logMe**
-> Costumer logMe(username, password)
+> Costumer logMe(loginParam)
 
 
 
@@ -427,10 +409,9 @@ Login
 //import io.swagger.client.api.DefaultApi;
 
 DefaultApi apiInstance = new DefaultApi();
-String username = "username_example"; // String | 
-String password = "password_example"; // String | 
+LoginParam loginParam = new LoginParam(); // LoginParam | 
 try {
-    Costumer result = apiInstance.logMe(username, password);
+    Costumer result = apiInstance.logMe(loginParam);
     System.out.println(result);
 } catch (ApiException e) {
     System.err.println("Exception when calling DefaultApi#logMe");
@@ -442,8 +423,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **username** | **String**|  |
- **password** | **String**|  |
+ **loginParam** | [**LoginParam**](LoginParam.md)|  |
 
 ### Return type
 

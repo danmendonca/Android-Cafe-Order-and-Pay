@@ -263,6 +263,8 @@ definitions:
         type: "boolean"
       name:
         type: "string"
+      updatedAt:
+        type: "string"
       unitprice:
         type: "number"
         format: "double"

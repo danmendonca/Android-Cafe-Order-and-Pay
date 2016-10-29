@@ -53,7 +53,7 @@ public class SlideActivity extends FragmentActivity {
                 //change tittle when page change
                 tittle.setText(fragments[position].toString());
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true, true);
-                fragments[position].focusObtained();
+                //fragments[position].focusObtained(SlideActivity.this);
             }
 
             @Override
@@ -76,7 +76,6 @@ public class SlideActivity extends FragmentActivity {
 
             }
         });
-
     }
 
     @Override

@@ -38,8 +38,10 @@ public class Product  {
   private Boolean active = null;
   @SerializedName("name")
   private String name = null;
+  @SerializedName("updatedAt")
+  private String updatedAt = null;
   @SerializedName("unitprice")
-  private Float unitprice = null;
+  private Double unitprice = null;
 
   /**
    **/
@@ -74,10 +76,20 @@ public class Product  {
   /**
    **/
   @ApiModelProperty(value = "")
-  public Float getUnitprice() {
+  public String getUpdatedAt() {
+    return updatedAt;
+  }
+  public void setUpdatedAt(String updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public Double getUnitprice() {
     return unitprice;
   }
-  public void setUnitprice(Float unitprice) {
+  public void setUnitprice(Double unitprice) {
     this.unitprice = unitprice;
   }
 
@@ -94,6 +106,7 @@ public class Product  {
     return (id == null ? product.id == null : id.equals(product.id)) &&
         (active == null ? product.active == null : active.equals(product.active)) &&
         (name == null ? product.name == null : name.equals(product.name)) &&
+        (updatedAt == null ? product.updatedAt == null : updatedAt.equals(product.updatedAt)) &&
         (unitprice == null ? product.unitprice == null : unitprice.equals(product.unitprice));
   }
 
@@ -103,6 +116,7 @@ public class Product  {
     result = 31 * result + (id == null ? 0: id.hashCode());
     result = 31 * result + (active == null ? 0: active.hashCode());
     result = 31 * result + (name == null ? 0: name.hashCode());
+    result = 31 * result + (updatedAt == null ? 0: updatedAt.hashCode());
     result = 31 * result + (unitprice == null ? 0: unitprice.hashCode());
     return result;
   }
@@ -115,6 +129,7 @@ public class Product  {
     sb.append("  id: ").append(id).append("\n");
     sb.append("  active: ").append(active).append("\n");
     sb.append("  name: ").append(name).append("\n");
+    sb.append("  updatedAt: ").append(updatedAt).append("\n");
     sb.append("  unitprice: ").append(unitprice).append("\n");
     sb.append("}\n");
     return sb.toString();

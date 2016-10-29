@@ -10,5 +10,4 @@ public class NamedFragment extends Fragment {
         return (tittle!=null)? tittle : "NoTittleDefined";
     }
 
-    public void focusObtained(){}
 }

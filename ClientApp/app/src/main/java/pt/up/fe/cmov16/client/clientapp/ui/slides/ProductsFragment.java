@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -46,7 +45,10 @@ public class ProductsFragment extends NamedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_products, container, false);
-        PRODUCTS = new ArrayList<>();// NEVER REPLACE THIS REFERENCE, if needed clear it.
+        if (PRODUCTS == null) {
+            PRODUCTS = new ArrayList<>();// NEVER REPLACE THIS REFERENCE, if needed clear it.
+            loadProducts();
+        }
 
         //PREPARE LIST VIEW
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_products);
@@ -55,46 +57,33 @@ public class ProductsFragment extends NamedFragment {
         adapter = new RVAdapter();
         rv.setAdapter(adapter);
 
-        loadProducts();
-
         return rootView;
     }
 
-    @Override
-    public void focusObtained() {
-        loadProducts();
-    }
-
     private void loadProducts() {
+        //TODO fix double function call on screen rotation
         DefaultApi api = new DefaultApi();
 
-        java.util.Date dateNow = new java.util.Date();
-        Timestamp tsNow = new Timestamp(dateNow.getTime());
-        final String updatedAt = tsNow.toString().replace(' ', 'T');
-
-
-        //if updatedAt was saved before, the skip this step and use its value in lastDate
-        String lastUpdated = new String();
-        boolean stored = false;
-        if(stored){
-            //lastUpdated = sharedPreferences.lastUpdated;
-        }
-        else{
-            lastUpdated = getDefaultTimestamp();
-        }
-
-        final String finalLastUpdated = lastUpdated;
         final Context context = getContext();
+        if (context == null)
+            return;
         final ProductContract productContract = new ProductContract();
+        //if updatedAt was saved before, the skip this step and use its value in lastDate
+        String lastUpdated = productContract.lastUpdatedProductDate(context);
+        boolean stored = !lastUpdated.isEmpty();
+        if (!stored)
+            lastUpdated = getDefaultTimestamp();
 
-        api.getProducts(finalLastUpdated,
+        Log.e("products", lastUpdated);
+        api.getProducts(lastUpdated,
                 new Response.Listener<Products>() {
                     @Override
                     public void onResponse(Products response) {
                         if (response.getProducts().size() > 0) {
-                            productContract.saveUpdatedProductDate(context, updatedAt);
-                            updateListItems(response.getProducts());
-                            productContract.updateProducts(context, PRODUCTS);
+                            productContract.updateProducts(context, response.getProducts());
+                            updateListItems(productContract.loadProducts(context));
+                        } else {
+                            updateListItems(productContract.loadProducts(context));
                         }
                     }
                 },
@@ -178,6 +167,15 @@ public class ProductsFragment extends NamedFragment {
                 productName = (TextView) itemView.findViewById(R.id.product_name);
                 productPrice = (TextView) itemView.findViewById(R.id.product_price);
             }
+        }
+    }
+
+    //update all times that user see this screen
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            loadProducts();
         }
     }
 }

@@ -9,6 +9,8 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import io.swagger.client.model.Product;
 import pt.up.fe.cmov16.client.clientapp.R;
@@ -40,7 +42,15 @@ public final class ProductContract {
 
     //private static final String DELETE_ALL_PRODUCTS = "DELETE FROM " + ProductEntry.TABLE_NAME;
 
-    public void updateProducts(Context context, ArrayList<Product> products) {
+    /**
+     * Update local database products
+     *
+     * @param context
+     * @param products
+     * @return products that are active
+     */
+    public void updateProducts(Context context, List<Product> products) {
+        String updatedAt = "";
         if (products == null || products.isEmpty()) {
             LogError("empty array");
             return;
@@ -53,6 +63,11 @@ public final class ProductContract {
                 Log.e(TAG, "Contacts array has null user");
                 continue;
             }
+
+            if (updatedAt.isEmpty())
+                updatedAt = product.getUpdatedAt();
+            else if (product.getUpdatedAt().compareTo(updatedAt) > 0)
+                updatedAt = product.getUpdatedAt();
 
             Cursor c = db.rawQuery(selectByProductIDQuery(product.getId()), null);
             if (c == null)
@@ -91,6 +106,8 @@ public final class ProductContract {
         }
         db.close();
         Log.e(TAG, "UPDATED: " + updatedProducts + " and NEW: " + newProducts + " products");
+        if (!updatedAt.isEmpty())
+            saveUpdatedProductDate(context, updatedAt);
     }
 
     private String selectByProductIDQuery(int id) {
@@ -124,7 +141,7 @@ public final class ProductContract {
                             ProductEntry.COLUMN_NAME_UNIT_PRICE));
 
                     Product prod = new Product();
-                    prod.setUnitprice(Float.valueOf(unitPrice));
+                    prod.setUnitprice(Double.valueOf(unitPrice));
                     prod.setName(name);
                     products.add(prod);
                     // move to next row

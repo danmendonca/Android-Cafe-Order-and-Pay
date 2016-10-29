@@ -64,11 +64,9 @@ public class DefaultApiExample {
 
     public static void main(String[] args) {
         DefaultApi apiInstance = new DefaultApi();
-        String costumerUuid = "costumerUuid_example"; // String | 
-        String myId = "myId_example"; // String | 
-        String myPw = "myPw_example"; // String | 
+        BlacklistParam blacklist = new BlacklistParam(); // BlacklistParam | 
         try {
-            Blacklist result = apiInstance.addToBlacklist(costumerUuid, myId, myPw);
+            Blacklist result = apiInstance.addToBlacklist(blacklist);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#addToBlacklist");
@@ -100,14 +98,19 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [Blacklist](docs/Blacklist.md)
+ - [BlacklistParam](docs/BlacklistParam.md)
  - [Blacklists](docs/Blacklists.md)
  - [Consult](docs/Consult.md)
  - [Costumer](docs/Costumer.md)
  - [Costumers](docs/Costumers.md)
  - [ErrorResponse](docs/ErrorResponse.md)
  - [HelloWorldResponse](docs/HelloWorldResponse.md)
+ - [LoginParam](docs/LoginParam.md)
+ - [PinLoginParam](docs/PinLoginParam.md)
  - [Product](docs/Product.md)
+ - [ProductParam](docs/ProductParam.md)
  - [Products](docs/Products.md)
+ - [RegisterParam](docs/RegisterParam.md)
  - [Request](docs/Request.md)
  - [RequestPut](docs/RequestPut.md)
  - [Requestline](docs/Requestline.md)

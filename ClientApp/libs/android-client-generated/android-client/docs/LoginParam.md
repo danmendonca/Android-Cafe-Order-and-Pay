@@ -1,11 +1,11 @@
 
-# RequestlineParam
+# LoginParam
 
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**productId** | **Integer** |  |  [optional]
-**quantity** | **Integer** |  |  [optional]
+**username** | **String** |  | 
+**password** | **String** |  | 
 
 
 
