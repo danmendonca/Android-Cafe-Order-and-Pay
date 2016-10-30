@@ -52,8 +52,8 @@ import io.swagger.client.model.Products;
 import io.swagger.client.model.HelloWorldResponse;
 import io.swagger.client.model.LoginParam;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

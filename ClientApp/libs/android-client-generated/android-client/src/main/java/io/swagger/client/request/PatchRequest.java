@@ -31,7 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 
-import org.apache.http.HttpEntity;
+import cz.msebera.android.httpclient.HttpEntity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

@@ -37,10 +37,11 @@ import com.android.volley.toolbox.NoCache;
 import com.android.volley.toolbox.RequestFuture;
 import com.google.gson.JsonParseException;
 
-import org.apache.http.Consts;
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
+
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.Consts;
+import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.entity.ContentType;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
