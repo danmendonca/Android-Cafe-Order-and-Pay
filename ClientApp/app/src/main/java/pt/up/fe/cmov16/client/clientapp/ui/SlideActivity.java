@@ -75,7 +75,6 @@ public class SlideActivity extends FragmentActivity {
         findViewById(R.id.cartButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("test","asdihagsdlsaduiashdas");
                 Intent i = new Intent(SlideActivity.this,CartActivity.class);
                 i.putExtra(CartActivity.productsArrayKey,((ProductsFragment)fragments[0]).getProducts());
                 startActivity(i);
