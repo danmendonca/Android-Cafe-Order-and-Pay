@@ -24,36 +24,8 @@
 
 package io.swagger.client.api;
 
-import io.swagger.client.ApiInvoker;
-import io.swagger.client.ApiException;
-import io.swagger.client.Pair;
-
-import io.swagger.client.model.*;
-
-import java.util.*;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
-import io.swagger.client.model.BlacklistParam;
-import io.swagger.client.model.Blacklist;
-import io.swagger.client.model.ErrorResponse;
-import io.swagger.client.model.ProductParam;
-import io.swagger.client.model.Product;
-import io.swagger.client.model.RequestPut;
-import io.swagger.client.model.Request;
-import io.swagger.client.model.RegisterParam;
-import io.swagger.client.model.Costumer;
-import io.swagger.client.model.Blacklists;
-import io.swagger.client.model.Consult;
-import io.swagger.client.model.PinLoginParam;
-import io.swagger.client.model.Costumers;
-import io.swagger.client.model.Products;
-import io.swagger.client.model.HelloWorldResponse;
-import io.swagger.client.model.LoginParam;
-
-import cz.msebera.android.httpclient.HttpEntity;
-import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,9 +34,30 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
+import io.swagger.client.ApiException;
+import io.swagger.client.ApiInvoker;
+import io.swagger.client.Pair;
+import io.swagger.client.model.Blacklist;
+import io.swagger.client.model.BlacklistParam;
+import io.swagger.client.model.Blacklists;
+import io.swagger.client.model.Consult;
+import io.swagger.client.model.Costumer;
+import io.swagger.client.model.Costumers;
+import io.swagger.client.model.HelloWorldResponse;
+import io.swagger.client.model.LoginParam;
+import io.swagger.client.model.PinLoginParam;
+import io.swagger.client.model.Product;
+import io.swagger.client.model.ProductParam;
+import io.swagger.client.model.Products;
+import io.swagger.client.model.RegisterParam;
+import io.swagger.client.model.Request;
+import io.swagger.client.model.RequestPut;
+
 public class DefaultApi {
-    //String basePath = "http://10.0.2.2:8080/api";
-    String basePath = "https://cmov1.herokuapp.com/api";
+    String basePath = "http://10.0.2.2:8080/api";
+    //String basePath = "https://cmov1.herokuapp.com/api";
     ApiInvoker apiInvoker = ApiInvoker.getInstance();
 
     public void addHeader(String key, String value) {
@@ -75,12 +68,12 @@ public class DefaultApi {
         return apiInvoker;
     }
 
-    public void setBasePath(String basePath) {
-        this.basePath = basePath;
-    }
-
     public String getBasePath() {
         return basePath;
+    }
+
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
     }
 
     /**
