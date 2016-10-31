@@ -5,10 +5,10 @@ var db = {};
 var env = process.env.NODE_ENV || "development";
 var config;
 try {
-   config = require(__dirname + '/../config/config.json')[env];
-    // do stuff
+  config = require(__dirname + '/../config/config.json')[env];
+  // do stuff
 } catch (ex) {
-    config = require(__dirname + '/../config/serverConfig.json')[env];
+  config = require(__dirname + '/../config/serverConfig.json')[env];
 }
 
 // var sequelize = new Sequelize('postgres://user:password@localhost:5432/AcmeCafeDB');
@@ -60,7 +60,43 @@ sequelize
           uuid: '487d7210-9882-11e6-9d39-f7b6026b4be5',
           creditcardnumber: '12345678',
           creditcarddate: '2016-12-19T00:00:00.000Z',
-        }).then(() => { });
+        }).then((costumer) => {
+          sequelize.models.product.create({
+            active: true,
+            name: 'Popcorn',
+            unitprice: 1.5
+          }).then((prdct) => {
+            sequelize.models.request.create({
+              costumerUuid: costumer.uuid,
+              number: 0
+            }).then((rq) => {
+              //create requestline for request
+              sequelize.models.requestline.create({
+                quantity: 101,
+                unitprice: prdct.unitprice,
+                productId: prdct.id,
+                requestId: rq.id
+              }).then(() => {
+
+              })
+
+              sequelize.models.voucher.create({
+                costumerUuid: costumer.uuid,
+                type: 1,
+                signature: "1",
+                isused: false
+              }).then(() => { })
+
+              sequelize.models.voucher.create({
+                costumerUuid: costumer.uuid,
+                type: 3,
+                signature: "2",
+                isused: false
+              }).then(() => { })
+
+            })
+          });
+        });
         sequelize.models.costumer.create({
           username: 'mnunes',
           name: 'Miguel',
@@ -88,11 +124,6 @@ sequelize
         //products
         sequelize.models.product.create({
           active: true,
-          name: 'Popcorn',
-          unitprice: 1.5
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
           name: 'Coffee',
           unitprice: 0.8
         }).then(() => { });
@@ -100,7 +131,36 @@ sequelize
           active: false,
           name: 'Francesinha',
           unitprice: 10.0,
-          updatedAt: new Date(1899, 1, 1)
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: false,
+          name: 'French Toast',
+          unitprice: 2.5,
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: false,
+          name: 'Coke',
+          unitprice: 1.5,
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: false,
+          name: 'Evian Water',
+          unitprice: 1,
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: false,
+          name: 'Chocolate Cake',
+          unitprice: 3,
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: false,
+          name: 'Cheesecake',
+          unitprice: 3.2,
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: false,
+          name: 'Super Bock',
+          unitprice: 1.5,
         }).then(() => { });
       })
     }
