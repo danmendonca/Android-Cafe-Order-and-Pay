@@ -67,9 +67,14 @@ function getCostumerRequests(req, res) {
     }
 }
 
+/**
+ * 
+ * 
+ * @param {any} req
+ * @param {any} res
+ */
 function createRequest(req, res) {
     var cUuid = req.swagger.params.request.value.costumerUuid;
-    var cPin = req.swagger.params.request.value.pin;
     var reqVouchers = req.swagger.params.request.value.requestvouchers;
     var rls = req.swagger.params.request.value.requestlines;
     var ErrorResponse = {};
@@ -77,15 +82,14 @@ function createRequest(req, res) {
 
     //TODO costumer validation
     //TODO generate voucher for every 100€ spent
-    if (cUuid && cPin && reqVouchers.length <= 3) {
+    if (cUuid && reqVouchers.length <= 3) {
         var rlines = [];
         var oldLines = [];
 
         var isValid = false;
         Costumer.count({
             where: {
-                uuid: cUuid,
-                pin: cPin
+                uuid: cUuid
             }
         }).then(function (c) {
             if (c == 1) {
@@ -109,7 +113,6 @@ function createRequest(req, res) {
                                     Promise.all(voucherPromises).then(function () {
                                         //stuff?
                                         answered = true;
-                                        request.dataValues.pin = cPin;
                                         console.log(JSON.stringify(request));
 
                                         BlackList.count({
@@ -136,7 +139,7 @@ function createRequest(req, res) {
                                                 res.json(ErrorResponse);
                                             })
                                     })
-                                        .catch(() => {
+                                        .catch((msg) => {
                                             ErrorResponse.message = "BlackList Costumer";
                                             res.statusCode = 403;
                                             res.json(ErrorResponse);
@@ -307,9 +310,8 @@ function createRandomVoucher(cUuid) {
     Voucher.create({
         costumerUuid: cUuid,
         type: vType,
-        key: vKey,
-        isused: false,
-        number: 0
+        signature: vKey,
+        isused: false
     });
 }
 
@@ -323,8 +325,7 @@ function createDiscountVoucher(cUuid) {
     Voucher.create({
         costumerUuid: cUuid,
         type: 3,
-        key: vKey,
-        isused: false,
-        number: 0
+        signature: vKey,
+        isused: false
     })
 }
