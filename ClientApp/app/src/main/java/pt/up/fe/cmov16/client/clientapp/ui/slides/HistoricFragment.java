@@ -156,8 +156,8 @@ public class HistoricFragment extends NamedFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof RequestOverviewViewHolder) {
                 Request request = requestsMade.get(position);
-//                ((RequestOverviewViewHolder) holder).header.setText(request.getId());
-//                ((RequestOverviewViewHolder) holder).info.setText(request.getCostumerUuid());
+                ((RequestOverviewViewHolder) holder).header.setText(request.getId().toString());
+                ((RequestOverviewViewHolder) holder).info.setText(request.getCostumerUuid());
             }
         }
 
@@ -168,6 +168,7 @@ public class HistoricFragment extends NamedFragment {
 
         private class RequestOverviewViewHolder extends RecyclerView.ViewHolder {
             TextView header, info;
+
 
             public RequestOverviewViewHolder(View view) {
                 super(view);

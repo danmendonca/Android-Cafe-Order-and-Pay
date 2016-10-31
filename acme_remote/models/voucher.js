@@ -8,14 +8,10 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.BOOLEAN,
             allowNull: false
         },
-        key: {
+        signature: {
             type: DataTypes.TEXT,
             allowNull: false,
             unique: 'VOUCHER_KEY_UNIQUE'
-        },
-        number: {
-            type: DataTypes.INTEGER,
-            allowNull: false
         }
     }, { tablename: 'voucher' });
     return Voucher;
