@@ -131,6 +131,15 @@ public class ProductsFragment extends NamedFragment {
         adapter.notifyDataSetChanged();
     }
 
+    public ArrayList<ProductMenuItem> getProducts() {
+        ArrayList<ProductMenuItem> products = new ArrayList<>();
+        for (ProductMenuItem prod : PRODUCTS){
+            if (prod.getQuantity()>0)
+                products.add(prod);
+        }
+        return products;
+    }
+
     public class RVAdapter extends RecyclerView.Adapter {
         private int VIEW_TYPE = 0;
 
