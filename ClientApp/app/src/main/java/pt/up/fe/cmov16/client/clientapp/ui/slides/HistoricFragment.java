@@ -106,7 +106,8 @@ public class HistoricFragment extends NamedFragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("RequestsOv-Fetch", error.getMessage());
+                            if (error.getMessage() != null)
+                                Log.d("RequestsOv-Fetch", error.getMessage());
                         }
                     });
         } catch (Exception e) {
