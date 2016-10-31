@@ -28,14 +28,16 @@ public class CartActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_cart);
 
-        if (savedInstanceState.get(productsArrayKey) == null) {
+        Bundle b = getIntent().getExtras();
+
+        if (b.get(productsArrayKey) == null) {
             finish();
             return;
         }
         requestLines = new ArrayList<>();
 
 
-        for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) savedInstanceState.get(productsArrayKey))
+        for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(productsArrayKey))
             requestLines.add(new ProductVoucherWrapper(pmi));
 
 
@@ -96,8 +98,6 @@ public class CartActivity extends AppCompatActivity {
 
     private class ItemsRvAdapter extends RecyclerView.Adapter<ItemsRvAdapter.Holder> {
 
-        ArrayList<ProductVoucherWrapper> pvw = new ArrayList<>();
-
         @Override
         public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item_card, parent, false);
@@ -107,14 +107,14 @@ public class CartActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(Holder holder, int position) {
-            holder.quantity.setText(pvw.get(position).getQuantity());
-            holder.name.setText(pvw.get(position).getName());
-            holder.total.setText(pvw.get(position).getTotal());
+            holder.quantity.setText(requestLines.get(position).getQuantity());
+            holder.name.setText(requestLines.get(position).getName());
+            holder.total.setText(requestLines.get(position).getTotal());
         }
 
         @Override
         public int getItemCount() {
-            return pvw.size();
+            return requestLines.size();
         }
 
         public class Holder extends RecyclerView.ViewHolder {

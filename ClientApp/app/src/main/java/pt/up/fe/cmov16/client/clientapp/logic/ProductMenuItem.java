@@ -1,8 +1,11 @@
 package pt.up.fe.cmov16.client.clientapp.logic;
 
+import java.io.Serializable;
+
 import io.swagger.client.model.Product;
 
-public class ProductMenuItem {
+
+public class ProductMenuItem implements Serializable {
     private int quantity;
     private Product product;
 
@@ -11,12 +14,12 @@ public class ProductMenuItem {
         quantity=0;
     }
 
-    public void setQuantity(int quantity){
-        this.quantity=quantity;
-    }
-
     public int getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Product getProduct() {
