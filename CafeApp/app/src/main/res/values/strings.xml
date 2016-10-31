@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CafeApp</string>
+    <string name="nothing_to_read">Nothing to read</string>
 </resources>
