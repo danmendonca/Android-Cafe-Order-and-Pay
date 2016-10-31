@@ -1,6 +1,7 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +28,13 @@ import io.swagger.client.model.Product;
 import io.swagger.client.model.Products;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.database.ProductContract;
+import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
+
+import static android.view.View.GONE;
 
 public class ProductsFragment extends NamedFragment {
 
-    private ArrayList<Product> PRODUCTS = new ArrayList<>();
+    private ArrayList<ProductMenuItem> PRODUCTS = new ArrayList<>();
     private RVAdapter adapter;
 
     public static ProductsFragment newInstance(int page) {
@@ -45,7 +50,7 @@ public class ProductsFragment extends NamedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_products, container, false);
-        if(PRODUCTS.size() == 0){
+        if (PRODUCTS.size() == 0) {
             loadProducts();
         }
 //        if (PRODUCTS == null) {
@@ -120,7 +125,9 @@ public class ProductsFragment extends NamedFragment {
 
     private void updateListItems(List<Product> products) {
         PRODUCTS.clear();
-        PRODUCTS.addAll(products);
+        for (Product p : products){
+            PRODUCTS.add( new ProductMenuItem(p));
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -144,14 +151,48 @@ public class ProductsFragment extends NamedFragment {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int i) {
+        public void onBindViewHolder(final RecyclerView.ViewHolder holder, int i) {
             if (holder instanceof ProductViewHolder) {
-                ((ProductViewHolder) holder).productName.setText(PRODUCTS.get(i).getName());
-                String p = PRODUCTS.get(i).getUnitprice() + "€";
+                final ProductMenuItem product = PRODUCTS.get(i);
+                ((ProductViewHolder) holder).productName.setText(product.getName());
+                String p = product.getUnitPrice() + "€";
                 ((ProductViewHolder) holder).productPrice.setText(p);
+                ((ProductViewHolder) holder).quantityTV.setText(String.valueOf(product.getQuantity()));
+                updateButtonsVisibility((ProductViewHolder) holder, product.getQuantity());
+
+                ((ProductViewHolder) holder).addButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int quantityActual = Integer.valueOf(((ProductViewHolder) holder).quantityTV.getText().toString());
+                        quantityActual++;
+                        ((ProductViewHolder) holder).quantityTV.setText(String.valueOf(quantityActual));
+                        product.setQuantity(quantityActual);
+                        updateButtonsVisibility((ProductViewHolder) holder,quantityActual);
+                    }
+                });
+                ((ProductViewHolder) holder).subButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int quantityActual = Integer.valueOf(((ProductViewHolder) holder).quantityTV.getText().toString());
+                        quantityActual--;
+                        product.setQuantity(quantityActual);
+                        ((ProductViewHolder) holder).quantityTV.setText(String.valueOf(quantityActual));
+                        updateButtonsVisibility((ProductViewHolder) holder,quantityActual);
+                    }
+                });
+
             }
         }
 
+        private void updateButtonsVisibility(ProductViewHolder holder, int quantity){
+            if (quantity == 0) {
+                holder.subButton.setVisibility(GONE);
+                holder.quantityTV.setVisibility(GONE);
+            }else {
+                holder.subButton.setVisibility(View.VISIBLE);
+                holder.quantityTV.setVisibility(View.VISIBLE);
+            }
+        }
         @Override
         public int getItemCount() {
             return PRODUCTS.size();
@@ -163,12 +204,16 @@ public class ProductsFragment extends NamedFragment {
         }
 
         class ProductViewHolder extends RecyclerView.ViewHolder {
-            TextView productName, productPrice;
+            TextView productName, productPrice, quantityTV;
+            Button addButton, subButton;
 
             ProductViewHolder(View itemView) {
                 super(itemView);
                 productName = (TextView) itemView.findViewById(R.id.product_name);
                 productPrice = (TextView) itemView.findViewById(R.id.product_price);
+                quantityTV = (TextView) itemView.findViewById(R.id.quantityTextView);
+                addButton = (Button) itemView.findViewById(R.id.addButton);
+                subButton = (Button) itemView.findViewById(R.id.subButton);
             }
         }
     }
@@ -178,8 +223,7 @@ public class ProductsFragment extends NamedFragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            if(PRODUCTS.size() == 0)
-                loadProducts();
+            loadProducts();
         }
     }
 }

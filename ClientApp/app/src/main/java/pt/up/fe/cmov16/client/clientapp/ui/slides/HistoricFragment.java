@@ -86,7 +86,7 @@ public class HistoricFragment extends NamedFragment {
                         public void onResponse(Consult response) {
                             for (Request r : response.getRequests())
                                 requestsMade.add(r);
-                            if (response.getVouchers().size() > 0) {
+                            if (response.getVouchers() != null && response.getVouchers().size() > 0) {
                                 Set<String> vouchersJson = new HashSet<String>();
                                 Gson gson = new Gson();
                                 for (Voucher v : response.getVouchers()) {
