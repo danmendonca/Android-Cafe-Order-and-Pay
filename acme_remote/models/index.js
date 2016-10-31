@@ -50,7 +50,7 @@ sequelize
       sequelize.sync({
         force: true,
         // logging: console.log
-      }).then(() => {
+      }).then((result) => {
         //costumers
         sequelize.models.costumer.create({
           username: 'dmendonca',
@@ -128,41 +128,41 @@ sequelize
           unitprice: 0.8
         }).then(() => { });
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'Francesinha',
           unitprice: 10.0,
         }).then(() => { });
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'French Toast',
           unitprice: 2.5,
         }).then(() => { });
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'Coke',
           unitprice: 1.5,
         }).then(() => { });
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'Evian Water',
           unitprice: 1,
         }).then(() => { });
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'Chocolate Cake',
           unitprice: 3,
         }).then(() => { });
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'Cheesecake',
           unitprice: 3.2,
         }).then(() => { });
         sequelize.models.product.create({
-          active: false,
+          active: true,
           name: 'Super Bock',
           unitprice: 1.5,
         }).then(() => { });
-      })
+      });
     }
     else {
       sequelize.sync({
