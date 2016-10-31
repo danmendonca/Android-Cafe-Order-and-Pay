@@ -39,15 +39,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Costumer c = new Costumer();
-        c.setUsername("dmc");
-        c.setCreditcarddate("");
-        c.setCreditcardnumber("");
-        c.setName("");
-        c.setPassword("");
-        c.setPin("");
-        c.setUuid("45");
-        saveUserDataAndShowPIN(c);
         ApiInvoker.initializeInstance();
         api = new DefaultApi();
 
