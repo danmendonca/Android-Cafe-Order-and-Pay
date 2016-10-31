@@ -66,16 +66,8 @@ public class SlideActivity extends FragmentActivity {
         tittle = (TextView) findViewById(R.id.frag_tittle);
         tittle.setText(fragments[0].toString());
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fabButton);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mPager);
-
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     @Override

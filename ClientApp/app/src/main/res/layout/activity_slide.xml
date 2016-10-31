@@ -14,21 +14,28 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:gravity="center"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <TextView
                 android:id="@+id/frag_tittle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
+                android:gravity="left"
                 android:textColor="@android:color/white"
                 android:fontFamily="sans-serif-light"
                 android:textStyle="normal"
                 android:textSize="17dp"
                 android:paddingTop="10dp"/>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_shop"
+                android:gravity="right"
+                android:foregroundGravity="right"
+                android:contentDescription="@string/cart" />
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
@@ -47,18 +54,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:scaleType="fitXY"
-        app:borderWidth="0dp"
-        app:backgroundTint="@android:color/holo_green_light"/>
 
 </android.support.design.widget.CoordinatorLayout>
 

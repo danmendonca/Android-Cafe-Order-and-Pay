@@ -86,7 +86,7 @@ public class HistoricFragment extends NamedFragment {
                         public void onResponse(Consult response) {
                             for (Request r : response.getRequests())
                                 requestsMade.add(r);
-                            if (response.getVouchers().size() > 0) {
+                            if (response.getVouchers() != null && response.getVouchers().size() > 0) {
                                 Set<String> vouchersJson = new HashSet<String>();
                                 Gson gson = new Gson();
                                 for (Voucher v : response.getVouchers()) {
@@ -106,7 +106,8 @@ public class HistoricFragment extends NamedFragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("RequestsOv-Fetch", error.getMessage());
+                            if (error.getMessage() != null)
+                                Log.d("RequestsOv-Fetch", error.getMessage());
                         }
                     });
         } catch (Exception e) {

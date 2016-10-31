@@ -8,4 +8,5 @@
     <string name="credit_card_expiration_date">Credit card expiration date</string>
     <string name="credit_card_number">Credit card number</string>
     <string name="name">Name</string>
+    <string name="cart">cart</string>
 </resources>
