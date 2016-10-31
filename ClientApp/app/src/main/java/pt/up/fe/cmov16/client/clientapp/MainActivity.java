@@ -37,17 +37,16 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private DefaultApi api;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         ApiInvoker.initializeInstance();
         api = new DefaultApi();
 
-        if (User.getInstance(this).isFirstTime()) {
+        if (User.getInstance(this).isFirstTime())
             setFirstTimeScreen();
-        } else {
+        else
             startSlideActivity();
-        }
-
     }
 
     private void setFirstTimeScreen() {
