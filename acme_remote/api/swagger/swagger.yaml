@@ -154,7 +154,7 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/RequestPut'
+            $ref: '#/definitions/RequestParam'
       responses:
         "200":
           description: Success
@@ -317,7 +317,7 @@ definitions:
       type:
         type: integer
         format: int32
-      key:
+      signature:
         type: string
       costumerUuid:
         type: string
@@ -326,16 +326,16 @@ definitions:
         format: int32
       isused:
         type: boolean
-      number:
-        type: integer
-        format: int32
   VoucherParam:
     properties:
       id:
         type: integer
         format: int32
-      key:
+      signature:
         type: string
+      type:
+        type: integer
+        format: int32
   Request:
     type: object
     properties:
@@ -409,14 +409,12 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Voucher'
-  RequestPut:
+  RequestParam:
     required:
       - costumerUuid
-      - pin
+      - requestlines
     properties:
       costumerUuid:
-        type: string
-      pin:
         type: string
       requestlines:
         type: array

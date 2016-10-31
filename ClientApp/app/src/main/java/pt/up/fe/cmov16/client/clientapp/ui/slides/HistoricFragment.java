@@ -86,7 +86,7 @@ public class HistoricFragment extends NamedFragment {
                         public void onResponse(Consult response) {
                             for (Request r : response.getRequests())
                                 requestsMade.add(r);
-                            if (response.getVouchers().size() > 0) {
+                            if (response.getVouchers() != null && response.getVouchers().size() > 0) {
                                 Set<String> vouchersJson = new HashSet<String>();
                                 Gson gson = new Gson();
                                 for (Voucher v : response.getVouchers()) {
@@ -157,8 +157,8 @@ public class HistoricFragment extends NamedFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof RequestOverviewViewHolder) {
                 Request request = requestsMade.get(position);
-//                ((RequestOverviewViewHolder) holder).header.setText(request.getId());
-//                ((RequestOverviewViewHolder) holder).info.setText(request.getCostumerUuid());
+                ((RequestOverviewViewHolder) holder).header.setText(request.getId().toString());
+                ((RequestOverviewViewHolder) holder).info.setText(request.getCostumerUuid());
             }
         }
 
@@ -169,6 +169,7 @@ public class HistoricFragment extends NamedFragment {
 
         private class RequestOverviewViewHolder extends RecyclerView.ViewHolder {
             TextView header, info;
+
 
             public RequestOverviewViewHolder(View view) {
                 super(view);
