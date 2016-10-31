@@ -33,4 +33,8 @@ public class ProductMenuItem implements Serializable {
     public Double getUnitPrice() {
         return product.getUnitprice();
     }
+
+    public int getId() {
+        return product.getId();
+    }
 }
