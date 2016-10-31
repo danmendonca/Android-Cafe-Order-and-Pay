@@ -1,7 +1,9 @@
 package pt.up.fe.cmov16.client.clientapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,9 @@ import com.android.volley.VolleyError;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+
 import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Costumer;
@@ -24,6 +29,7 @@ import io.swagger.client.model.LoginParam;
 import io.swagger.client.model.RegisterParam;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
 import pt.up.fe.cmov16.client.clientapp.ui.SlideActivity;
+import pt.up.fe.cmov16.client.clientapp.util.ShPrefKeys;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -33,7 +39,15 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Costumer c = new Costumer();
+        c.setUsername("dmc");
+        c.setCreditcarddate("");
+        c.setCreditcardnumber("");
+        c.setName("");
+        c.setPassword("");
+        c.setPin("");
+        c.setUuid("45");
+        saveUserDataAndShowPIN(c);
         ApiInvoker.initializeInstance();
         api = new DefaultApi();
 

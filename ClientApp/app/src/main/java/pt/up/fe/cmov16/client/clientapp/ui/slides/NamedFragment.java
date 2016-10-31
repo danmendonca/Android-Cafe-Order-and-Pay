@@ -3,11 +3,11 @@ package pt.up.fe.cmov16.client.clientapp.ui.slides;
 import android.support.v4.app.Fragment;
 
 public class NamedFragment extends Fragment {
-    protected String tittle;
+    protected String title;
 
     @Override
     public String toString(){
-        return (tittle!=null)? tittle : "NoTittleDefined";
+        return (title !=null)? title : "NoTittleDefined";
     }
 
 }

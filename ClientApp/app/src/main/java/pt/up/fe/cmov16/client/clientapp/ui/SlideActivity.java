@@ -50,7 +50,7 @@ public class SlideActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //change tittle when page change
+                //change title when page change
                 tittle.setText(fragments[position].toString());
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true, true);
                 //fragments[position].focusObtained(SlideActivity.this);

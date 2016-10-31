@@ -38,7 +38,7 @@ public class ProductsFragment extends NamedFragment {
         //args.putInt(ARG_PAGE, page);
         ProductsFragment fragment = new ProductsFragment();
         fragment.setArguments(args);
-        fragment.tittle = "Menu";
+        fragment.title = "Menu";
         return fragment;
     }
 
