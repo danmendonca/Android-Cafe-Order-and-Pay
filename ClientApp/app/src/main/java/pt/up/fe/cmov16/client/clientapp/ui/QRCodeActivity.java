@@ -1,28 +1,14 @@
 package pt.up.fe.cmov16.client.clientapp.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import net.glxn.qrgen.android.QRCode;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.swagger.client.model.Product;
@@ -73,40 +59,69 @@ public class QRCodeActivity extends Activity {
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         img.setImageBitmap(generateBitMap());
+
+        Log.e(QRCodeActivity.class.toString(),requestToString());
     }
 
     private Bitmap generateBitMap() {
         int w = (metrics.widthPixels >= metrics.heightPixels) ? metrics.widthPixels : metrics.heightPixels;
 
-        return QRCode.from(requestToJson())
+        return QRCode.from(requestToString())
                 .withSize(w, w)
                 .withColor(0xFFEF4B4D, 0x0FFFFFFF)
                 .bitmap();
     }
 
-    private String requestToJson() {
-        JsonObject request = new JsonObject();
-        request.addProperty("costumerID", User.getInstance(QRCodeActivity.this).getCostumerID());
+    private String requestToString() {
+//        JsonObject request = new JsonObject();
+//        request.addProperty("costumerID", User.getInstance(QRCodeActivity.this).getCostumerID());
+//
+//        JsonArray prodsJsonArray = new JsonArray();
+//        for (ProductMenuItem prod : products) {
+//            JsonObject prodJson = new JsonObject();
+//            prodJson.addProperty("id", prod.getId());
+//            prodJson.addProperty("quantity", prod.getQuantity());
+//            prodsJsonArray.add(prodJson);
+//        }
+//
+//        JsonArray vouchersJsonArray = new JsonArray();
+//        for (Voucher voucher : vouchers) {
+//            JsonObject voucherJson = new JsonObject();
+//            voucherJson.addProperty("id", voucher.getId());
+//            voucherJson.addProperty("type", voucher.getType());
+//            voucherJson.addProperty("signature", voucher.getKey());
+//            vouchersJsonArray.add(voucherJson);
+//        }
+//
+//        request.add("products", prodsJsonArray);
+//        request.add("vouchers", vouchersJsonArray);
+//        return request.toString();
 
-        JsonArray prodsJsonArray = new JsonArray();
-        for (ProductMenuItem prod : products) {
-            JsonObject prodJson = new JsonObject();
-            prodJson.addProperty("id", prod.getId());
-            prodJson.addProperty("quantity", prod.getQuantity());
-            prodsJsonArray.add(prodJson);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(User.getInstance(QRCodeActivity.this).getCostumerID());
+        sb.append(";");
+
+        for (int i = 0; i < products.size(); i++) {
+            sb.append(products.get(i).getId());
+            sb.append(",");
+            sb.append(products.get(i).getQuantity());
+            if(i!=products.size()-1){
+                sb.append("|");
+            }
         }
+        sb.append(";");
 
-        JsonArray vouchersJsonArray = new JsonArray();
-        for (Voucher voucher : vouchers) {
-            JsonObject voucherJson = new JsonObject();
-            voucherJson.addProperty("id", voucher.getId());
-            voucherJson.addProperty("type", voucher.getType());
-            voucherJson.addProperty("signature", voucher.getKey());
-            vouchersJsonArray.add(voucherJson);
+        for (int i = 0; i < vouchers.size(); i++) {
+            sb.append(vouchers.get(i).getId());
+            sb.append(",");
+            sb.append(vouchers.get(i).getType());
+            sb.append(",");
+            sb.append(vouchers.get(i).getKey());
+            if(i!=vouchers.size()-1){
+                sb.append("|");
+            }
         }
-
-        request.add("products", prodsJsonArray);
-        request.add("vouchers", vouchersJsonArray);
-        return request.toString();
+        return sb.toString();
     }
 }

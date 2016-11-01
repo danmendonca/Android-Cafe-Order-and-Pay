@@ -125,16 +125,17 @@ public class ProductsFragment extends NamedFragment {
 
     private void updateListItems(List<Product> products) {
         PRODUCTS.clear();
-        for (Product p : products){
-            PRODUCTS.add( new ProductMenuItem(p));
+        for (Product p : products) {
+            PRODUCTS.add(new ProductMenuItem(p));
         }
-        adapter.notifyDataSetChanged();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     public ArrayList<ProductMenuItem> getProducts() {
         ArrayList<ProductMenuItem> products = new ArrayList<>();
-        for (ProductMenuItem prod : PRODUCTS){
-            if (prod.getQuantity()>0)
+        for (ProductMenuItem prod : PRODUCTS) {
+            if (prod.getQuantity() > 0)
                 products.add(prod);
         }
         return products;
@@ -176,7 +177,7 @@ public class ProductsFragment extends NamedFragment {
                         quantityActual++;
                         ((ProductViewHolder) holder).quantityTV.setText(String.valueOf(quantityActual));
                         product.setQuantity(quantityActual);
-                        updateButtonsVisibility((ProductViewHolder) holder,quantityActual);
+                        updateButtonsVisibility((ProductViewHolder) holder, quantityActual);
                     }
                 });
                 ((ProductViewHolder) holder).subButton.setOnClickListener(new View.OnClickListener() {
@@ -186,22 +187,23 @@ public class ProductsFragment extends NamedFragment {
                         quantityActual--;
                         product.setQuantity(quantityActual);
                         ((ProductViewHolder) holder).quantityTV.setText(String.valueOf(quantityActual));
-                        updateButtonsVisibility((ProductViewHolder) holder,quantityActual);
+                        updateButtonsVisibility((ProductViewHolder) holder, quantityActual);
                     }
                 });
 
             }
         }
 
-        private void updateButtonsVisibility(ProductViewHolder holder, int quantity){
+        private void updateButtonsVisibility(ProductViewHolder holder, int quantity) {
             if (quantity == 0) {
                 holder.subButton.setVisibility(GONE);
                 holder.quantityTV.setVisibility(GONE);
-            }else {
+            } else {
                 holder.subButton.setVisibility(View.VISIBLE);
                 holder.quantityTV.setVisibility(View.VISIBLE);
             }
         }
+
         @Override
         public int getItemCount() {
             return PRODUCTS.size();

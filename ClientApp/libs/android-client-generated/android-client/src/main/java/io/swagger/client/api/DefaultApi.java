@@ -56,8 +56,8 @@ import io.swagger.client.model.Request;
 import io.swagger.client.model.RequestPut;
 
 public class DefaultApi {
-    String basePath = "http://10.0.2.2:8080/api";
-    //String basePath = "https://cmov1.herokuapp.com/api";
+    //String basePath = "http://10.0.2.2:8080/api";
+    String basePath = "https://cmov1.herokuapp.com/api";
     //String basePath = "localhost:8080/api";
     ApiInvoker apiInvoker = ApiInvoker.getInstance();
 
