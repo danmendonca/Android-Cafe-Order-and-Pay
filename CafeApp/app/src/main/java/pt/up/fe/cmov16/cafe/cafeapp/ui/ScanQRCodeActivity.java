@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -52,6 +51,7 @@ public class ScanQRCodeActivity extends Activity {
         requestLayout = (RelativeLayout) findViewById(R.id.info_request);
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         requestTV = (TextView) findViewById(R.id.request_text);
+        TextView codeInfo = (TextView) findViewById(R.id.code_info);
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
@@ -166,71 +166,37 @@ public class ScanQRCodeActivity extends Activity {
         requestLayout.setVisibility(View.VISIBLE);
         requestTV.setText(qrCodeString);
 
-        String[] fields = qrCodeString.split(";");
-
         String costumerID = "";
         ArrayList<ProductMenuItem> productMenuItems = new ArrayList<>();
         ArrayList<Voucher> vouchers = new ArrayList<>();
-        for (int i = 0; i < fields.length; i++) {
-            Log.e("Fields", fields[i]);
-            String field = fields[i];
-            if (i == 0) {//costumerID
-                costumerID = field;
-            } else if (i == 1) {//products
-                String[] prods = field.split("\\|");
-                for (String prod : prods) {
-                    String[] prodFields = prod.split(",");
-                    Product product = new Product();
-                    product.setId(Integer.valueOf(prodFields[0]));
-                    ProductMenuItem productMenuItem = new ProductMenuItem(product);
-                    productMenuItem.setQuantity(Integer.valueOf(prodFields[1]));
-                    productMenuItems.add(productMenuItem);
-                }
-            } else if (i == 2) {//vouchers
-                String[] vcs = field.split("\\|");
-                for (String voucherString : vcs) {
-                    String[] voucherFields = voucherString.split(",");
-                    Voucher voucher = new Voucher();
-                    voucher.setId(Integer.valueOf(voucherFields[0]));
-                    voucher.setType(Integer.valueOf(voucherFields[1]));
-                    voucher.setKey(voucherFields[2]);
-                    vouchers.add(voucher);
-                }
-            }
-        }
-        processRequest(costumerID, productMenuItems, vouchers);
+        try {
+            JSONObject request = new JSONObject(qrCodeString);
+            costumerID = request.getString("costumerID");
 
-//        String costumerID = "";
-//        ArrayList<ProductMenuItem> productMenuItems = new ArrayList<>();
-//        ArrayList<Voucher> vouchers = new ArrayList<>();
-//        try {
-//            JSONObject request = new JSONObject(qrCodeString);
-//            costumerID = request.getString("costumerID");
-//
-//            JSONArray productsArray = request.getJSONArray("products");
-//            JSONArray vouchersArray = request.getJSONArray("vouchers");
-//
-//            for (int i = 0; i < productsArray.length(); i++) {
-//                JSONObject prodJson = (JSONObject) productsArray.get(i);
-//                Product product = new Product();
-//                product.setId(prodJson.getInt("id"));
-//                ProductMenuItem productMenuItem = new ProductMenuItem(product);
-//                productMenuItem.setQuantity(prodJson.getInt("quantity"));
-//                productMenuItems.add(productMenuItem);
-//            }
-//            for (int i = 0; i < vouchersArray.length(); i++) {
-//                JSONObject voucherJson = (JSONObject) vouchersArray.get(i);
-//                Voucher voucher = new Voucher();
-//                voucher.setId(voucherJson.getInt("id"));
-//                voucher.setType(voucherJson.getInt("type"));
-//                voucher.setKey(voucherJson.getString("signature"));
-//                vouchers.add(voucher);
-//            }
-//
-//            processRequest(costumerID,productMenuItems,vouchers);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+            JSONArray productsArray = request.getJSONArray("products");
+            JSONArray vouchersArray = request.getJSONArray("vouchers");
+
+            for (int i = 0; i < productsArray.length(); i++) {
+                JSONObject prodJson = (JSONObject) productsArray.get(i);
+                Product product = new Product();
+                product.setId(prodJson.getInt("id"));
+                ProductMenuItem productMenuItem = new ProductMenuItem(product);
+                productMenuItem.setQuantity(prodJson.getInt("quantity"));
+                productMenuItems.add(productMenuItem);
+            }
+            for (int i = 0; i < vouchersArray.length(); i++) {
+                JSONObject voucherJson = (JSONObject) vouchersArray.get(i);
+                Voucher voucher = new Voucher();
+                voucher.setId(voucherJson.getInt("id"));
+                voucher.setType(voucherJson.getInt("type"));
+                voucher.setSignature(voucherJson.getString("signature"));
+                vouchers.add(voucher);
+            }
+
+            processRequest(costumerID,productMenuItems,vouchers);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void processRequest(String costumerID, ArrayList<ProductMenuItem> productMenuItems, ArrayList<Voucher> vouchers) {
@@ -238,30 +204,19 @@ public class ScanQRCodeActivity extends Activity {
 
         StringBuilder sb = new StringBuilder();
         sb.append("dados lidos do qrCode:\n");
-        sb.append("\tcostumerID: ");
-        sb.append(costumerID);
-        sb.append("\n");
+        sb.append("\tcostumerID: ");sb.append(costumerID);sb.append("\n");
 
-        sb.append("products: ");
-        sb.append("\n");
-        for (ProductMenuItem prod : productMenuItems) {
-            sb.append("\tProd{id: ");
-            sb.append(prod.getId());
-            sb.append(";quant: ");
-            sb.append(prod.getQuantity());
-            sb.append("}\n");
+        sb.append("products: ");sb.append("\n");
+        for (ProductMenuItem prod : productMenuItems){
+            sb.append("\tProd{id: ");sb.append(prod.getId());sb.append(";quant: ");
+            sb.append(prod.getQuantity());sb.append("}\n");
         }
 
-        sb.append("vouchers: ");
-        sb.append("\n");
-        for (Voucher voucher : vouchers) {
-            sb.append("\tVoucher{id: ");
-            sb.append(voucher.getId());
-            sb.append(";type: ");
-            sb.append(voucher.getType());
-            sb.append(";signature: ");
-            sb.append(voucher.getKey());
-            sb.append("}\n");
+        sb.append("vouchers: ");sb.append("\n");
+        for (Voucher voucher : vouchers){
+            sb.append("\tVoucher{id: ");sb.append(voucher.getId());sb.append(";type: ");
+            sb.append(voucher.getType());sb.append(";signature: ");
+            sb.append(voucher.getSignature());sb.append("}\n");
         }
         requestTV.setText(sb.toString());
     }

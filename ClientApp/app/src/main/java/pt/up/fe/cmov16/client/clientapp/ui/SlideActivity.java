@@ -1,5 +1,6 @@
 package pt.up.fe.cmov16.client.clientapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.transition.Slide;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -50,7 +53,7 @@ public class SlideActivity extends FragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //change tittle when page change
+                //change title when page change
                 tittle.setText(fragments[position].toString());
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true, true);
                 //fragments[position].focusObtained(SlideActivity.this);
@@ -66,14 +69,15 @@ public class SlideActivity extends FragmentActivity {
         tittle = (TextView) findViewById(R.id.frag_tittle);
         tittle.setText(fragments[0].toString());
 
-        FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fabButton);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mPager);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.cartButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent i = new Intent(SlideActivity.this,CartActivity.class);
+                i.putExtra(CartActivity.productsArrayKey,((ProductsFragment)fragments[0]).getProducts());
+                startActivity(i);
             }
         });
     }

@@ -39,7 +39,7 @@ public class HistoricFragment extends NamedFragment {
         //args.putInt(ARG_PAGE, page);
         HistoricFragment fragment = new HistoricFragment();
         fragment.setArguments(args);
-        fragment.tittle = "Historic";
+        fragment.title = "Historic";
         return fragment;
     }
 
@@ -52,18 +52,15 @@ public class HistoricFragment extends NamedFragment {
 
         Set<String> rqsts = preferences.getStringSet(ShPrefKeys.RequestsOvShPrefKey, null);
 
-        if (rqsts != null && rqsts.size() > 0) {
-            Gson gson = new Gson();
-            for (String r : rqsts) {
-                Request fromGson = gson.fromJson(r, Request.class);
-                if (fromGson != null)
-                    requestsMade.add(fromGson);
-            }
-        }
-
-        if (requestsMade.size() == 0) {
-            askForRequests();
-        }
+//        if (rqsts != null && rqsts.size() > 0) {
+//            Gson gson = new Gson();
+//            for (String r : rqsts) {
+//                Request fromGson = gson.fromJson(r, Request.class);
+//                if (fromGson != null)
+//                    requestsMade.add(fromGson);
+//            }
+//        }
+        askForRequests();
 
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_historic);
         rv.setHasFixedSize(true);
@@ -86,13 +83,14 @@ public class HistoricFragment extends NamedFragment {
                         public void onResponse(Consult response) {
                             for (Request r : response.getRequests())
                                 requestsMade.add(r);
-                            if (response.getVouchers().size() > 0) {
+                            if (response.getVouchers() != null && response.getVouchers().size() > 0) {
                                 Set<String> vouchersJson = new HashSet<String>();
                                 Gson gson = new Gson();
                                 for (Voucher v : response.getVouchers()) {
                                     String vStr = gson.toJson(v);
                                     vouchersJson.add(vStr);
                                 }
+                                adapter.notifyDataSetChanged();
                                 Context ctx = getContext();
                                 SharedPreferences sp = ctx.getSharedPreferences(
                                         ctx.getResources().getString(R.string.preference_file_key),
@@ -100,13 +98,15 @@ public class HistoricFragment extends NamedFragment {
 
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putStringSet(ShPrefKeys.vouchersShPrefKey, vouchersJson);
+                                editor.commit();
                             }
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d("RequestsOv-Fetch", error.getMessage());
+                            if (error.getMessage() != null)
+                                Log.d("RequestsOv-Fetch", error.getMessage());
                         }
                     });
         } catch (Exception e) {
