@@ -3,15 +3,12 @@ package pt.up.fe.cmov16.client.clientapp.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.transition.Slide;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -75,8 +72,8 @@ public class SlideActivity extends FragmentActivity {
         findViewById(R.id.cartButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SlideActivity.this,CartActivity.class);
-                i.putExtra(CartActivity.productsArrayKey,((ProductsFragment)fragments[0]).getProducts());
+                Intent i = new Intent(SlideActivity.this, CartActivity.class);
+                i.putExtra(CartActivity.productsArrayKey, ((ProductsFragment) fragments[0]).getProducts());
                 startActivity(i);
             }
         });

@@ -4,11 +4,7 @@ package pt.up.fe.cmov16.client.clientapp.logic;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.google.gson.Gson;
-
 import pt.up.fe.cmov16.client.clientapp.R;
-
-import static pt.up.fe.cmov16.client.clientapp.util.ShPrefKeys.userSharedPreferencesKey;
 
 
 public class User {
@@ -105,7 +101,7 @@ public class User {
         return costumerID;
     }
 
-    public String toString(){
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("User {\n");
 

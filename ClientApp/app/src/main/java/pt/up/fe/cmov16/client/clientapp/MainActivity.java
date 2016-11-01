@@ -24,7 +24,6 @@ import io.swagger.client.model.Costumer;
 import io.swagger.client.model.LoginParam;
 import io.swagger.client.model.RegisterParam;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
-import pt.up.fe.cmov16.client.clientapp.ui.QRCodeActivity;
 import pt.up.fe.cmov16.client.clientapp.ui.SlideActivity;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {

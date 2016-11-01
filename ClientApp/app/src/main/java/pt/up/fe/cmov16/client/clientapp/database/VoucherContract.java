@@ -11,19 +11,16 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.swagger.client.model.Product;
 import io.swagger.client.model.Voucher;
-
-import static pt.up.fe.cmov16.client.clientapp.database.ProductContract.ProductEntry.COLUMN_NAME_NAME;
-import static pt.up.fe.cmov16.client.clientapp.database.VoucherContract.VoucherEntry.*;
 
 public class VoucherContract {
 
     private static final String TAG = VoucherContract.class.toString();
 
-    public VoucherContract(){
+    public VoucherContract() {
 
     }
+
     /* Inner class that defines the table contents */
     static abstract class VoucherEntry implements BaseColumns {
         static final String TABLE_NAME = "vouchers";
@@ -33,34 +30,34 @@ public class VoucherContract {
     }
 
     private final static String SELECT_ALL_VOUCHERS =
-            "SELECT * FROM " + TABLE_NAME;
+            "SELECT * FROM " + VoucherEntry.TABLE_NAME;
 
-    public static void saveVoucherInDB(Context context, List<Voucher> vouchers){
-        if(context==null){
-            Log.e(TAG,"NULL CONTEXT UPDATING PRODUCTS DB");
+    public static void saveVoucherInDB(Context context, List<Voucher> vouchers) {
+        if (context == null) {
+            Log.e(TAG, "NULL CONTEXT UPDATING PRODUCTS DB");
             return;
         }
         if (vouchers == null || vouchers.isEmpty()) {
-            Log.e(TAG,"empty array");
+            Log.e(TAG, "empty array");
             return;
         }
         DbHelper dbHelper = new DbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        if(db==null){
-            Log.e(TAG,"NULL DB UPDATING PRODUCTS DB");
+        if (db == null) {
+            Log.e(TAG, "NULL DB UPDATING PRODUCTS DB");
             return;
         }
-        int newVouchers=0;
-        for (Voucher voucher : vouchers){
+        int newVouchers = 0;
+        for (Voucher voucher : vouchers) {
             ContentValues values = new ContentValues();
-            values.put(COLUMN_NAME_ID, voucher.getId());
-            values.put(COLUMN_NAME_TYPE, voucher.getType());
-            values.put(COLUMN_NAME_SIGNATURE, voucher.getKey());
+            values.put(VoucherEntry.COLUMN_NAME_ID, voucher.getId());
+            values.put(VoucherEntry.COLUMN_NAME_TYPE, voucher.getType());
+            values.put(VoucherEntry.COLUMN_NAME_SIGNATURE, voucher.getSignature());
             //INSERT
-            if (db.insert(TABLE_NAME, null, values) != -1)
+            if (db.insert(VoucherEntry.TABLE_NAME, null, values) != -1)
                 newVouchers++;
         }
-        Log.e(TAG,"NEW VOUCHERS: "+newVouchers);
+        Log.e(TAG, "NEW VOUCHERS: " + newVouchers);
     }
 
     public static ArrayList<Voucher> loadVouchers(final Context context) {
@@ -83,18 +80,18 @@ public class VoucherContract {
                 do {
                     // Get version from Cursor
                     int id = cursor.getInt(cursor.getColumnIndex(
-                            COLUMN_NAME_NAME));
+                            VoucherEntry.COLUMN_NAME_ID));
 
                     int type = cursor.getInt(cursor.getColumnIndex(
-                            COLUMN_NAME_TYPE));
+                            VoucherEntry.COLUMN_NAME_TYPE));
 
                     String signature = cursor.getString(cursor.getColumnIndex(
-                            COLUMN_NAME_SIGNATURE));
+                            VoucherEntry.COLUMN_NAME_SIGNATURE));
 
                     Voucher voucher = new Voucher();
                     voucher.setId(id);
                     voucher.setType(type);
-                    voucher.setKey(signature);
+                    voucher.setSignature(signature);
                     vouchers.add(voucher);
                     // move to next row
                 } while (cursor.moveToNext());

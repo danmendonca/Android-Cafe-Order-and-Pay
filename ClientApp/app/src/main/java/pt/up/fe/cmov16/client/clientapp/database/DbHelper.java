@@ -33,6 +33,7 @@ class DbHelper extends SQLiteOpenHelper {
     }
 
     private static final String TEXT_TYPE = " TEXT ";
+
     private static final String SQL_CREATE_PRODUCTS =
             "CREATE TABLE " + ProductEntry.TABLE_NAME + " (" +
                     ProductEntry.COLUMN_NAME_ID + " INTEGER PRIMARY KEY," +

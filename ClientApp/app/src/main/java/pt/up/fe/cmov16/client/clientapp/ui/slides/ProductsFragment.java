@@ -1,7 +1,6 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,21 +49,15 @@ public class ProductsFragment extends NamedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_products, container, false);
-        if (PRODUCTS.size() == 0) {
-            loadProducts();
-        }
-//        if (PRODUCTS == null) {
-//            PRODUCTS = new ArrayList<>();// NEVER REPLACE THIS REFERENCE, if needed clear it.
-//
-//        }
-
         //PREPARE LIST VIEW
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_products);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new RVAdapter();
         rv.setAdapter(adapter);
-
+        if (PRODUCTS.size() == 0) {
+            loadProducts();
+        }
         return rootView;
     }
 

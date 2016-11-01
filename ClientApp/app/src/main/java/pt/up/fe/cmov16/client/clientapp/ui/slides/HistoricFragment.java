@@ -1,7 +1,5 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,21 +11,16 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Consult;
 import io.swagger.client.model.PinLoginParam;
 import io.swagger.client.model.Request;
-import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
-import pt.up.fe.cmov16.client.clientapp.util.ShPrefKeys;
 
 public class HistoricFragment extends NamedFragment {
 
@@ -48,13 +41,13 @@ public class HistoricFragment extends NamedFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_historic, container, false);
 
-        askForRequests();
-
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_historic);
         rv.setHasFixedSize(true);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new RVAdapter();
         rv.setAdapter(adapter);
+
+        askForRequests();
 
         return rootView;
     }
@@ -70,7 +63,9 @@ public class HistoricFragment extends NamedFragment {
                         @Override
                         public void onResponse(Consult response) {
                             requestsMade.addAll(response.getRequests());
-                            VoucherContract.saveVoucherInDB(getContext(),response.getVouchers());
+                            if (adapter != null)
+                                adapter.notifyDataSetChanged();
+                            VoucherContract.saveVoucherInDB(getContext(), response.getVouchers());
                         }
                     },
                     new Response.ErrorListener() {
@@ -87,18 +82,18 @@ public class HistoricFragment extends NamedFragment {
 
     @Override
     public void onPause() {
-        Context ctx = getContext();
-        SharedPreferences sp = ctx.getSharedPreferences(
-                ctx.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-
-        Set<String> requestsJson = new HashSet<String>();
-        Gson gson = new Gson();
-        for (Request r : requestsMade)
-            requestsJson.add(gson.toJson(r));
-
-        editor.putStringSet(ShPrefKeys.RequestsOvShPrefKey, requestsJson);
-        editor.commit();
+//        Context ctx = getContext();
+//        SharedPreferences sp = ctx.getSharedPreferences(
+//                ctx.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sp.edit();
+//
+//        Set<String> requestsJson = new HashSet<String>();
+//        Gson gson = new Gson();
+//        for (Request r : requestsMade)
+//            requestsJson.add(gson.toJson(r));
+//
+//        editor.putStringSet(ShPrefKeys.RequestsOvShPrefKey, requestsJson);
+//        editor.commit();
         super.onPause();
     }
 
@@ -127,7 +122,7 @@ public class HistoricFragment extends NamedFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof RequestOverviewViewHolder) {
                 Request request = requestsMade.get(position);
-                ((RequestOverviewViewHolder) holder).header.setText(request.getId().toString());
+                ((RequestOverviewViewHolder) holder).header.setText(String.valueOf(request.getId()));
                 ((RequestOverviewViewHolder) holder).info.setText(request.getCostumerUuid());
             }
         }
@@ -139,7 +134,6 @@ public class HistoricFragment extends NamedFragment {
 
         private class RequestOverviewViewHolder extends RecyclerView.ViewHolder {
             TextView header, info;
-
 
             RequestOverviewViewHolder(View view) {
                 super(view);
