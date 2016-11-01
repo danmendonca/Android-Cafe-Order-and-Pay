@@ -3,6 +3,7 @@ package pt.up.fe.cmov16.client.clientapp.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +24,7 @@ public class SlideActivity extends FragmentActivity {
     private ViewPager mPager;
     private NamedFragment[] fragments;
     private TextView tittle;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,14 @@ public class SlideActivity extends FragmentActivity {
                 VouchersFragment.newInstance(2)
         };
 
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fabButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((HistoricFragment)fragments[1]).refresh();
+            }
+        });
+        floatingActionButton.hide();
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -54,6 +64,11 @@ public class SlideActivity extends FragmentActivity {
                 tittle.setText(fragments[position].toString());
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true, true);
                 //fragments[position].focusObtained(SlideActivity.this);
+                if(position==1){
+                    floatingActionButton.show();
+                }else {
+                    floatingActionButton.hide();
+                }
             }
 
             @Override

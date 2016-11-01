@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -62,6 +63,7 @@ public class HistoricFragment extends NamedFragment {
             api.getCostumerRequests(param, new Response.Listener<Consult>() {
                         @Override
                         public void onResponse(Consult response) {
+                            requestsMade.clear();
                             requestsMade.addAll(response.getRequests());
                             if (adapter != null)
                                 adapter.notifyDataSetChanged();
@@ -95,6 +97,11 @@ public class HistoricFragment extends NamedFragment {
 //        editor.putStringSet(ShPrefKeys.RequestsOvShPrefKey, requestsJson);
 //        editor.commit();
         super.onPause();
+    }
+
+    public void refresh() {
+        askForRequests();
+        Toast.makeText(getContext(),"Updating...",Toast.LENGTH_LONG).show();
     }
 
 
