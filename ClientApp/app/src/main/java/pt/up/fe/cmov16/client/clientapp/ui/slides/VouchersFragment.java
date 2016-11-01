@@ -21,12 +21,14 @@ import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.util.ShPrefKeys;
 
-public class VouchersFragment extends NamedFragment {
+public class VouchersFragment extends NamedFragment
+{
     private static String[] types = {"", "1 Free coffee", "1 Free popcorn pack", "5% Discount"};
     private ArrayList<Voucher> vouchers = new ArrayList<>();
     private VouchersFragment.RVAdapter adapter;
 
-    public static VouchersFragment newInstance(int page) {
+    public static VouchersFragment newInstance(int page)
+    {
         Bundle args = new Bundle();
         VouchersFragment fragment = new VouchersFragment();
         fragment.setArguments(args);
@@ -34,24 +36,27 @@ public class VouchersFragment extends NamedFragment {
         return fragment;
     }
 
-    public void loadVouchers() {
+    public void loadVouchers()
+    {
         Context ctx = getContext();
         SharedPreferences sp = ctx.getSharedPreferences(
                 ctx.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         Set<String> vouchersJson = sp.getStringSet(ShPrefKeys.vouchersShPrefKey, new HashSet<String>());
         Gson gson = new Gson();
-        vouchers.clear();
-        for (String s : vouchersJson) {
+        for (String s : vouchersJson)
+        {
             Log.e("Voucher", s);
             vouchers.add(gson.fromJson(s, Voucher.class));
         }
-        if (adapter != null)//when data loads before adapter creation
-            adapter.notifyDataSetChanged();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_vouchers, container, false);
+
+        if (vouchers.size() == 0)
+            loadVouchers();
 
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_vouchers);
         rv.setHasFixedSize(true);
@@ -59,25 +64,26 @@ public class VouchersFragment extends NamedFragment {
         adapter = new VouchersFragment.RVAdapter();
         rv.setAdapter(adapter);
 
-        if (vouchers.size() == 0)
-            loadVouchers();
-
         return rootView;
     }
 
-    public class RVAdapter extends RecyclerView.Adapter {
+    public class RVAdapter extends RecyclerView.Adapter
+    {
         private int VIEW_TYPE = 0;
 
         @Override
-        public int getItemViewType(int position) {
+        public int getItemViewType(int position)
+        {
             return VIEW_TYPE;
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)
+        {
             View v;
             RecyclerView.ViewHolder evh = null;
-            if (viewType == VIEW_TYPE) {
+            if (viewType == VIEW_TYPE)
+            {
                 v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.voucher_list_item, viewGroup, false);
                 evh = new VouchersFragment.RVAdapter.VoucherViewHolder(v);
             }
@@ -85,39 +91,37 @@ public class VouchersFragment extends NamedFragment {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int i) {
-            if (holder instanceof VouchersFragment.RVAdapter.VoucherViewHolder) {
-                ((VouchersFragment.RVAdapter.VoucherViewHolder) holder).voucherNumber.setText("" + vouchers.get(i).getNumber());
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int i)
+        {
+            if (holder instanceof VouchersFragment.RVAdapter.VoucherViewHolder)
+            {
+//                ((VouchersFragment.RVAdapter.VoucherViewHolder) holder).voucherNumber.setText("" + vouchers.get(i).getNumber());
                 ((VouchersFragment.RVAdapter.VoucherViewHolder) holder).voucherType.setText(types[vouchers.get(i).getType()]);
             }
         }
 
         @Override
-        public int getItemCount() {
+        public int getItemCount()
+        {
             return vouchers.size();
         }
 
         @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        public void onAttachedToRecyclerView(RecyclerView recyclerView)
+        {
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        class VoucherViewHolder extends RecyclerView.ViewHolder {
+        class VoucherViewHolder extends RecyclerView.ViewHolder
+        {
             TextView voucherNumber, voucherType;
 
-            VoucherViewHolder(View itemView) {
+            VoucherViewHolder(View itemView)
+            {
                 super(itemView);
                 voucherNumber = (TextView) itemView.findViewById(R.id.voucher_number);
                 voucherType = (TextView) itemView.findViewById(R.id.voucher_type);
             }
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            loadVouchers();
         }
     }
 }
