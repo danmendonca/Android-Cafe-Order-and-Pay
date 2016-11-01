@@ -3,14 +3,13 @@ package pt.up.fe.cmov16.client.clientapp.ui;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
 
     ArrayList<ProductVoucherWrapper> requestLines;
     RecyclerView rv;
-    //VoucherItemFragment voucherItemFragment;
+    SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +33,39 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
         setContentView(R.layout.activity_cart);
 
 
-        Bundle b = getIntent().getExtras();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        VoucherItemFragment voucherItemFragment = (VoucherItemFragment) fm.findFragmentById(R.id.frame_vouchers_cart_frag);
+        if (voucherItemFragment != null) {
+            ft.hide(voucherItemFragment);
+            ft.commit();
+        }
 
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        if (swipeContainer != null) {
+            swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    FragmentManager fm = getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+
+                    VoucherItemFragment voucherItemFragment = (VoucherItemFragment) fm.findFragmentById(R.id.frame_vouchers_cart_frag);
+                    if (voucherItemFragment == null)
+                        return;
+
+                    if (voucherItemFragment.isHidden()) {
+                        ft.show(voucherItemFragment);
+                    } else {
+                        ft.hide(voucherItemFragment);
+                    }
+                    ft.commit();
+                    swipeContainer.setRefreshing(false);
+                }
+            });
+        }
+
+        Bundle b = getIntent().getExtras();
         if (b.get(productsArrayKey) == null) {
             finish();
             return;
@@ -45,32 +75,6 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
 
         for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(productsArrayKey))
             requestLines.add(new ProductVoucherWrapper(pmi));
-
-        Button btn = (Button) findViewById(R.id.cart_vchr_btn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-
-//                if(fm.findFragmentById(R.id.list) == null)
-//                    ft.replace(R.id.flFragmentContainer, voucherItemFragment);
-                VoucherItemFragment voucherItemFragment = (VoucherItemFragment) fm.findFragmentById(R.id.frame_vouchers_cart_frag);
-                if (voucherItemFragment == null)
-                    return;
-
-                if (voucherItemFragment.isHidden()) {
-                    ft.show(voucherItemFragment);
-                } else {
-                    ft.hide(voucherItemFragment);
-                }
-                ft.commit();
-
-                Log.d("FM", "Show/Hide voucher cart frag");
-            }
-        });
-
 
         rv = (RecyclerView) findViewById(R.id.cart_items_rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);
