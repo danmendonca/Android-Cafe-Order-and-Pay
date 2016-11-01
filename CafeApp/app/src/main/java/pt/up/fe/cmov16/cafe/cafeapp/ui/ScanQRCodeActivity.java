@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -21,17 +22,25 @@ import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
+import io.swagger.client.model.Product;
+import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.cafe.cafeapp.R;
+import pt.up.fe.cmov16.cafe.cafeapp.logic.ProductMenuItem;
 
 
-public class ScanQRCodeActivity extends Activity{
+public class ScanQRCodeActivity extends Activity {
     private final static int PERMISSION_REQUEST_CAMERA = 0;
-    private RelativeLayout cameraLayout;
+    private RelativeLayout cameraLayout, requestLayout;
     private SurfaceView cameraView;
     private DisplayMetrics metrics;
-    private TextView codeInfo;
+    private TextView requestTV;
     Handler handler;
 
     @Override
@@ -39,9 +48,10 @@ public class ScanQRCodeActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_qrcode);
         cameraLayout = (RelativeLayout) findViewById(R.id.camera_layout);
+        requestLayout = (RelativeLayout) findViewById(R.id.info_request);
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
-
-        codeInfo = (TextView) findViewById(R.id.code_info);
+        requestTV = (TextView) findViewById(R.id.request_text);
+        TextView codeInfo = (TextView) findViewById(R.id.code_info);
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
@@ -65,7 +75,7 @@ public class ScanQRCodeActivity extends Activity{
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_CAMERA: {
                 // If request is cancelled, the result arrays are empty.
@@ -140,13 +150,74 @@ public class ScanQRCodeActivity extends Activity{
     }
 
     private void qrCodeReceived(final String qrCodeString) {
-        final String r = "Received: "+qrCodeString;
-        Log.e("ScanQrCode",r);
+        final String r = "Received: " + qrCodeString;
+        Log.e("ScanQrCode", r);
         handler.post(new Runnable() {
             @Override
             public void run() {
-                codeInfo.setText(r);
+                cameraLayout.setVisibility(View.GONE);
+                requestLayout.setVisibility(View.GONE);
+                loadFromJson(qrCodeString);
             }
         });
+    }
+
+    private void loadFromJson(String qrCodeString) {
+        requestLayout.setVisibility(View.VISIBLE);
+        requestTV.setText(qrCodeString);
+
+        String costumerID = "";
+        ArrayList<ProductMenuItem> productMenuItems = new ArrayList<>();
+        ArrayList<Voucher> vouchers = new ArrayList<>();
+        try {
+            JSONObject request = new JSONObject(qrCodeString);
+            costumerID = request.getString("costumerID");
+
+            JSONArray productsArray = request.getJSONArray("products");
+            JSONArray vouchersArray = request.getJSONArray("vouchers");
+
+            for (int i = 0; i < productsArray.length(); i++) {
+                JSONObject prodJson = (JSONObject) productsArray.get(i);
+                Product product = new Product();
+                product.setId(prodJson.getInt("id"));
+                ProductMenuItem productMenuItem = new ProductMenuItem(product);
+                productMenuItem.setQuantity(prodJson.getInt("quantity"));
+                productMenuItems.add(productMenuItem);
+            }
+            for (int i = 0; i < vouchersArray.length(); i++) {
+                JSONObject voucherJson = (JSONObject) vouchersArray.get(i);
+                Voucher voucher = new Voucher();
+                voucher.setId(voucherJson.getInt("id"));
+                voucher.setType(voucherJson.getInt("type"));
+                voucher.setKey(voucherJson.getString("signature"));
+                vouchers.add(voucher);
+            }
+
+            processRequest(costumerID,productMenuItems,vouchers);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void processRequest(String costumerID, ArrayList<ProductMenuItem> productMenuItems, ArrayList<Voucher> vouchers) {
+        //TODO fazer qq com isto em vez de brincar às strings :P
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("dados lidos do qrCode:\n");
+        sb.append("\tcostumerID: ");sb.append(costumerID);sb.append("\n");
+
+        sb.append("products: ");sb.append("\n");
+        for (ProductMenuItem prod : productMenuItems){
+            sb.append("\tProd{id: ");sb.append(prod.getId());sb.append(";quant: ");
+            sb.append(prod.getQuantity());sb.append("}\n");
+        }
+
+        sb.append("vouchers: ");sb.append("\n");
+        for (Voucher voucher : vouchers){
+            sb.append("\tVoucher{id: ");sb.append(voucher.getId());sb.append(";type: ");
+            sb.append(voucher.getType());sb.append(";signature: ");
+            sb.append(voucher.getKey());sb.append("}\n");
+        }
+        requestTV.setText(sb.toString());
     }
 }
