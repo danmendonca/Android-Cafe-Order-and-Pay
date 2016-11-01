@@ -46,6 +46,7 @@ public class QRCodeActivity extends Activity {
         products.add(p1);
         products.add(p2);
 
+        vouchers = new ArrayList<>();
         Voucher v = new Voucher();
         v.setId(1);
         v.setType(1);
@@ -54,7 +55,6 @@ public class QRCodeActivity extends Activity {
             sb.append("a");
         v.setKey(sb.toString());
 
-        vouchers = new ArrayList<>();
         vouchers.add(v);
 
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -110,6 +110,9 @@ public class QRCodeActivity extends Activity {
                 sb.append("|");
             }
         }
+        if(vouchers.size()==0)
+            return sb.toString();
+
         sb.append(";");
 
         for (int i = 0; i < vouchers.size(); i++) {
