@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.SlideActivity" />
-        <activity android:name=".ui.CartActivity"></activity>
+        <activity android:name=".ui.CartActivity" />
+        <activity android:name=".ui.QRCodeActivity" />
     </application>
 
 </manifest>
