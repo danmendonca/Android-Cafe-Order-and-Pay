@@ -6,6 +6,5 @@ package pt.up.fe.cmov16.client.clientapp.util;
 
 public final class ShPrefKeys {
     public static final String userSharedPreferencesKey = "MyUser";
-    public static final String vouchersShPrefKey = "VouchersKey";
     public static final String RequestsOvShPrefKey = "RequestsOverviewKey";
 }

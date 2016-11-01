@@ -25,6 +25,7 @@ import io.swagger.client.model.PinLoginParam;
 import io.swagger.client.model.Request;
 import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
+import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
 import pt.up.fe.cmov16.client.clientapp.util.ShPrefKeys;
 
@@ -46,20 +47,7 @@ public class HistoricFragment extends NamedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_historic, container, false);
-
-        SharedPreferences preferences = getContext().getSharedPreferences(getContext().getResources()
-                .getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
-        Set<String> rqsts = preferences.getStringSet(ShPrefKeys.RequestsOvShPrefKey, null);
-
-//        if (rqsts != null && rqsts.size() > 0) {
-//            Gson gson = new Gson();
-//            for (String r : rqsts) {
-//                Request fromGson = gson.fromJson(r, Request.class);
-//                if (fromGson != null)
-//                    requestsMade.add(fromGson);
-//            }
-//        }
+        
         askForRequests();
 
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_historic);
@@ -81,25 +69,8 @@ public class HistoricFragment extends NamedFragment {
             api.getCostumerRequests(param, new Response.Listener<Consult>() {
                         @Override
                         public void onResponse(Consult response) {
-                            for (Request r : response.getRequests())
-                                requestsMade.add(r);
-                            if (response.getVouchers() != null && response.getVouchers().size() > 0) {
-                                Set<String> vouchersJson = new HashSet<String>();
-                                Gson gson = new Gson();
-                                for (Voucher v : response.getVouchers()) {
-                                    String vStr = gson.toJson(v);
-                                    vouchersJson.add(vStr);
-                                }
-                                adapter.notifyDataSetChanged();
-                                Context ctx = getContext();
-                                SharedPreferences sp = ctx.getSharedPreferences(
-                                        ctx.getResources().getString(R.string.preference_file_key),
-                                        Context.MODE_PRIVATE);
-
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putStringSet(ShPrefKeys.vouchersShPrefKey, vouchersJson);
-                                editor.commit();
-                            }
+                            requestsMade.addAll(response.getRequests());
+                            VoucherContract.saveVoucherInDB(getContext(),response.getVouchers());
                         }
                     },
                     new Response.ErrorListener() {
@@ -170,7 +141,7 @@ public class HistoricFragment extends NamedFragment {
             TextView header, info;
 
 
-            public RequestOverviewViewHolder(View view) {
+            RequestOverviewViewHolder(View view) {
                 super(view);
                 header = (TextView) view.findViewById(R.id.request_ov_header);
                 info = (TextView) view.findViewById(R.id.request_ov_info);

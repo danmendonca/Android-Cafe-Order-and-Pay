@@ -50,6 +50,10 @@ public final class ProductContract {
      * @return products that are active
      */
     public void updateProducts(Context context, List<Product> products) {
+        if(context==null){
+            Log.e(TAG,"NULL CONTEXT UPDATING PRODUCTS DB");
+            return;
+        }
         String updatedAt = "";
         if (products == null || products.isEmpty()) {
             LogError("empty array");
@@ -57,10 +61,14 @@ public final class ProductContract {
         }
         DbHelper dbHelper = new DbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if(db==null){
+            Log.e(TAG,"NULL DB UPDATING PRODUCTS DB");
+            return;
+        }
         int newProducts = 0, updatedProducts = 0;
         for (Product product : products) {
             if (product == null) {
-                Log.e(TAG, "Contacts array has null user");
+                Log.e(TAG, "products array has null product");
                 continue;
             }
 
