@@ -189,7 +189,7 @@ public class ScanQRCodeActivity extends Activity {
                 Voucher voucher = new Voucher();
                 voucher.setId(voucherJson.getInt("id"));
                 voucher.setType(voucherJson.getInt("type"));
-                voucher.setKey(voucherJson.getString("signature"));
+                voucher.setSignature(voucherJson.getString("signature"));
                 vouchers.add(voucher);
             }
 
@@ -216,7 +216,7 @@ public class ScanQRCodeActivity extends Activity {
         for (Voucher voucher : vouchers){
             sb.append("\tVoucher{id: ");sb.append(voucher.getId());sb.append(";type: ");
             sb.append(voucher.getType());sb.append(";signature: ");
-            sb.append(voucher.getKey());sb.append("}\n");
+            sb.append(voucher.getSignature());sb.append("}\n");
         }
         requestTV.setText(sb.toString());
     }
