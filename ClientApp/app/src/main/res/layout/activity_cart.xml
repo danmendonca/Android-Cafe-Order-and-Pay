@@ -10,6 +10,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="pt.up.fe.cmov16.client.clientapp.ui.CartActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vouchers"
+        android:id="@+id/cart_vchr_btn"
+        />
+
+
+    <fragment
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:name="pt.up.fe.cmov16.client.clientapp.ui.cart.VoucherItemFragment"
+        android:id="@+id/frame_vouchers_cart_frag"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cart_items_rv"
         android:layout_width="match_parent"

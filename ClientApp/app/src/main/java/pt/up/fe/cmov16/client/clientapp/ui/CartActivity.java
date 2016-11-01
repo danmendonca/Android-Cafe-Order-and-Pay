@@ -1,12 +1,15 @@
 package pt.up.fe.cmov16.client.clientapp.ui;
 
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,19 +17,21 @@ import java.util.ArrayList;
 import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
+import pt.up.fe.cmov16.client.clientapp.ui.cart.VoucherItemFragment;
 
-public class CartActivity extends AppCompatActivity {
+public class CartActivity extends AppCompatActivity implements VoucherItemFragment.OnVoucherFragmentInteractionListener {
     public static final String intentKey = "MAKE_REQUEST_INTENT_KEY";
     public static final String productsArrayKey = "PRODUCTS_KEY";
 
     ArrayList<ProductVoucherWrapper> requestLines;
     RecyclerView rv;
+    VoucherItemFragment voucherItemFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_cart);
+
 
         Bundle b = getIntent().getExtras();
 
@@ -40,12 +45,45 @@ public class CartActivity extends AppCompatActivity {
         for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(productsArrayKey))
             requestLines.add(new ProductVoucherWrapper(pmi));
 
+        voucherItemFragment = new VoucherItemFragment();
+
+        Button btn = (Button) findViewById(R.id.cart_vchr_btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fm = getSupportFragmentManager();
+                fm.beginTransaction()
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .show(voucherItemFragment)
+                        .commit();
+                Log.d("FM", "Show/Hide voucher cart frag");
+            }
+        });
+
 
         rv = (RecyclerView) findViewById(R.id.cart_items_rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
         rv.setAdapter(new ItemsRvAdapter());
 
+    }
+
+    @Override
+    public void onAddVoucherFragmentInteraction(Voucher item) {
+        requestLines.add(new ProductVoucherWrapper(item));
+        rv.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRemVoucherFragmentInteraction(Voucher item) {
+        for (int i = 0; i < requestLines.size(); i++) {
+            ProductVoucherWrapper pvw = requestLines.get(i);
+            if (pvw.type == 1 && pvw.voucher.getId() == item.getId()) {
+                requestLines.remove(i);
+                rv.getAdapter().notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
     private class ProductVoucherWrapper {
