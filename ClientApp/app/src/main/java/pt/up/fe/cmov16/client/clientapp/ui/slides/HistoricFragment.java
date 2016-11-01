@@ -52,18 +52,15 @@ public class HistoricFragment extends NamedFragment {
 
         Set<String> rqsts = preferences.getStringSet(ShPrefKeys.RequestsOvShPrefKey, null);
 
-        if (rqsts != null && rqsts.size() > 0) {
-            Gson gson = new Gson();
-            for (String r : rqsts) {
-                Request fromGson = gson.fromJson(r, Request.class);
-                if (fromGson != null)
-                    requestsMade.add(fromGson);
-            }
-        }
-
-        if (requestsMade.size() == 0) {
-            askForRequests();
-        }
+//        if (rqsts != null && rqsts.size() > 0) {
+//            Gson gson = new Gson();
+//            for (String r : rqsts) {
+//                Request fromGson = gson.fromJson(r, Request.class);
+//                if (fromGson != null)
+//                    requestsMade.add(fromGson);
+//            }
+//        }
+        askForRequests();
 
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_historic);
         rv.setHasFixedSize(true);
@@ -93,6 +90,7 @@ public class HistoricFragment extends NamedFragment {
                                     String vStr = gson.toJson(v);
                                     vouchersJson.add(vStr);
                                 }
+                                adapter.notifyDataSetChanged();
                                 Context ctx = getContext();
                                 SharedPreferences sp = ctx.getSharedPreferences(
                                         ctx.getResources().getString(R.string.preference_file_key),
@@ -100,6 +98,7 @@ public class HistoricFragment extends NamedFragment {
 
                                 SharedPreferences.Editor editor = sp.edit();
                                 editor.putStringSet(ShPrefKeys.vouchersShPrefKey, vouchersJson);
+                                editor.commit();
                             }
                         }
                     },

@@ -47,6 +47,18 @@ public class MyVoucherItemRecyclerViewAdapter extends RecyclerView.Adapter<MyVou
 
         holder.mContentView.setText(getVoucherContent(mValues.get(position)));
 
+//        holder.mView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(mListener != null){
+//                    if(!holder.mCheckBox.isChecked())
+//                        voucherSelectedHandler(holder);
+//                    else
+//                        voucherDeselectHandler(holder);
+//                }
+//            }
+//        });
+
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -70,6 +82,7 @@ public class MyVoucherItemRecyclerViewAdapter extends RecyclerView.Adapter<MyVou
             discountSelected = false;
             Log.d("nrVouSelDis", "True->false");
         }
+        holder.mCheckBox.setChecked(false);
         mListener.onRemVoucherFragmentInteraction(holder.mItem);
     }
 
@@ -85,6 +98,7 @@ public class MyVoucherItemRecyclerViewAdapter extends RecyclerView.Adapter<MyVou
                 Log.d("nrVouSelDis", "False->True");
             discountSelected = true;
             mListener.onAddVoucherFragmentInteraction(holder.mItem);
+            holder.mCheckBox.setChecked(true);
         } else {
             holder.mCheckBox.setChecked(false);
         }
