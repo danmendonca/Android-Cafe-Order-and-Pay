@@ -47,7 +47,7 @@ public class HistoricFragment extends NamedFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_historic, container, false);
-        
+
         askForRequests();
 
         final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_historic);
