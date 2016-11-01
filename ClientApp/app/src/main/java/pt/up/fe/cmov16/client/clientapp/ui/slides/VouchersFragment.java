@@ -95,7 +95,7 @@ public class VouchersFragment extends NamedFragment
         {
             if (holder instanceof VouchersFragment.RVAdapter.VoucherViewHolder)
             {
-                ((VouchersFragment.RVAdapter.VoucherViewHolder) holder).voucherNumber.setText("" + vouchers.get(i).getNumber());
+//                ((VouchersFragment.RVAdapter.VoucherViewHolder) holder).voucherNumber.setText("" + vouchers.get(i).getNumber());
                 ((VouchersFragment.RVAdapter.VoucherViewHolder) holder).voucherType.setText(types[vouchers.get(i).getType()]);
             }
         }

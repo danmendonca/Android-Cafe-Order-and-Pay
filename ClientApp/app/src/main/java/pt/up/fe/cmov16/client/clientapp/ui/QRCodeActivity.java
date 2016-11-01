@@ -1,28 +1,16 @@
 package pt.up.fe.cmov16.client.clientapp.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.glxn.qrgen.android.QRCode;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.swagger.client.model.Product;
@@ -66,7 +54,7 @@ public class QRCodeActivity extends Activity {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 46; i++)
             sb.append("a");
-        v.setKey(sb.toString());
+//        v.setKey(sb.toString());
 
         vouchers = new ArrayList<>();
         vouchers.add(v);
@@ -101,7 +89,7 @@ public class QRCodeActivity extends Activity {
             JsonObject voucherJson = new JsonObject();
             voucherJson.addProperty("id", voucher.getId());
             voucherJson.addProperty("type", voucher.getType());
-            voucherJson.addProperty("signature", voucher.getKey());
+//            voucherJson.addProperty("signature", voucher.getKey());
             vouchersJsonArray.add(voucherJson);
         }
 
