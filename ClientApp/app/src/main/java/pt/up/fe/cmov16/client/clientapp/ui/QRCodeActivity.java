@@ -54,7 +54,7 @@ public class QRCodeActivity extends Activity {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 46; i++)
             sb.append("a");
-//        v.setKey(sb.toString());
+        v.setSignature(sb.toString());
 
         vouchers = new ArrayList<>();
         vouchers.add(v);
@@ -89,7 +89,7 @@ public class QRCodeActivity extends Activity {
             JsonObject voucherJson = new JsonObject();
             voucherJson.addProperty("id", voucher.getId());
             voucherJson.addProperty("type", voucher.getType());
-//            voucherJson.addProperty("signature", voucher.getKey());
+            voucherJson.addProperty("signature", voucher.getSignature());
             vouchersJsonArray.add(voucherJson);
         }
 
