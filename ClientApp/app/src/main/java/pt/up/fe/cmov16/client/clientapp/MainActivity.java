@@ -42,9 +42,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             setFirstTimeScreen();
         else
             startSlideActivity();
-
-        Intent i = new Intent(this, QRCodeActivity.class);
-        startActivity(i);
     }
 
     private void setFirstTimeScreen() {
