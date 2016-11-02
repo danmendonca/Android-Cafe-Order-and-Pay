@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -16,8 +18,10 @@ import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 
 public class VouchersFragment extends NamedFragment {
     private static String[] types = {"", "1 Free coffee", "1 Free popcorn pack", "5% Discount"};
-    private ArrayList<Voucher> vouchers = new ArrayList<>();
+    private ArrayList<VoucherMenuItem> vouchers = new ArrayList<>();
     private VouchersFragment.RVAdapter adapter;
+    private boolean isDiscountSelected = false;
+    private short commonVouchersSelected = 0;
 
     public static VouchersFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -29,9 +33,18 @@ public class VouchersFragment extends NamedFragment {
 
     public void loadVouchers() {
         vouchers.clear();
-        vouchers.addAll(VoucherContract.loadVouchers(getContext()));
+
+        vouchers.addAll(getConvertedArrList(VoucherContract.loadVouchers(getContext())));
         if (adapter != null)
             adapter.notifyDataSetChanged();
+    }
+
+    public ArrayList<Voucher> getSelectedVouchers() {
+        ArrayList<Voucher> vs = new ArrayList<>();
+        for (VoucherMenuItem vmi : vouchers)
+            if (vmi.isChecked) vs.add(vmi.v);
+
+        return vs;
     }
 
     @Override
@@ -47,6 +60,23 @@ public class VouchersFragment extends NamedFragment {
             loadVouchers();
 
         return rootView;
+    }
+
+    //update all times that user see this screen
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            loadVouchers();
+        }
+    }
+
+    public ArrayList<VoucherMenuItem> getConvertedArrList(ArrayList<Voucher> vs) {
+        ArrayList<VoucherMenuItem> vmis = new ArrayList<>();
+        for (Voucher v : vs)
+            vmis.add(new VoucherMenuItem(v));
+
+        return vmis;
     }
 
     public class RVAdapter extends RecyclerView.Adapter {
@@ -72,7 +102,9 @@ public class VouchersFragment extends NamedFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int i) {
             if (holder instanceof VouchersFragment.RVAdapter.VoucherViewHolder) {
 //                ((VouchersFragment.RVAdapter.VoucherViewHolder) holder).voucherNumber.setText("" + vouchers.get(i).getNumber());
-                ((VouchersFragment.RVAdapter.VoucherViewHolder) holder).voucherType.setText(types[vouchers.get(i).getType()]);
+                ((VoucherViewHolder) holder).voucherType.setText(types[vouchers.get(i).v.getType()]);
+                ((VoucherViewHolder) holder).checkBox.setChecked(vouchers.get(i).isChecked);
+                ((VoucherViewHolder) holder).mVoucher = vouchers.get(i);
             }
         }
 
@@ -88,20 +120,64 @@ public class VouchersFragment extends NamedFragment {
 
         class VoucherViewHolder extends RecyclerView.ViewHolder {
             TextView voucherNumber, voucherType;
+            CheckBox checkBox;
+            VoucherMenuItem mVoucher;
 
             VoucherViewHolder(View itemView) {
                 super(itemView);
                 voucherNumber = (TextView) itemView.findViewById(R.id.voucher_number);
                 voucherType = (TextView) itemView.findViewById(R.id.voucher_type);
+                checkBox = (CheckBox) itemView.findViewById(R.id.voucher_checkbox);
+
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (mVoucher == null) return;
+                        if (mVoucher.v.getType() == 3)
+                            handleDiscountVoucherSelection(b);
+                        else
+                            handleVoucherSelection(b);
+                    }
+                });
+            }
+
+            private void handleVoucherSelection(boolean b) {
+                if (b) {
+                    if (commonVouchersSelected < 2) {
+                        commonVouchersSelected++;
+                        mVoucher.isChecked = true;
+                    } else {
+                        checkBox.setChecked(false);
+                    }
+                } else {
+                    mVoucher.isChecked = false;
+                    commonVouchersSelected--;
+                }
+            }
+
+            private void handleDiscountVoucherSelection(boolean b) {
+                if (b) {
+                    if (isDiscountSelected) {
+                        checkBox.setChecked(false);
+                    } else {
+                        mVoucher.isChecked = true;
+                        isDiscountSelected = true;
+                    }
+                } else {
+                    mVoucher.isChecked = false;
+                    isDiscountSelected = false;
+                }
             }
         }
     }
-    //update all times that user see this screen
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            loadVouchers();
+
+    class VoucherMenuItem {
+        public Voucher v;
+        public boolean isChecked;
+
+        public VoucherMenuItem(Voucher v) {
+            this.v = v;
+            isChecked = false;
         }
     }
 }

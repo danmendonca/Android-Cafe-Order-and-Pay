@@ -20,8 +20,8 @@ import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.ui.cart.VoucherItemFragment;
 
 public class CartActivity extends AppCompatActivity implements VoucherItemFragment.OnVoucherFragmentInteractionListener {
-    public static final String intentKey = "MAKE_REQUEST_INTENT_KEY";
     public static final String productsArrayKey = "PRODUCTS_KEY";
+    public static final String vouchersArrayKey = "VOUCHERS_KEY";
 
     ArrayList<ProductVoucherWrapper> requestLines;
     RecyclerView rv;
@@ -75,6 +75,8 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
 
         for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(productsArrayKey))
             requestLines.add(new ProductVoucherWrapper(pmi));
+        for (Voucher vchr : (ArrayList<Voucher>) b.get(vouchersArrayKey))
+            requestLines.add(new ProductVoucherWrapper(vchr));
 
         rv = (RecyclerView) findViewById(R.id.cart_items_rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);

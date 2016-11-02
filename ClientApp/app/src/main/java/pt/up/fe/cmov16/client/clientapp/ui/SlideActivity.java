@@ -13,7 +13,11 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
+import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.HistoricFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.NamedFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.ProductsFragment;
@@ -88,7 +92,11 @@ public class SlideActivity extends FragmentActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(SlideActivity.this, CartActivity.class);
-                i.putExtra(CartActivity.productsArrayKey, ((ProductsFragment) fragments[0]).getProducts());
+                ArrayList<ProductMenuItem> ps = ((ProductsFragment) fragments[0]).getProducts();
+                ArrayList<Voucher> vs = ((VouchersFragment) fragments[2]).getSelectedVouchers();
+
+                i.putExtra(CartActivity.productsArrayKey, ps);
+                i.putExtra(CartActivity.vouchersArrayKey, vs);
                 startActivity(i);
             }
         });
