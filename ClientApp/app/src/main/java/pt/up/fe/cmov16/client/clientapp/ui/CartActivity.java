@@ -1,5 +1,6 @@
 package pt.up.fe.cmov16.client.clientapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,8 +21,8 @@ import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.ui.cart.VoucherItemFragment;
 
 public class CartActivity extends AppCompatActivity implements VoucherItemFragment.OnVoucherFragmentInteractionListener {
-    public static final String productsArrayKey = "PRODUCTS_KEY";
-    public static final String vouchersArrayKey = "VOUCHERS_KEY";
+    public static final String PRODUCTS_ARRAY_KEY = "PRODUCTS_KEY";
+    public static final String VOUCHERS_ARRAY_KEY = "VOUCHERS_KEY";
 
     ArrayList<ProductVoucherWrapper> requestLines;
     RecyclerView rv;
@@ -66,16 +67,16 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
         }
 
         Bundle b = getIntent().getExtras();
-        if (b.get(productsArrayKey) == null) {
+        if (b.get(PRODUCTS_ARRAY_KEY) == null) {
             finish();
             return;
         }
         requestLines = new ArrayList<>();
 
 
-        for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(productsArrayKey))
+        for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(PRODUCTS_ARRAY_KEY))
             requestLines.add(new ProductVoucherWrapper(pmi));
-        for (Voucher vchr : (ArrayList<Voucher>) b.get(vouchersArrayKey))
+        for (Voucher vchr : (ArrayList<Voucher>) b.get(VOUCHERS_ARRAY_KEY))
             requestLines.add(new ProductVoucherWrapper(vchr));
 
         rv = (RecyclerView) findViewById(R.id.cart_items_rv);
@@ -83,6 +84,26 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
         rv.setLayoutManager(llm);
         rv.setAdapter(new ItemsRvAdapter());
 
+        findViewById(R.id.cart_buy_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+                ArrayList<ProductMenuItem> prods = new ArrayList<>();
+                ArrayList<Voucher> vouchers = new ArrayList<>();
+                for (ProductVoucherWrapper item : requestLines) {
+                    if (item.type == 1)
+                        vouchers.add(item.voucher);
+                    else prods.add(item.productItem);
+                }
+                Intent i = new Intent(CartActivity.this, QRCodeActivity.class);
+                i.putExtra(PRODUCTS_ARRAY_KEY, prods);
+                i.putExtra(VOUCHERS_ARRAY_KEY, vouchers);
+                startActivity(i);
+                finish();
+            }
+        });
     }
 
     @Override
@@ -186,4 +207,9 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
         }
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        finish();
+    }
 }

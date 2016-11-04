@@ -140,6 +140,9 @@ public final class ProductContract {
             // move cursor to first row
             if (cursor.moveToFirst()) {
                 do {
+                    int id = cursor.getInt(cursor.getColumnIndex(
+                            ProductEntry.COLUMN_NAME_ID));
+
                     // Get version from Cursor
                     String name = cursor.getString(cursor.getColumnIndex(
                             ProductEntry.COLUMN_NAME_NAME));
@@ -150,6 +153,7 @@ public final class ProductContract {
                     Product prod = new Product();
                     prod.setUnitprice(Double.valueOf(unitPrice));
                     prod.setName(name);
+                    prod.setId(id);
                     products.add(prod);
                     // move to next row
                 } while (cursor.moveToNext());

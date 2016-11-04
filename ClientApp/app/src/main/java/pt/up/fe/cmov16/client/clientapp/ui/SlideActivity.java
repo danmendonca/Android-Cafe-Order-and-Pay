@@ -95,8 +95,8 @@ public class SlideActivity extends FragmentActivity {
                 ArrayList<ProductMenuItem> ps = ((ProductsFragment) fragments[0]).getProducts();
                 ArrayList<Voucher> vs = ((VouchersFragment) fragments[2]).getSelectedVouchers();
 
-                i.putExtra(CartActivity.productsArrayKey, ps);
-                i.putExtra(CartActivity.vouchersArrayKey, vs);
+                i.putExtra(CartActivity.PRODUCTS_ARRAY_KEY, ps);
+                i.putExtra(CartActivity.VOUCHERS_ARRAY_KEY, vs);
                 startActivity(i);
             }
         });
