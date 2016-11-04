@@ -164,6 +164,26 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /requestlines:
+    x-swagger-router-controller: requestlines
+    get:
+      description: Return the requestlines of a request
+      operationId: getRequestlines
+      parameters:
+        - name: requestId
+          in: query
+          required: true
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/LinesVouchersResponse'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /blacklists:
     x-swagger-router-controller: blacklists
     get:
@@ -288,12 +308,13 @@ definitions:
   Requestline:
     type: object
     required:
-      - productid
+      - productId
       - quantity
       - unitprice
     properties:
-      productid:
-          $ref: '#/definitions/Product'
+      productId:
+          type: integer
+          format: int32
       quantity:
         type: integer
         format: int32
@@ -424,6 +445,19 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/VoucherParam'
+  LinesVouchersResponse:
+    required:
+      - requestlines
+      - vouchers
+    properties:
+      requestlines:
+        type: array
+        items:
+          $ref: '#/definitions/Requestline'
+      vouchers:
+        type: array
+        items:
+          $ref: '#/definitions/Voucher'
   HelloWorldResponse:
     required:
       - message
