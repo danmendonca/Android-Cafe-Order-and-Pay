@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
+import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
 import pt.up.fe.cmov16.client.clientapp.ui.cart.VoucherItemFragment;
@@ -123,10 +124,12 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
                                                     vouchers.add(item.voucher);
                                                 else prods.add(item.productItem);
                                             }
+
                                             Intent i = new Intent(CartActivity.this, QRCodeActivity.class);
                                             i.putExtra(PRODUCTS_ARRAY_KEY, prods);
                                             i.putExtra(VOUCHERS_ARRAY_KEY, vouchers);
                                             startActivity(i);
+                                            VoucherContract.deleteVouchersFromDB(CartActivity.this,vouchers);
                                             finish();
                                         }else{
                                             Toast.makeText(CartActivity.this,"Invalid PIN",Toast.LENGTH_SHORT).show();
