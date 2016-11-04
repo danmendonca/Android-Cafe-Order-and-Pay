@@ -85,7 +85,12 @@ sequelize
                 type: 1,
                 signature: "1",
                 isused: false
-              }).then(() => { })
+              }).then((v) => {
+                v.update({
+                  isused: true,
+                  requestId: rq.id
+                })
+               })
 
               sequelize.models.voucher.create({
                 costumerUuid: costumer.uuid,
