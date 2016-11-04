@@ -1,23 +1,28 @@
 package pt.up.fe.cmov16.client.clientapp.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
+import pt.up.fe.cmov16.client.clientapp.logic.User;
 import pt.up.fe.cmov16.client.clientapp.ui.cart.VoucherItemFragment;
 
 public class CartActivity extends AppCompatActivity implements VoucherItemFragment.OnVoucherFragmentInteractionListener {
@@ -88,20 +93,58 @@ public class CartActivity extends AppCompatActivity implements VoucherItemFragme
             @Override
             public void onClick(View view) {
 
+                LayoutInflater li = LayoutInflater.from(CartActivity.this);
+                View promptsView = li.inflate(R.layout.confirm_pin_dialog, null);
 
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                        CartActivity.this);
 
-                ArrayList<ProductMenuItem> prods = new ArrayList<>();
-                ArrayList<Voucher> vouchers = new ArrayList<>();
-                for (ProductVoucherWrapper item : requestLines) {
-                    if (item.type == 1)
-                        vouchers.add(item.voucher);
-                    else prods.add(item.productItem);
-                }
-                Intent i = new Intent(CartActivity.this, QRCodeActivity.class);
-                i.putExtra(PRODUCTS_ARRAY_KEY, prods);
-                i.putExtra(VOUCHERS_ARRAY_KEY, vouchers);
-                startActivity(i);
-                finish();
+                // set prompts.xml to alertdialog builder
+                alertDialogBuilder.setView(promptsView);
+
+                final EditText userInput = (EditText) promptsView
+                        .findViewById(R.id.editTextDialogPIN);
+
+                // set dialog message
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Buy",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        // get user input and set it to result
+                                        // edit text
+                                        if(userInput.getText().toString()
+                                                .equals(User.getInstance(CartActivity.this)
+                                                        .getPIN())){
+                                            ArrayList<ProductMenuItem> prods = new ArrayList<>();
+                                            ArrayList<Voucher> vouchers = new ArrayList<>();
+                                            for (ProductVoucherWrapper item : requestLines) {
+                                                if (item.type == 1)
+                                                    vouchers.add(item.voucher);
+                                                else prods.add(item.productItem);
+                                            }
+                                            Intent i = new Intent(CartActivity.this, QRCodeActivity.class);
+                                            i.putExtra(PRODUCTS_ARRAY_KEY, prods);
+                                            i.putExtra(VOUCHERS_ARRAY_KEY, vouchers);
+                                            startActivity(i);
+                                            finish();
+                                        }else{
+                                            Toast.makeText(CartActivity.this,"Invalid PIN",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                })
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
             }
         });
     }
