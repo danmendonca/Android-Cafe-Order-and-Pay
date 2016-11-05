@@ -38,17 +38,28 @@ public class VoucherContract {
             Log.e(TAG, "NULL DB UPDATING VOUCHERS DB");
             return;
         }
-        int newVouchers = 0;
+
         for (Voucher voucher : vouchers) {
+
+            if (isVoucherStored(context, db, voucher.getId()))
+            {
+                Log.v("VOUCHER_ALREADY_S", "voucher is stored");
+                continue;
+            }
+
             ContentValues values = new ContentValues();
             values.put(VoucherEntry.COLUMN_NAME_ID, voucher.getId());
             values.put(VoucherEntry.COLUMN_NAME_TYPE, voucher.getType());
             values.put(VoucherEntry.COLUMN_NAME_SIGNATURE, voucher.getSignature());
             //INSERT
-            if (db.insert(VoucherEntry.TABLE_NAME, null, values) != -1)
-                newVouchers++;
+            try {
+
+                db.insert(VoucherEntry.TABLE_NAME, null, values);
+            } catch (Exception e) {
+                Log.e("VOUCHER_INSERTION", e.getMessage());
+            }
+
         }
-        Log.e(TAG, "NEW VOUCHERS: " + newVouchers);
     }
 
     public static ArrayList<Voucher> loadVouchers(final Context context) {
@@ -112,6 +123,27 @@ public class VoucherContract {
         for (Voucher v : vouchers) {
             db.delete(VoucherEntry.TABLE_NAME, where + v.getId(), null);
         }
+    }
+
+    private static String selectByVoucherIDQuery(int id) {
+        return "SELECT * FROM " + VoucherEntry.TABLE_NAME + " where "
+                + VoucherEntry.COLUMN_NAME_ID + "=" + id;
+    }
+
+    public static boolean isVoucherStored(Context context, SQLiteDatabase db, int id) {
+        if (context == null) {
+            Log.e(TAG, "NULL CONTEXT UPDATING PRODUCTS DB");
+            return false;
+        }
+
+        Cursor cursor = db.rawQuery(selectByVoucherIDQuery(id), null);
+        if (cursor != null && cursor.moveToFirst()) {
+            cursor.close();
+            return true;
+        }
+
+        cursor.close();
+        return false;
     }
 
     /* Inner class that defines the table contents */
