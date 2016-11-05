@@ -88,9 +88,7 @@ public class CartActivity extends AppCompatActivity {
         boolean[] selecteds = new boolean[voucherMenuItems.size()];
         for (int i = 0; i < voucherMenuItems.size(); i++) {
             vouchersName[i] = voucherMenuItems.get(i).getName();
-            if (voucherMenuItems.get(i).isChecked)
-                selecteds[i] = true;
-            else selecteds[i] = false;
+            selecteds[i] = voucherMenuItems.get(i).isChecked;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -177,6 +175,16 @@ public class CartActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    private String doubleToDecimalString(double d) {
+        return new DecimalFormat("0.00####",
+                DecimalFormatSymbols.getInstance(Locale.ENGLISH)).format(d);
+    }
+
     private class ItemsRvAdapter extends RecyclerView.Adapter<ItemsRvAdapter.Holder> {
         ArrayList<VoucherMenuItem> selectedVouchers = new ArrayList<>();
 
@@ -244,11 +252,6 @@ public class CartActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     private class DialogListener implements DialogInterface.OnMultiChoiceClickListener {
 
         @Override
@@ -288,10 +291,5 @@ public class CartActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    private String doubleToDecimalString(double d) {
-        return new DecimalFormat("0.00####",
-                DecimalFormatSymbols.getInstance(Locale.ENGLISH)).format(d);
     }
 }

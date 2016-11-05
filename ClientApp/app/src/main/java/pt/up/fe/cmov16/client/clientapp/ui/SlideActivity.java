@@ -24,12 +24,12 @@ import pt.up.fe.cmov16.client.clientapp.ui.slides.VouchersFragment;
 
 public class SlideActivity extends FragmentActivity {
 
-    private ViewPager mPager;
     private static NamedFragment[] fragments = new NamedFragment[]{
             ProductsFragment.newInstance(0),
             HistoricFragment.newInstance(1),
             VouchersFragment.newInstance(2)
     };
+    private ViewPager mPager;
     private TextView tittle;
     private FloatingActionButton floatingActionButton;
 
@@ -115,6 +115,11 @@ public class SlideActivity extends FragmentActivity {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     /**
      * Pager adapter
      */
@@ -180,10 +185,5 @@ public class SlideActivity extends FragmentActivity {
                 view.setAlpha(0);
             }
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

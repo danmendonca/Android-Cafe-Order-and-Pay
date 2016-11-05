@@ -16,21 +16,12 @@ import io.swagger.client.model.Voucher;
 public class VoucherContract {
 
     private static final String TAG = VoucherContract.class.toString();
+    private final static String SELECT_ALL_VOUCHERS =
+            "SELECT * FROM " + VoucherEntry.TABLE_NAME;
 
     public VoucherContract() {
 
     }
-
-    /* Inner class that defines the table contents */
-    static abstract class VoucherEntry implements BaseColumns {
-        static final String TABLE_NAME = "vouchers";
-        static final String COLUMN_NAME_ID = "id";
-        static final String COLUMN_NAME_TYPE = "type";
-        static final String COLUMN_NAME_SIGNATURE = "signature";
-    }
-
-    private final static String SELECT_ALL_VOUCHERS =
-            "SELECT * FROM " + VoucherEntry.TABLE_NAME;
 
     public static void saveVoucherInDB(Context context, List<Voucher> vouchers) {
         if (context == null) {
@@ -121,5 +112,13 @@ public class VoucherContract {
         for (Voucher v : vouchers) {
             db.delete(VoucherEntry.TABLE_NAME, where + v.getId(), null);
         }
+    }
+
+    /* Inner class that defines the table contents */
+    static abstract class VoucherEntry implements BaseColumns {
+        static final String TABLE_NAME = "vouchers";
+        static final String COLUMN_NAME_ID = "id";
+        static final String COLUMN_NAME_TYPE = "type";
+        static final String COLUMN_NAME_SIGNATURE = "signature";
     }
 }

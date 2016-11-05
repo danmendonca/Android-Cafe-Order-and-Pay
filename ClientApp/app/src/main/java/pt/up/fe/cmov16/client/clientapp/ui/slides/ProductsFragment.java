@@ -34,20 +34,10 @@ import static android.view.View.GONE;
 
 public class ProductsFragment extends NamedFragment {
 
+    static final String STATE_PRODS = "STATE_PRODS";
     private ArrayList<ProductMenuItem> PRODUCTS = new ArrayList<>();
     private RVAdapter adapter;
-    static final String STATE_PRODS = "STATE_PRODS";
-
     private boolean restoringState = false;
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save the user's current game state
-        savedInstanceState.putSerializable(STATE_PRODS, PRODUCTS);
-
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
 
     public static ProductsFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -57,6 +47,15 @@ public class ProductsFragment extends NamedFragment {
         fragment.setArguments(args);
         fragment.title = "Menu";
         return fragment;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putSerializable(STATE_PRODS, PRODUCTS);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -102,7 +101,7 @@ public class ProductsFragment extends NamedFragment {
             return;
         final ProductContract productContract = new ProductContract();
         //if updatedAt was saved before, the skip this step and use its value in lastDate
-        String lastUpdated = productContract.lastUpdatedProductDate(context);
+        String lastUpdated = ProductContract.lastUpdatedProductDate(context);
         boolean stored = !lastUpdated.isEmpty();
         if (!stored)
             lastUpdated = getDefaultTimestamp();
@@ -113,10 +112,10 @@ public class ProductsFragment extends NamedFragment {
                     @Override
                     public void onResponse(Products response) {
                         if (response.getProducts().size() > 0) {
-                            productContract.updateProducts(context, response.getProducts());
-                            updateListItems(productContract.loadProducts(context), quantities);
+                            ProductContract.updateProducts(context, response.getProducts());
+                            updateListItems(ProductContract.loadProducts(context), quantities);
                         } else {
-                            updateListItems(productContract.loadProducts(context), quantities);
+                            updateListItems(ProductContract.loadProducts(context), quantities);
                         }
                     }
                 },
@@ -126,7 +125,7 @@ public class ProductsFragment extends NamedFragment {
                         Log.d("Get-Products", error.toString());
                         Toast.makeText(getContext(),
                                 "Connection failed, loading local products", Toast.LENGTH_SHORT).show();
-                        updateListItems(productContract.loadProducts(context), quantities);
+                        updateListItems(ProductContract.loadProducts(context), quantities);
                     }
                 });
     }
@@ -169,6 +168,16 @@ public class ProductsFragment extends NamedFragment {
                 products.add(prod);
         }
         return products;
+    }
+
+    //update all times that user see this screen
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (!restoringState && isVisibleToUser) {
+            loadProducts();
+        } else if (restoringState)
+            restoringState = false;
     }
 
     public class RVAdapter extends RecyclerView.Adapter {
@@ -257,15 +266,5 @@ public class ProductsFragment extends NamedFragment {
                 subButton = (Button) itemView.findViewById(R.id.subButton);
             }
         }
-    }
-
-    //update all times that user see this screen
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (!restoringState && isVisibleToUser) {
-            loadProducts();
-        } else if (restoringState)
-            restoringState = false;
     }
 }

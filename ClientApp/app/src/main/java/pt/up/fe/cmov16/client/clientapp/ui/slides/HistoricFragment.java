@@ -1,7 +1,7 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -104,7 +104,7 @@ public class HistoricFragment extends NamedFragment {
 
     public void refresh(Context context) {
         askForRequests(context);
-        Toast.makeText(context,"Updating...",Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Updating...", Toast.LENGTH_LONG).show();
     }
 
 
