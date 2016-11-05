@@ -11,4 +11,12 @@
     <string name="cart">cart</string>
     <string name="title_activity_make_request">MakeRequestActivity</string>
     <string name="enter_pin">Enter PIN</string>
+    <string name="buy">Buy</string>
+    <string name="hashtag">#</string>
+    <string name="product">Product</string>
+    <string name="price">Price (€)</string>
+    <string name="add_vouchers">Add vouchers</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="total">Total</string>
 </resources>

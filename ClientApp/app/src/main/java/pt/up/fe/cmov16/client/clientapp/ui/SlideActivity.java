@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.HistoricFragment;
@@ -26,7 +25,11 @@ import pt.up.fe.cmov16.client.clientapp.ui.slides.VouchersFragment;
 public class SlideActivity extends FragmentActivity {
 
     private ViewPager mPager;
-    private NamedFragment[] fragments;
+    private static NamedFragment[] fragments = new NamedFragment[]{
+            ProductsFragment.newInstance(0),
+            HistoricFragment.newInstance(1),
+            VouchersFragment.newInstance(2)
+    };
     private TextView tittle;
     private FloatingActionButton floatingActionButton;
 
@@ -35,17 +38,11 @@ public class SlideActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide);
 
-        fragments = new NamedFragment[]{
-                ProductsFragment.newInstance(0),
-                HistoricFragment.newInstance(1),
-                VouchersFragment.newInstance(2)
-        };
-
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fabButton);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((HistoricFragment)fragments[1]).refresh();
+                ((HistoricFragment) fragments[1]).refresh(SlideActivity.this);
             }
         });
         floatingActionButton.hide();
@@ -68,9 +65,9 @@ public class SlideActivity extends FragmentActivity {
                 tittle.setText(fragments[position].toString());
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true, true);
                 //fragments[position].focusObtained(SlideActivity.this);
-                if(position==1){
+                if (position == 1) {
                     floatingActionButton.show();
-                }else {
+                } else {
                     floatingActionButton.hide();
                 }
             }
@@ -93,10 +90,8 @@ public class SlideActivity extends FragmentActivity {
             public void onClick(View view) {
                 Intent i = new Intent(SlideActivity.this, CartActivity.class);
                 ArrayList<ProductMenuItem> ps = ((ProductsFragment) fragments[0]).getProducts();
-                ArrayList<Voucher> vs = ((VouchersFragment) fragments[2]).getSelectedVouchers();
 
                 i.putExtra(CartActivity.PRODUCTS_ARRAY_KEY, ps);
-                i.putExtra(CartActivity.VOUCHERS_ARRAY_KEY, vs);
                 startActivity(i);
             }
         });
@@ -185,5 +180,10 @@ public class SlideActivity extends FragmentActivity {
                 view.setAlpha(0);
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private void startSlideActivity() {
         Intent i = new Intent(this, SlideActivity.class);
         startActivity(i);
+        finish();
     }
 
 }

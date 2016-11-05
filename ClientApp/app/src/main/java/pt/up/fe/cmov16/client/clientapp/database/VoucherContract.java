@@ -34,7 +34,7 @@ public class VoucherContract {
 
     public static void saveVoucherInDB(Context context, List<Voucher> vouchers) {
         if (context == null) {
-            Log.e(TAG, "NULL CONTEXT UPDATING PRODUCTS DB");
+            Log.e(TAG, "NULL CONTEXT UPDATING VOUCHERS DB");
             return;
         }
         if (vouchers == null || vouchers.isEmpty()) {
@@ -44,7 +44,7 @@ public class VoucherContract {
         DbHelper dbHelper = new DbHelper(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         if (db == null) {
-            Log.e(TAG, "NULL DB UPDATING PRODUCTS DB");
+            Log.e(TAG, "NULL DB UPDATING VOUCHERS DB");
             return;
         }
         int newVouchers = 0;
@@ -100,5 +100,26 @@ public class VoucherContract {
         }
         db.close();
         return vouchers;
+    }
+
+    public static void deleteVouchersFromDB(Context context, ArrayList<Voucher> vouchers) {
+        if (context == null) {
+            Log.e(TAG, "NULL CONTEXT UPDATING PRODUCTS DB");
+            return;
+        }
+        if (vouchers == null || vouchers.isEmpty()) {
+            return;
+        }
+        DbHelper dbHelper = new DbHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if (db == null) {
+            Log.e(TAG, "NULL DB UPDATING PRODUCTS DB");
+            return;
+        }
+
+        String where = VoucherEntry.COLUMN_NAME_ID + " = ";
+        for (Voucher v : vouchers) {
+            db.delete(VoucherEntry.TABLE_NAME, where + v.getId(), null);
+        }
     }
 }

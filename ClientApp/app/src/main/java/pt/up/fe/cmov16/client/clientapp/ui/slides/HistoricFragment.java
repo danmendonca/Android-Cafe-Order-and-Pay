@@ -1,6 +1,7 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
 import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,12 +51,12 @@ public class HistoricFragment extends NamedFragment {
         adapter = new RVAdapter();
         rv.setAdapter(adapter);
 
-        askForRequests();
+        askForRequests(getContext());
 
         return rootView;
     }
 
-    private void askForRequests() {
+    private void askForRequests(final Context context) {
         DefaultApi api = new DefaultApi();
         PinLoginParam param = new PinLoginParam();
         User me = User.getInstance(getContext());
@@ -69,7 +70,7 @@ public class HistoricFragment extends NamedFragment {
                             requestsMade.addAll(response.getRequests());
                             if (adapter != null)
                                 adapter.notifyDataSetChanged();
-                            VoucherContract.saveVoucherInDB(getContext(), response.getVouchers());
+                            VoucherContract.saveVoucherInDB(context, response.getVouchers());
                         }
                     },
                     new Response.ErrorListener() {
@@ -101,9 +102,9 @@ public class HistoricFragment extends NamedFragment {
         super.onPause();
     }
 
-    public void refresh() {
-        askForRequests();
-        Toast.makeText(getContext(),"Updating...",Toast.LENGTH_LONG).show();
+    public void refresh(Context context) {
+        askForRequests(context);
+        Toast.makeText(context,"Updating...",Toast.LENGTH_LONG).show();
     }
 
 
