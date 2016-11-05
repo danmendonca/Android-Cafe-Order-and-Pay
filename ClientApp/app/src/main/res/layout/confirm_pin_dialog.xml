@@ -17,7 +17,7 @@
         android:id="@+id/editTextDialogPIN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text">
+        android:inputType="numberPassword">
         <requestFocus />
     </EditText>
 

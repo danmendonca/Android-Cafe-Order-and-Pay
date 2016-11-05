@@ -93,10 +93,8 @@ public class SlideActivity extends FragmentActivity {
             public void onClick(View view) {
                 Intent i = new Intent(SlideActivity.this, CartActivity.class);
                 ArrayList<ProductMenuItem> ps = ((ProductsFragment) fragments[0]).getProducts();
-                ArrayList<Voucher> vs = ((VouchersFragment) fragments[2]).getSelectedVouchers();
 
                 i.putExtra(CartActivity.PRODUCTS_ARRAY_KEY, ps);
-                i.putExtra(CartActivity.VOUCHERS_ARRAY_KEY, vs);
                 startActivity(i);
             }
         });
@@ -185,5 +183,10 @@ public class SlideActivity extends FragmentActivity {
                 view.setAlpha(0);
             }
         }
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
     }
 }
