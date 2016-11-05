@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import pt.up.fe.cmov16.client.clientapp.MainActivity;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
@@ -136,7 +137,12 @@ public class SlideActivity extends FragmentActivity {
         } else if (mPager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(MainActivity.FINISH_ACTIVITY_KEY, true);
+            startActivity(intent);
+            finish();
+
         } else {
             // Otherwise, select the previous step.
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);

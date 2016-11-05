@@ -28,13 +28,21 @@ import pt.up.fe.cmov16.client.clientapp.ui.SlideActivity;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    public static final String FINISH_ACTIVITY_KEY = "isFinish";
     private Button dateTextView;
     private DefaultApi api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra(FINISH_ACTIVITY_KEY, false)) {
+            finish();
+            return;
+        }
+
         ApiInvoker.initializeInstance();
+
         api = new DefaultApi();
 
         if (User.getInstance(this).isFirstTime())
