@@ -247,7 +247,6 @@ public class CartActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        finish();
     }
 
     private class DialogListener implements DialogInterface.OnMultiChoiceClickListener {

@@ -99,7 +99,7 @@ public class VouchersFragment extends NamedFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int i) {
             if (holder instanceof VouchersFragment.RVAdapter.VoucherViewHolder) {
                 ((VoucherViewHolder) holder).voucherType.setText(vouchers.get(i).getName());
-                ((VoucherViewHolder) holder).voucherNumber.setText(String.valueOf(i));
+                //((VoucherViewHolder) holder).voucherNumber.setText(String.valueOf(i));
             }
         }
 
@@ -114,11 +114,11 @@ public class VouchersFragment extends NamedFragment {
         }
 
         class VoucherViewHolder extends RecyclerView.ViewHolder {
-            TextView voucherNumber, voucherType;
+            TextView voucherType; //voucherNumber;
 
             VoucherViewHolder(View itemView) {
                 super(itemView);
-                voucherNumber = (TextView) itemView.findViewById(R.id.voucher_number);
+                //voucherNumber = (TextView) itemView.findViewById(R.id.voucher_number);
                 voucherType = (TextView) itemView.findViewById(R.id.voucher_type);
             }
         }
