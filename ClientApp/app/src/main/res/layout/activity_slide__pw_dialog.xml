@@ -10,6 +10,7 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/pw_dialog_text"
         android:hint="Password"
+        android:inputType="textPassword"
         android:text=""/>
 
     <LinearLayout
