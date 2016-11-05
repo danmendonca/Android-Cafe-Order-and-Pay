@@ -1,5 +1,6 @@
 package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import io.swagger.client.model.Request;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
+import pt.up.fe.cmov16.client.clientapp.ui.RequestDetailActivity;
 
 public class HistoricFragment extends NamedFragment {
 
@@ -116,12 +118,14 @@ public class HistoricFragment extends NamedFragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view;
-            RecyclerView.ViewHolder holder = null;
+            RequestOverviewViewHolder holder = null;
             if (viewType == VIEW_TYPE) {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.request_overview_list_item, parent, false);
                 holder = new RequestOverviewViewHolder(view);
             }
+
+
             return holder;
         }
 
@@ -131,6 +135,7 @@ public class HistoricFragment extends NamedFragment {
                 Request request = requestsMade.get(position);
                 ((RequestOverviewViewHolder) holder).header.setText(String.valueOf(request.getId()));
                 ((RequestOverviewViewHolder) holder).info.setText(request.getCostumerUuid());
+                ((RequestOverviewViewHolder) holder).mItem = request;
             }
         }
 
@@ -141,11 +146,20 @@ public class HistoricFragment extends NamedFragment {
 
         private class RequestOverviewViewHolder extends RecyclerView.ViewHolder {
             TextView header, info;
+            Request mItem;
 
             RequestOverviewViewHolder(View view) {
                 super(view);
                 header = (TextView) view.findViewById(R.id.request_ov_header);
                 info = (TextView) view.findViewById(R.id.request_ov_info);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(getContext(), RequestDetailActivity.class);
+                        i.putExtra(RequestDetailActivity.REQUESTID_KEY, mItem.getId());
+                        startActivity(i);
+                    }
+                });
             }
         }
     }

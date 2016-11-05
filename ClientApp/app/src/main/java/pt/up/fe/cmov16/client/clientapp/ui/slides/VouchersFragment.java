@@ -17,7 +17,7 @@ import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 
 public class VouchersFragment extends NamedFragment {
-    private static String[] types = {"", "1 Free coffee", "1 Free popcorn pack", "5% Discount"};
+    public static String[] types = {"", "1 Free coffee", "1 Free popcorn pack", "5% Discount"};
     private ArrayList<VoucherMenuItem> vouchers = new ArrayList<>();
     private VouchersFragment.RVAdapter adapter;
     private boolean isDiscountSelected = false;
