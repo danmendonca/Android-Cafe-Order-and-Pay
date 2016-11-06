@@ -15,3 +15,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 
 Don't forget to make model classes implements Serializable
+
+    //String basePath = "http://10.0.2.2:8080/api";
+    String basePath = "https://cmov1.herokuapp.com/api";
+    //String basePath = "localhost:8080/api";

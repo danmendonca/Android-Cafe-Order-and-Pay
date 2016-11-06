@@ -9,9 +9,9 @@ public class ProductMenuItem implements Serializable {
     private int quantity;
     private Product product;
 
-    public ProductMenuItem(Product product){
-        this.product=product;
-        quantity=0;
+    public ProductMenuItem(Product product) {
+        this.product = product;
+        quantity = 0;
     }
 
     public int getQuantity() {

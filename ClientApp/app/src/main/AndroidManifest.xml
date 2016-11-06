@@ -21,6 +21,7 @@
         <activity android:name=".ui.SlideActivity" />
         <activity android:name=".ui.CartActivity" />
         <activity android:name=".ui.QRCodeActivity" />
+        <activity android:name=".ui.RequestDetailActivity"></activity>
     </application>
 
 </manifest>

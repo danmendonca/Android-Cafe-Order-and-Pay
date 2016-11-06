@@ -6,8 +6,8 @@ public class NamedFragment extends Fragment {
     protected String title;
 
     @Override
-    public String toString(){
-        return (title !=null)? title : "NoTittleDefined";
+    public String toString() {
+        return (title != null) ? title : "NoTittleDefined";
     }
 
 }

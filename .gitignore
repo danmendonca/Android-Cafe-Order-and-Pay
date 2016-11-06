@@ -74,6 +74,7 @@ AcmeRemote/node_modules/
 /Common/Android/android-client/gradle
 ...iml
 CommLib/CommLib.iml
+CommLib/.idea
 CommLib/.idea/compiler.xml
 CommLib/.idea/misc.xml
 CommLib/.idea/vcs.xml
