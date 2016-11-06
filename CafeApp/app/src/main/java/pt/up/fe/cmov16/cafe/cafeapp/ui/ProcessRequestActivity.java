@@ -79,14 +79,12 @@ public class ProcessRequestActivity extends AppCompatActivity {
         api.createRequest(requestParam, new Response.Listener<Request>() {
             @Override
             public void onResponse(Request response) {
-                Log.e(TAG,"Server responde: "+ response.toString());
-                textView.append("\nServer responde: "+ response.toString());
+                textView.append("\nServer response: "+ response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,"Error responde: "+ error.toString());
-                textView.append("\nError responde: "+ error.toString());
+                textView.append("\nError response: "+ error.toString());
             }
         });
         textView.append("\nWaiting response");

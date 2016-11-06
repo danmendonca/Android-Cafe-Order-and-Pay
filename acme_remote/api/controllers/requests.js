@@ -312,7 +312,7 @@ function createRandomVoucher(cUuid) {
         type: vType,
         signature: vKey,
         isused: false
-    });
+    }).then(() => {})
 }
 
 /**
@@ -327,5 +327,5 @@ function createDiscountVoucher(cUuid) {
         type: 3,
         signature: vKey,
         isused: false
-    })
+    }).then(() => {})
 }

@@ -59,8 +59,9 @@ import io.swagger.client.model.Request;
 import io.swagger.client.model.RequestParam;
 
 public class DefaultApi {
-    //String basePath = "http://10.0.2.2:8080/api";
-    String basePath = "https://cmov1.herokuapp.com/api";
+//    String basePath = "http://10.0.2.2:8080/api";
+    String basePath = "http://192.168.1.66:8080/api";
+//    String basePath = "https://cmov1.herokuapp.com/api";
     //String basePath = "http://192.168.10.5:8080/api";
     //String basePath = "localhost:8080/api";
     ApiInvoker apiInvoker = ApiInvoker.getInstance();
@@ -459,7 +460,7 @@ public class DefaultApi {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String localVarResponse) {
-                            Log.e("response","response: "+localVarResponse);
+                            Log.d("response","response: "+localVarResponse);
                             try {
                                 responseListener.onResponse((Request) ApiInvoker.deserialize(localVarResponse, "", Request.class));
                             } catch (ApiException exception) {
@@ -470,12 +471,10 @@ public class DefaultApi {
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.e("response","response: "+error.toString());
                             errorListener.onErrorResponse(error);
                         }
                     });
         } catch (ApiException ex) {
-            Log.e("response","excep: "+ex.toString());
             errorListener.onErrorResponse(new VolleyError(ex));
         }
     }
