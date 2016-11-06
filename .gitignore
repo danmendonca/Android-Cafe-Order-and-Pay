@@ -72,3 +72,11 @@
 acme_remote/config/config.json
 AcmeRemote/node_modules/
 /Common/Android/android-client/gradle
+...iml
+CommLib/CommLib.iml
+CommLib/.idea/compiler.xml
+CommLib/.idea/misc.xml
+CommLib/.idea/vcs.xml
+CommLib/.idea/workspace.xml
+CommLib/.idea/copyright/profiles_settings.xml
+CommLib/CommLibrary/CommLibrary.iml
