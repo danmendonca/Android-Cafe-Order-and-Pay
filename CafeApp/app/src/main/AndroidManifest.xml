@@ -3,8 +3,12 @@
     package="pt.up.fe.cmov16.cafe.cafeapp">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <meta-data
+        android:name="com.google.android.gms.vision.DEPENDENCIES"
+        android:value="barcode" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ScanQRCodeActivity" />
+        <activity android:name=".ui.ProcessRequestActivity"></activity>
     </application>
 
 </manifest>
