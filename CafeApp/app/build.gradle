@@ -26,6 +26,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.0'
     testCompile 'junit:junit:4.12'
-    compile 'com.google.android.gms:play-services:8.4.0' //CAN'T TOUCH THIS
+    compile 'com.google.android.gms:play-services:9.8.0' //CAN'T TOUCH THIS
     compile project(path: ':..:CommLib:CommLibrary')
 }
