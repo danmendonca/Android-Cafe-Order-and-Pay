@@ -1,5 +1,6 @@
 package pt.up.fe.cmov16.cafe.cafeapp.ui;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import io.swagger.client.api.DefaultApi;
@@ -34,6 +36,7 @@ public class ProcessRequestActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.activity_process_request_tv);
 
         Bundle bundle = getIntent().getExtras();
+
         if (bundle != null) {
             ArrayList<ProductMenuItem> productMenuItems =
                     (ArrayList<ProductMenuItem>) bundle.get(MainActivity.PRODUCTS_KEY);
@@ -58,7 +61,7 @@ public class ProcessRequestActivity extends AppCompatActivity {
             requestline.setProductId(productMenuItem.getId());
             requestline.setQuantity(productMenuItem.getQuantity());
             requestLines.add(requestline);
-            textView.append("\n\t Prod: "+productMenuItem.getId()+" #: "+productMenuItem.getQuantity());
+            textView.append("\n\t Prod: " + productMenuItem.getId() + " #: " + productMenuItem.getQuantity());
         }
         requestParam.setRequestlines(requestLines);
 
@@ -69,24 +72,59 @@ public class ProcessRequestActivity extends AppCompatActivity {
             voucherParam.setId(voucher.getId());
             voucherParam.setType(voucher.getType());
             voucherParam.setSignature(voucher.getSignature());
-            textView.append("\n\t Voucher: "+voucher.getType()+" type: "+voucher.getType());
+            textView.append("\n\t Voucher: " + voucher.getType() + " type: " + voucher.getType());
         }
         requestParam.setRequestvouchers(requestVouchers);
 
-       // Log.e(TAG,requestParam.toString());
+        // Log.e(TAG,requestParam.toString());
         textView.append("\nSending request to server");
-        DefaultApi api = new DefaultApi();
-        api.createRequest(requestParam, new Response.Listener<Request>() {
-            @Override
-            public void onResponse(Request response) {
-                textView.append("\nServer response: "+ response.toString());
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                textView.append("\nError response: "+ error.toString());
-            }
-        });
+        //
+        new WaitRequestResponseTask().execute(requestParam);
         textView.append("\nWaiting response");
     }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("PROCESSREQ", "Destroyed");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d("PROCESSREQ", "Paused");
+        super.onPause();
+    }
+
+    private class WaitRequestResponseTask extends AsyncTask<RequestParam, Void, Void> {
+
+        @Override
+        protected Void doInBackground(RequestParam... requestParams) {
+            DefaultApi api = new DefaultApi();
+            Request r = null;
+            try {
+
+                //Request r = api.createRequest(requestParams[0]);
+
+                api.createRequest(requestParams[0], new Response.Listener<Request>() {
+                    @Override
+                    public void onResponse(Request response) {
+                        if (response != null)
+                            textView.setText(response.getId().toString());
+                        Log.d(DefaultApi.DEBUGKEY, "Server request response: " + response.getId().toString());
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        textView.append("\nError response: " + error.toString());
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+    }
+
 }

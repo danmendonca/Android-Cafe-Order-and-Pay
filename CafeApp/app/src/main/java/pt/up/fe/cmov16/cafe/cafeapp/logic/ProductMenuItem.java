@@ -8,10 +8,12 @@ import io.swagger.client.model.Product;
 public class ProductMenuItem implements Serializable {
     private int quantity;
     private Product product;
+    private int prodId;
 
     public ProductMenuItem(Product product){
         this.product=product;
         quantity=0;
+        prodId = product.getId();
     }
 
     public int getQuantity() {
@@ -35,6 +37,6 @@ public class ProductMenuItem implements Serializable {
     }
 
     public int getId() {
-        return product.getId();
+        return (prodId != 0) ? prodId : 1;
     }
 }

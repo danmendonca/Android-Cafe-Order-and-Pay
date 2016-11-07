@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
 import io.swagger.client.ApiException;
 import io.swagger.client.ApiInvoker;
@@ -64,6 +65,7 @@ public class DefaultApi {
 //    String basePath = "https://cmov1.herokuapp.com/api";
     //String basePath = "http://192.168.10.5:8080/api";
     //String basePath = "localhost:8080/api";
+    public static final String DEBUGKEY = "http://localhost.com";
     ApiInvoker apiInvoker = ApiInvoker.getInstance();
 
     public void addHeader(String key, String value) {
@@ -460,11 +462,12 @@ public class DefaultApi {
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String localVarResponse) {
-                            Log.d("response","response: "+localVarResponse);
+                            Log.d(DEBUGKEY,"response: "+localVarResponse);
                             try {
-                                responseListener.onResponse((Request) ApiInvoker.deserialize(localVarResponse, "", Request.class));
+                                Request r = (Request) ApiInvoker.deserialize(localVarResponse, "", Request.class);
+                                responseListener.onResponse(r);
                             } catch (ApiException exception) {
-                                Log.e("response","response: "+exception.toString());
+                                Log.e(DEBUGKEY,"ErrorResponse: "+exception.toString());
                                 errorListener.onErrorResponse(new VolleyError(exception));
                             }
                         }

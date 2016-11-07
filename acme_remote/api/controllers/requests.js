@@ -121,8 +121,7 @@ function createRequest(req, res) {
                                             }
                                         }).then((isListed) => {
                                             if (isListed == 0) {
-                                                var newLinesPromises = makeRequestLine(request, rls, rlines);
-                                                Promise.all(newLinesPromises).then(function (param) {
+                                                Promise.all(makeRequestLine(request, rls, rlines)).then(function (param) {
                                                     voucherCreation(cUuid, oldLines, rlines);
                                                     res.json(request);
                                                 });
@@ -237,8 +236,8 @@ function makeRequestLine(request, rls, addedLines) {
                     else
                         reject(value);
                 });
-        });
-    });
+        })
+    })
 }
 
 function useVouchers(request, rvs) {

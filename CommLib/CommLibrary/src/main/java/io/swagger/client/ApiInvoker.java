@@ -24,6 +24,8 @@
 
 package io.swagger.client;
 
+import android.util.Log;
+
 import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.Request;
@@ -64,6 +66,8 @@ import io.swagger.client.request.PatchRequest;
 import io.swagger.client.request.PostRequest;
 import io.swagger.client.request.PutRequest;
 
+import static io.swagger.client.api.DefaultApi.DEBUGKEY;
+
 public class ApiInvoker {
     /**
      * Content type "text/plain" with UTF-8 encoding.
@@ -72,13 +76,13 @@ public class ApiInvoker {
     /**
      * ISO 8601 date time format.
      *
-     * @see https://en.wikipedia.org/wiki/ISO_8601
+
      */
     public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     /**
      * ISO 8601 date format.
      *
-     * @see https://en.wikipedia.org/wiki/ISO_8601
+
      */
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static ApiInvoker INSTANCE;
@@ -456,6 +460,7 @@ public class ApiInvoker {
                     request = new PutRequest(url, headers, null, (HttpEntity) body, stringRequest, errorListener);
                 } else {
                     request = new PutRequest(url, headers, contentType, new StringEntity(serialize(body), "UTF-8"), stringRequest, errorListener);
+                    Log.d(DEBUGKEY,"putRequestSent: " + request.toString());
                 }
             } else {
                 request = new PutRequest(url, headers, null, null, stringRequest, errorListener);
