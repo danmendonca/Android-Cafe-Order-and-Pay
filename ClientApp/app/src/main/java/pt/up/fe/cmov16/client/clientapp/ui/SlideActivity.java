@@ -2,20 +2,31 @@ package pt.up.fe.cmov16.client.clientapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.transition.Slide;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import pt.up.fe.cmov16.client.clientapp.MainActivity;
 import pt.up.fe.cmov16.client.clientapp.R;
+import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
+import pt.up.fe.cmov16.client.clientapp.logic.User;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.HistoricFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.NamedFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.ProductsFragment;
@@ -23,21 +34,47 @@ import pt.up.fe.cmov16.client.clientapp.ui.slides.VouchersFragment;
 
 public class SlideActivity extends FragmentActivity {
 
+    private static NamedFragment[] fragments = new NamedFragment[]{
+            ProductsFragment.newInstance(0),
+            HistoricFragment.newInstance(1),
+            VouchersFragment.newInstance(2)
+    };
+    private static boolean pwInserted = false;
     private ViewPager mPager;
-    private NamedFragment[] fragments;
     private TextView tittle;
+    private FloatingActionButton floatingActionButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide);
 
-        fragments = new NamedFragment[]{
-                ProductsFragment.newInstance(0),
-                HistoricFragment.newInstance(1),
-                VouchersFragment.newInstance(2)
-        };
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fabButton);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                if (pwInserted)
+                    ((HistoricFragment) fragments[1]).refresh(SlideActivity.this);
+                else {
+                    // DialogFragment.show() will take care of adding the fragment
+                    // in a transaction.  We also want to remove any currently showing
+                    // dialog, so make our own transaction and take care of that here.
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+
+                    // Create and show the dialog.
+                    DialogFragment newFragment = MyPwDialogFragment.newInstance("Confirm Password");
+                    newFragment.show(ft, "dialog");
+
+                }
+            }
+        });
+        floatingActionButton.hide();
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -57,6 +94,11 @@ public class SlideActivity extends FragmentActivity {
                 tittle.setText(fragments[position].toString());
                 ((AppBarLayout) findViewById(R.id.appBarLayout)).setExpanded(true, true);
                 //fragments[position].focusObtained(SlideActivity.this);
+                if (position == 1) {
+                    floatingActionButton.show();
+                } else {
+                    floatingActionButton.hide();
+                }
             }
 
             @Override
@@ -75,8 +117,10 @@ public class SlideActivity extends FragmentActivity {
         findViewById(R.id.cartButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(SlideActivity.this,CartActivity.class);
-                i.putExtra(CartActivity.productsArrayKey,((ProductsFragment)fragments[0]).getProducts());
+                Intent i = new Intent(SlideActivity.this, CartActivity.class);
+                ArrayList<ProductMenuItem> ps = ((ProductsFragment) fragments[0]).getProducts();
+
+                i.putExtra(CartActivity.PRODUCTS_ARRAY_KEY, ps);
                 startActivity(i);
             }
         });
@@ -93,10 +137,82 @@ public class SlideActivity extends FragmentActivity {
         } else if (mPager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(MainActivity.FINISH_ACTIVITY_KEY, true);
+            startActivity(intent);
+            finish();
+
         } else {
             // Otherwise, select the previous step.
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    public boolean userValidation(String pw) {
+
+        if (!pwInserted && User.getInstance(this).getPassword().compareTo(pw) != 0)
+            Toast.makeText(this, "Invalid password", Toast.LENGTH_SHORT).show();
+        else
+            pwInserted = true;
+        return pwInserted;
+    }
+
+    public void refreshReqHistory() {
+        ((HistoricFragment) fragments[1]).refresh(SlideActivity.this);
+    }
+
+    public static class MyPwDialogFragment extends DialogFragment {
+        EditText text;
+
+        public static MyPwDialogFragment newInstance(String title) {
+            MyPwDialogFragment frag = new MyPwDialogFragment();
+            Bundle args = new Bundle();
+            args.putString("title", title);
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            super.onCreateView(inflater, container, savedInstanceState);
+            View v = inflater.inflate(R.layout.activity_slide__pw_dialog, container, false);
+
+            text = (EditText) v.findViewById(R.id.pw_dialog_text);
+
+            Button okButton = (Button) v.findViewById(R.id.pw_dialog_ok_btn);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SlideActivity activity = (SlideActivity) getActivity();
+                    if (!activity.userValidation(text.getText().toString()))
+                        return;
+
+                    activity.refreshReqHistory();
+                    dismiss();
+                }
+            });
+
+            Button cancelBtn = (Button) v.findViewById(R.id.pw_dialog_cancel_btn);
+            cancelBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                }
+            });
+
+            return v;
         }
     }
 
@@ -166,4 +282,6 @@ public class SlideActivity extends FragmentActivity {
             }
         }
     }
+
+
 }

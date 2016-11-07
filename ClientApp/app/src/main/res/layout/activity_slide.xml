@@ -67,6 +67,17 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_loop_white_18dp"
+        app:borderWidth="0dp"
+        app:backgroundTint="@android:color/holo_green_light"/>
+
 </android.support.design.widget.CoordinatorLayout>
 
 

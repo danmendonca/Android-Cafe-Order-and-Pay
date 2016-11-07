@@ -1,7 +1,6 @@
 package pt.up.fe.cmov16.client.clientapp.ui.cart;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,15 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
-import pt.up.fe.cmov16.client.clientapp.util.ShPrefKeys;
+import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 
 /**
  * A fragment representing a list of Items.
@@ -61,15 +56,7 @@ public class VoucherItemFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
         vouchers = new ArrayList<>();
-
-        Context ctx = getContext();
-        SharedPreferences sp = ctx.getSharedPreferences(
-                ctx.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        Set<String> vouchersJson = sp.getStringSet(ShPrefKeys.vouchersShPrefKey, new HashSet<String>());
-        Gson gson = new Gson();
-        for (String s : vouchersJson)
-            vouchers.add(gson.fromJson(s, Voucher.class));
-
+        vouchers.addAll(VoucherContract.loadVouchers(getContext()));
     }
 
     @Override
@@ -122,6 +109,7 @@ public class VoucherItemFragment extends Fragment {
     public interface OnVoucherFragmentInteractionListener {
         // TODO: Update argument type and name
         void onAddVoucherFragmentInteraction(Voucher item);
+
         void onRemVoucherFragmentInteraction(Voucher item);
     }
 }

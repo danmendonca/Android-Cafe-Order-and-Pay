@@ -24,18 +24,25 @@ import io.swagger.client.model.Costumer;
 import io.swagger.client.model.LoginParam;
 import io.swagger.client.model.RegisterParam;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
-import pt.up.fe.cmov16.client.clientapp.ui.QRCodeActivity;
 import pt.up.fe.cmov16.client.clientapp.ui.SlideActivity;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    public static final String FINISH_ACTIVITY_KEY = "isFinish";
     private Button dateTextView;
     private DefaultApi api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra(FINISH_ACTIVITY_KEY, false)) {
+            finish();
+            return;
+        }
+
         ApiInvoker.initializeInstance();
+
         api = new DefaultApi();
 
         if (User.getInstance(this).isFirstTime())
@@ -135,18 +142,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 } else if (!Character.isDigit(dateTextView.getText().toString().charAt(0))) {
                     Toast.makeText(MainActivity.this, "Insert credit card expiration date", Toast.LENGTH_SHORT).show();
                 } else {
-                    String cardDate = "";
-                    // 01-01-2019
                     String dateInput = dateTextView.getText().subSequence(6, 10).toString() + "-";
                     dateInput += dateTextView.getText().subSequence(3, 5).toString() + "-";
                     dateInput += dateTextView.getText().subSequence(0, 2).toString();
                     dateInput = dateInput.replace('/', '-');
-//                    cardDate += dateInput.split("/")[2];
-//                    cardDate += "-";
-//                    cardDate += dateInput.split("/")[1];
-//                    cardDate += "-";
-//                    cardDate += dateInput.split("/")[0];
-//                    cardDate += "T23:59:59.000Z";
 
                     RegisterParam registerParam = new RegisterParam();
                     registerParam.setUsername(username);
@@ -210,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private void startSlideActivity() {
         Intent i = new Intent(this, SlideActivity.class);
         startActivity(i);
+        finish();
     }
 
 }
