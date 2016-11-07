@@ -69,12 +69,6 @@ public class ProductsFragment extends NamedFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_products, container, false);
         //PREPARE LIST VIEW
-        final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_products);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new RVAdapter();
-        rv.setAdapter(adapter);
-        // Check whether we're recreating a previously destroyed instance
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             PRODUCTS = (ArrayList<ProductMenuItem>) savedInstanceState.getSerializable(STATE_PRODS);
@@ -82,6 +76,13 @@ public class ProductsFragment extends NamedFragment {
         } else {
             loadProducts();
         }
+        final RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_products);
+        rv.setHasFixedSize(true);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new RVAdapter();
+        rv.setAdapter(adapter);
+        // Check whether we're recreating a previously destroyed instance
+
         return rootView;
     }
 
@@ -123,6 +124,8 @@ public class ProductsFragment extends NamedFragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.d("Get-Products", error.toString());
+                        if (getContext() == null)
+                            return;
                         Toast.makeText(getContext(),
                                 "Connection failed, loading local products", Toast.LENGTH_SHORT).show();
                         updateListItems(ProductContract.loadProducts(context), quantities);

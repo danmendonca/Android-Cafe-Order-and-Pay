@@ -28,6 +28,7 @@ import pt.up.fe.cmov16.client.clientapp.ui.RequestDetailActivity;
 
 public class HistoricFragment extends NamedFragment {
 
+    private static final String STATE_REQUESTS = "REQUESTS_KEY";
     private ArrayList<Request> requestsMade = new ArrayList<>();
     private RVAdapter adapter = new RVAdapter();
 
@@ -42,6 +43,21 @@ public class HistoricFragment extends NamedFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putSerializable(STATE_REQUESTS, requestsMade);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // retain this fragment
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_historic, container, false);
 
@@ -51,7 +67,11 @@ public class HistoricFragment extends NamedFragment {
         adapter = new RVAdapter();
         rv.setAdapter(adapter);
 
-        askForRequests(getContext());
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            requestsMade = (ArrayList<Request>) savedInstanceState.getSerializable(STATE_REQUESTS);
+            adapter.notifyDataSetChanged();
+        }
 
         return rootView;
     }
@@ -83,23 +103,6 @@ public class HistoricFragment extends NamedFragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onPause() {
-//        Context ctx = getContext();
-//        SharedPreferences sp = ctx.getSharedPreferences(
-//                ctx.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//
-//        Set<String> requestsJson = new HashSet<String>();
-//        Gson gson = new Gson();
-//        for (Request r : requestsMade)
-//            requestsJson.add(gson.toJson(r));
-//
-//        editor.putStringSet(ShPrefKeys.RequestsOvShPrefKey, requestsJson);
-//        editor.commit();
-        super.onPause();
     }
 
     public void refresh(Context context) {
