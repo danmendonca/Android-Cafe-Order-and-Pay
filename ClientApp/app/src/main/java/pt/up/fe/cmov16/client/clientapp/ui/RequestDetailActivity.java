@@ -14,7 +14,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.LinesVouchersResponse;
@@ -113,7 +115,8 @@ public class RequestDetailActivity extends AppCompatActivity {
 
         public float getTotal() {
             if (requestline != null) {
-                DecimalFormat twoDf = new DecimalFormat("#.##");
+                DecimalFormat twoDf = new DecimalFormat("#.##",
+                        DecimalFormatSymbols.getInstance(Locale.ENGLISH));
                 return Float.valueOf(twoDf.format(requestline.getQuantity() * requestline.getUnitprice()));
             }
 

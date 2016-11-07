@@ -85,23 +85,6 @@ public class HistoricFragment extends NamedFragment {
         }
     }
 
-    @Override
-    public void onPause() {
-//        Context ctx = getContext();
-//        SharedPreferences sp = ctx.getSharedPreferences(
-//                ctx.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sp.edit();
-//
-//        Set<String> requestsJson = new HashSet<String>();
-//        Gson gson = new Gson();
-//        for (Request r : requestsMade)
-//            requestsJson.add(gson.toJson(r));
-//
-//        editor.putStringSet(ShPrefKeys.RequestsOvShPrefKey, requestsJson);
-//        editor.commit();
-        super.onPause();
-    }
-
     public void refresh(Context context) {
         askForRequests(context);
         Toast.makeText(context, "Updating...", Toast.LENGTH_LONG).show();

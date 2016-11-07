@@ -137,11 +137,7 @@ public class SlideActivity extends FragmentActivity {
         } else if (mPager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra(MainActivity.FINISH_ACTIVITY_KEY, true);
-            startActivity(intent);
-            finish();
+            super.onBackPressed();
 
         } else {
             // Otherwise, select the previous step.
