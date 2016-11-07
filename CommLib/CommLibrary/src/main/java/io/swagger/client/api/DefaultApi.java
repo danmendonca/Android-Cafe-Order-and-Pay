@@ -60,9 +60,10 @@ import io.swagger.client.model.Request;
 import io.swagger.client.model.RequestParam;
 
 public class DefaultApi {
-//    String basePath = "http://10.0.2.2:8080/api";
-    String basePath = "http://192.168.1.66:8080/api";
+    String basePath = "http://10.0.2.2:8080/api"; // google emulator
 //    String basePath = "https://cmov1.herokuapp.com/api";
+//    String basePath = "http://192.168.1.66:8080/api"; //danielm homeNetwork address
+//    String basePath = "http://172.30.18.124:8080/api"; //danielm eduroam address
     //String basePath = "http://192.168.10.5:8080/api";
     //String basePath = "localhost:8080/api";
     public static final String DEBUGKEY = "http://localhost.com";

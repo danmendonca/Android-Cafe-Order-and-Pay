@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
                 editor.commit();
 
-//                Intent i = new Intent(this, ProcessRequestActivity.class);
-//                i.replaceExtras(bundle);
-//                startActivity(i);
+                Intent i = new Intent(this, ProcessRequestActivity.class);
+                i.replaceExtras(bundle);
+                startActivity(i);
             }
         }
     }
