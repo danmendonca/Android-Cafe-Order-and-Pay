@@ -137,7 +137,7 @@ public class CartActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // get user input and set it to result
-                                // edit text
+                                // edit pwText
                                 if (userInput.getText().toString()
                                         .equals(User.getInstance(CartActivity.this)
                                                 .getPIN())) {
