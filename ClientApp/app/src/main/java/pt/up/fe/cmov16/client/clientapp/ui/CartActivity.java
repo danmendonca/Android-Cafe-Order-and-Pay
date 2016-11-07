@@ -165,8 +165,8 @@ public class CartActivity extends AppCompatActivity {
     private void makeRequest() {
         NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         // Check for available NFC Adapter
-        if (mNfcAdapter == null) {
-            Toast.makeText(getApplicationContext(), "NFC is not available on this device.", Toast.LENGTH_LONG).show();
+        if (mNfcAdapter == null || !mNfcAdapter.isEnabled()) {
+            Toast.makeText(getApplicationContext(), "NFC is not available/enabled on this device.", Toast.LENGTH_LONG).show();
             makeRequest("QRCode");
         } else {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
