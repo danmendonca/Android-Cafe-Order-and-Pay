@@ -213,11 +213,10 @@ public class CartActivity extends AppCompatActivity implements NfcAdapter.OnNdef
 
     private void makeNFCRequest() {
         app = (NfcApp) getApplication();
-        Bundle extras = getIntent().getExtras();
         String tag;
         byte[] message;
-        tag = extras.getString("tag");
-        message = extras.getByteArray("message sent");
+        tag = "application/nfc.feup.apm.message.type1";
+        message = "message to send".getBytes();
         NdefMessage msg = new NdefMessage(new NdefRecord[] { createMimeRecord(tag, message) });
 
         // Register a NDEF message to be sent in a beam operation (P2P)
