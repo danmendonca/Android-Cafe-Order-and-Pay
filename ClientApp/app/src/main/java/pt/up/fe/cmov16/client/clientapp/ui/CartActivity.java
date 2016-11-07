@@ -214,6 +214,7 @@ public class CartActivity extends AppCompatActivity {
         switch (type) {
             case "QRCode":
                 i = new Intent(CartActivity.this, QRCodeActivity.class);
+                VoucherContract.deleteVouchersFromDB(CartActivity.this, vouchers);
                 break;
             case "NFC":
                 i = new Intent(CartActivity.this, NFCActivity.class);
@@ -225,7 +226,6 @@ public class CartActivity extends AppCompatActivity {
         i.putExtra(RequestEncode.PRODUCTS_ARRAY_KEY, prods);
         i.putExtra(RequestEncode.VOUCHERS_ARRAY_KEY, vouchers);
         startActivity(i);
-        VoucherContract.deleteVouchersFromDB(CartActivity.this, vouchers);
         finish();
     }
 

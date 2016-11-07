@@ -10,15 +10,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
+import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.client.clientapp.R;
-import pt.up.fe.cmov16.client.clientapp.util.NfcApp;
+import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 import pt.up.fe.cmov16.client.clientapp.util.RequestEncode;
 
 public class NFCActivity extends AppCompatActivity implements NfcAdapter.OnNdefPushCompleteCallback {
 
     private static final String TAG = NFCActivity.class.toString();
-    private NfcApp app;
+    private ArrayList<Voucher> vouchers = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +35,14 @@ public class NFCActivity extends AppCompatActivity implements NfcAdapter.OnNdefP
                 Log.e(TAG, "Error generating NFC message");
                 finish();
             }
-        }else{
+            vouchers = (ArrayList<Voucher>) bundle.get(RequestEncode.VOUCHERS_ARRAY_KEY);
+            if (vouchers == null)
+                vouchers = new ArrayList<>();
+        } else {
             Log.e(TAG, "Missing bundle");
             finish();
         }
 
-        app = (NfcApp) getApplication();
         String tag = "text/plain";
         byte[] message = encoded.getBytes();
         NdefMessage msg = new NdefMessage(new NdefRecord[]{createMimeRecord(tag, message)});
@@ -47,7 +51,6 @@ public class NFCActivity extends AppCompatActivity implements NfcAdapter.OnNdefP
         // Register a NDEF message to be sent in a beam operation (P2P)
         mNfcAdapter.setNdefPushMessage(msg, this);
         mNfcAdapter.setOnNdefPushCompleteCallback(this, this);
-        app.reply = "Entered NfcSend";
     }
 
     public NdefRecord createMimeRecord(String mimeType, byte[] payload) {
@@ -58,10 +61,10 @@ public class NFCActivity extends AppCompatActivity implements NfcAdapter.OnNdefP
 
     @Override
     public void onNdefPushComplete(NfcEvent arg0) {
-        app.reply = "";
+        VoucherContract.deleteVouchersFromDB(NFCActivity.this, vouchers);
         runOnUiThread(new Runnable() {
             public void run() {
-                Toast.makeText(getApplicationContext(), "Request sent.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Request sent!", Toast.LENGTH_LONG).show();
                 finish();
             }
         });
