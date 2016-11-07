@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import io.swagger.client.ApiInvoker;
+import io.swagger.client.api.DefaultApi;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ScanQRCodeActivity;
 

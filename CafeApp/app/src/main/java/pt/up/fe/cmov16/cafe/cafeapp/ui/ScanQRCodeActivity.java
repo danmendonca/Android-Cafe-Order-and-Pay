@@ -34,6 +34,7 @@ public class ScanQRCodeActivity extends Activity {
     private final static int PERMISSION_REQUEST_CAMERA = 0;
     private SurfaceView cameraView;
     private DisplayMetrics metrics;
+    private boolean received;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class ScanQRCodeActivity extends Activity {
         cameraView = (SurfaceView) findViewById(R.id.camera_view);
         metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
+        received = false;
         requestCameraPermission();
     }
 
@@ -126,9 +127,10 @@ public class ScanQRCodeActivity extends Activity {
             public void receiveDetections(Detector.Detections<Barcode> detections) {
                 final SparseArray<Barcode> barCodes = detections.getDetectedItems();
 
-                if (barCodes.size() != 0) {
+                if (barCodes.size() != 0 && !received) {
                     qrCodeReceived(barCodes.valueAt(0).displayValue);
-                    cameraSource.release();
+                    //cameraSource.release();
+                    received = true;
                 }
             }
         });
@@ -136,7 +138,6 @@ public class ScanQRCodeActivity extends Activity {
 
     private void qrCodeReceived(final String qrCodeString) {
         final String r = "Received: " + qrCodeString;
-        Log.e("ScanQrCode", r);
         loadFromString(qrCodeString);
 
     }
@@ -149,7 +150,6 @@ public class ScanQRCodeActivity extends Activity {
         ArrayList<ProductMenuItem> productMenuItems = new ArrayList<>();
         ArrayList<Voucher> vouchers = new ArrayList<>();
         for (int i = 0; i < fields.length; i++) {
-            Log.e("Fields", fields[i]);
             String field = fields[i];
             if (i == 0) {//costumerID
                 costumerID = field;

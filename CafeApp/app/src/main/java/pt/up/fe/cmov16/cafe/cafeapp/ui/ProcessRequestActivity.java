@@ -69,23 +69,21 @@ public class ProcessRequestActivity extends AppCompatActivity {
             voucherParam.setId(voucher.getId());
             voucherParam.setType(voucher.getType());
             voucherParam.setSignature(voucher.getSignature());
+            requestVouchers.add(voucherParam);
             textView.append("\n\t Voucher: "+voucher.getType()+" type: "+voucher.getType());
         }
         requestParam.setRequestvouchers(requestVouchers);
 
-       // Log.e(TAG,requestParam.toString());
         textView.append("\nSending request to server");
         DefaultApi api = new DefaultApi();
         api.createRequest(requestParam, new Response.Listener<Request>() {
             @Override
             public void onResponse(Request response) {
-                Log.e(TAG,"Server responde: "+ response.toString());
                 textView.append("\nServer responde: "+ response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG,"Error responde: "+ error.toString());
                 textView.append("\nError responde: "+ error.toString());
             }
         });
