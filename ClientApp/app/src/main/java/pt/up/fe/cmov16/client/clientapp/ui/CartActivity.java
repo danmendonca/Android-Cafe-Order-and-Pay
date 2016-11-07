@@ -2,15 +2,13 @@ package pt.up.fe.cmov16.client.clientapp.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
-import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -32,23 +29,18 @@ import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
 import pt.up.fe.cmov16.client.clientapp.logic.VoucherMenuItem;
-import pt.up.fe.cmov16.client.clientapp.util.NfcApp;
+import pt.up.fe.cmov16.client.clientapp.util.RequestEncode;
 
-public class CartActivity extends AppCompatActivity implements NfcAdapter.OnNdefPushCompleteCallback {
-    public static final String PRODUCTS_ARRAY_KEY = "PRODUCTS_KEY";
-    public static final String VOUCHERS_ARRAY_KEY = "VOUCHERS_KEY";
+public class CartActivity extends AppCompatActivity {
+    private static final String TAG = CartActivity.class.toString();
     private boolean isDiscountSelected = false;
     private short commonVouchersSelected = 0;
 
     private ArrayList<ProductMenuItem> prods = new ArrayList<>();
     private ArrayList<VoucherMenuItem> voucherMenuItems = new ArrayList<>();
-    private RecyclerView rv;
     private ItemsRvAdapter adapter;
     private double totalPrice;
     private TextView totalPriceTV;
-
-    private NfcApp app;
-    private NfcAdapter mNfcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +48,17 @@ public class CartActivity extends AppCompatActivity implements NfcAdapter.OnNdef
         setContentView(R.layout.activity_cart);
         totalPrice = 0;
         Bundle b = getIntent().getExtras();
-        if (b.get(PRODUCTS_ARRAY_KEY) == null) {
+        if (b.get(RequestEncode.PRODUCTS_ARRAY_KEY) == null) {
             finish();
             return;
         }
-        for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(PRODUCTS_ARRAY_KEY)) {
+        for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(RequestEncode.PRODUCTS_ARRAY_KEY)) {
             prods.add(pmi);
             totalPrice += pmi.getUnitPrice() * pmi.getQuantity();
         }
         totalPriceTV = (TextView) findViewById(R.id.total_price);
         totalPriceTV.setText(doubleToDecimalString(totalPrice));
-        rv = (RecyclerView) findViewById(R.id.cart_items_rv);
+        RecyclerView rv = (RecyclerView) findViewById(R.id.cart_items_rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
         adapter = new ItemsRvAdapter();
@@ -170,13 +162,13 @@ public class CartActivity extends AppCompatActivity implements NfcAdapter.OnNdef
         alertDialog.show();
     }
 
-    private void makeRequest(){
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+    private void makeRequest() {
+        NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         // Check for available NFC Adapter
         if (mNfcAdapter == null) {
             Toast.makeText(getApplicationContext(), "NFC is not available on this device.", Toast.LENGTH_LONG).show();
-            makeQRCodeRequest();
-        }else{
+            makeRequest("QRCode");
+        } else {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                     CartActivity.this);
 
@@ -187,7 +179,7 @@ public class CartActivity extends AppCompatActivity implements NfcAdapter.OnNdef
                     .setPositiveButton("QRCode",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                makeQRCodeRequest();
+                                    makeRequest("QRCode");
                                 }
                             })
                     .setNeutralButton("Cancel",
@@ -199,7 +191,7 @@ public class CartActivity extends AppCompatActivity implements NfcAdapter.OnNdef
                     .setNegativeButton("NFC",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    makeNFCRequest();
+                                    makeRequest("NFC");
                                 }
                             });
 
@@ -211,43 +203,27 @@ public class CartActivity extends AppCompatActivity implements NfcAdapter.OnNdef
         }
     }
 
-    private void makeNFCRequest() {
-        app = (NfcApp) getApplication();
-        String tag;
-        byte[] message;
-        tag = "application/nfc.feup.apm.message.type1";
-        message = "message to send".getBytes();
-        NdefMessage msg = new NdefMessage(new NdefRecord[] { createMimeRecord(tag, message) });
 
-        // Register a NDEF message to be sent in a beam operation (P2P)
-        mNfcAdapter.setNdefPushMessage(msg, this);
-        mNfcAdapter.setOnNdefPushCompleteCallback(this,this);
-        app.reply = "Entered NfcSend";
-    }
-    public NdefRecord createMimeRecord(String mimeType, byte[] payload) {
-        byte[] mimeBytes = mimeType.getBytes(Charset.forName("ISO-8859-1"));
-        return new NdefRecord(
-                NdefRecord.TNF_MIME_MEDIA, mimeBytes, new byte[0], payload);
-    }
-    @Override
-    public void onNdefPushComplete(NfcEvent arg0) {
-        app.reply = "";
-        runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(getApplicationContext(), "Message sent.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        });
-    }
-    private void makeQRCodeRequest() {
+    private void makeRequest(String type) {
         ArrayList<Voucher> vouchers = new ArrayList<>();
         for (VoucherMenuItem v : voucherMenuItems) {
             if (v.isChecked)
                 vouchers.add(v.voucher);
         }
-        Intent i = new Intent(CartActivity.this, QRCodeActivity.class);
-        i.putExtra(PRODUCTS_ARRAY_KEY, prods);
-        i.putExtra(VOUCHERS_ARRAY_KEY, vouchers);
+        Intent i;
+        switch (type) {
+            case "QRCode":
+                i = new Intent(CartActivity.this, QRCodeActivity.class);
+                break;
+            case "NFC":
+                i = new Intent(CartActivity.this, NFCActivity.class);
+                break;
+            default:
+                Log.e(TAG, "Wrong type for request encoding");
+                return;
+        }
+        i.putExtra(RequestEncode.PRODUCTS_ARRAY_KEY, prods);
+        i.putExtra(RequestEncode.VOUCHERS_ARRAY_KEY, vouchers);
         startActivity(i);
         VoucherContract.deleteVouchersFromDB(CartActivity.this, vouchers);
         finish();

@@ -30,6 +30,7 @@ import pt.up.fe.cmov16.client.clientapp.ui.slides.HistoricFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.NamedFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.ProductsFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.VouchersFragment;
+import pt.up.fe.cmov16.client.clientapp.util.RequestEncode;
 
 public class SlideActivity extends FragmentActivity {
 
@@ -119,7 +120,7 @@ public class SlideActivity extends FragmentActivity {
                 Intent i = new Intent(SlideActivity.this, CartActivity.class);
                 ArrayList<ProductMenuItem> ps = ((ProductsFragment) fragments[0]).getProducts();
 
-                i.putExtra(CartActivity.PRODUCTS_ARRAY_KEY, ps);
+                i.putExtra(RequestEncode.PRODUCTS_ARRAY_KEY, ps);
                 startActivity(i);
             }
         });
