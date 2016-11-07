@@ -28,6 +28,7 @@ import pt.up.fe.cmov16.client.clientapp.ui.RequestDetailActivity;
 
 public class HistoricFragment extends NamedFragment {
 
+    private static final String STATE_REQUESTS = "REQUESTS_KEY";
     private ArrayList<Request> requestsMade = new ArrayList<>();
     private RVAdapter adapter = new RVAdapter();
 
@@ -42,6 +43,21 @@ public class HistoricFragment extends NamedFragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putSerializable(STATE_REQUESTS, requestsMade);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // retain this fragment
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_historic, container, false);
 
@@ -51,7 +67,11 @@ public class HistoricFragment extends NamedFragment {
         adapter = new RVAdapter();
         rv.setAdapter(adapter);
 
-        askForRequests(getContext());
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            requestsMade = (ArrayList<Request>) savedInstanceState.getSerializable(STATE_REQUESTS);
+            adapter.notifyDataSetChanged();
+        }
 
         return rootView;
     }
