@@ -2,7 +2,6 @@ package pt.up.fe.cmov16.cafe.cafeapp.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -20,6 +19,7 @@ import io.swagger.client.model.VoucherParam;
 import pt.up.fe.cmov16.cafe.cafeapp.MainActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.R;
 import pt.up.fe.cmov16.cafe.cafeapp.logic.ProductMenuItem;
+import pt.up.fe.cmov16.cafe.cafeapp.util.RequestDecode;
 
 public class ProcessRequestActivity extends AppCompatActivity {
 
@@ -35,12 +35,11 @@ public class ProcessRequestActivity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            ArrayList<ProductMenuItem> productMenuItems =
-                    (ArrayList<ProductMenuItem>) bundle.get(MainActivity.PRODUCTS_KEY);
-            ArrayList<Voucher> vouchers =
-                    (ArrayList<Voucher>) bundle.get(MainActivity.VOUCHERS_KEY);
-            String costumerID = (String) bundle.get(MainActivity.COSTUMER_KEY);
+            String encoded = (String) bundle.get(MainActivity.ENCODED_STRING_KEY);
 
+            ArrayList<ProductMenuItem> productMenuItems = new ArrayList<>();
+            ArrayList<Voucher> vouchers = new ArrayList<>();
+            String costumerID = RequestDecode.decode(encoded, productMenuItems, vouchers);
             sendRequest(productMenuItems, vouchers, costumerID);
         }
     }
@@ -58,7 +57,7 @@ public class ProcessRequestActivity extends AppCompatActivity {
             requestline.setProductId(productMenuItem.getId());
             requestline.setQuantity(productMenuItem.getQuantity());
             requestLines.add(requestline);
-            textView.append("\n\t Prod: "+productMenuItem.getId()+" #: "+productMenuItem.getQuantity());
+            textView.append("\n\t Prod: " + productMenuItem.getId() + " #: " + productMenuItem.getQuantity());
         }
         requestParam.setRequestlines(requestLines);
 
@@ -70,7 +69,7 @@ public class ProcessRequestActivity extends AppCompatActivity {
             voucherParam.setType(voucher.getType());
             voucherParam.setSignature(voucher.getSignature());
             requestVouchers.add(voucherParam);
-            textView.append("\n\t Voucher: "+voucher.getType()+" type: "+voucher.getType());
+            textView.append("\n\t Voucher: " + voucher.getType() + " type: " + voucher.getType());
         }
         requestParam.setRequestvouchers(requestVouchers);
 
@@ -79,12 +78,12 @@ public class ProcessRequestActivity extends AppCompatActivity {
         api.createRequest(requestParam, new Response.Listener<Request>() {
             @Override
             public void onResponse(Request response) {
-                textView.append("\nServer responde: "+ response.toString());
+                textView.append("\nServer responde: " + response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                textView.append("\nError responde: "+ error.toString());
+                textView.append("\nError responde: " + error.toString());
             }
         });
         textView.append("\nWaiting response");

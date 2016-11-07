@@ -1,8 +1,10 @@
 package pt.up.fe.cmov16.cafe.cafeapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -24,20 +26,17 @@ import io.swagger.client.model.Products;
 import pt.up.fe.cmov16.cafe.cafeapp.database.ProductContract;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ScanQRCodeActivity;
-import pt.up.fe.cmov16.cafe.cafeapp.util.NfcApp;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.toString();
+    public static final String ENCODED_STRING_KEY = "ENCODED_STRING";
     private static int QR_CODE_CODE = 1;
-    public static final String PRODUCTS_KEY = "PRODUCTS";
-    public static final String VOUCHERS_KEY = "VOUCHERS";
-    public static final String COSTUMER_KEY = "COSTUMERID";
-    private NfcApp app;
+    private static final int NFC_CODE = 2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        app = (NfcApp) getApplication();
 
         ApiInvoker.initializeInstance();
         loadProducts();
@@ -48,40 +47,31 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(i, QR_CODE_CODE);
             }
         });
+
+        Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_LONG).show();
+
+        NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
+        NfcAdapter adapter = manager.getDefaultAdapter();
+        if (adapter == null) {
+            Log.e(TAG, "Device haven't NFC ");
+        } else if (!adapter.isEnabled()) {
+            Log.e(TAG, "NFC isn't enabled ");
+        } else {
+            Log.i(TAG, "NFC is ready to use");
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request it is that we're responding to
-        if (requestCode == QR_CODE_CODE) {
+        if (requestCode == QR_CODE_CODE || requestCode == NFC_CODE) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                Bundle bundle = data.getExtras();
                 Intent i = new Intent(MainActivity.this, ProcessRequestActivity.class);
-                i.replaceExtras(bundle);
+                i.replaceExtras(data.getExtras());
                 startActivity(i);
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
-            processIntent(getIntent());
-        }
-    }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-        setIntent(intent);
-    }
-
-    void processIntent(Intent intent) {
-        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-        NdefMessage msg = (NdefMessage) rawMsgs[0];
-        app.reply = new String(msg.getRecords()[0].getPayload());
-        Log.e("Main", app.reply);
     }
 
     private void loadProducts() {

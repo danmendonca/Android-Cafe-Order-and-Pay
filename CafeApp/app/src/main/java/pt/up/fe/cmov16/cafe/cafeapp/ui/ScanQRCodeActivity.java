@@ -20,13 +20,9 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import io.swagger.client.model.Product;
-import io.swagger.client.model.Voucher;
 import pt.up.fe.cmov16.cafe.cafeapp.MainActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.R;
-import pt.up.fe.cmov16.cafe.cafeapp.logic.ProductMenuItem;
 
 
 public class ScanQRCodeActivity extends Activity {
@@ -120,7 +116,6 @@ public class ScanQRCodeActivity extends Activity {
 
             @Override
             public void release() {
-
             }
 
             @Override
@@ -129,7 +124,6 @@ public class ScanQRCodeActivity extends Activity {
 
                 if (barCodes.size() != 0 && !received) {
                     qrCodeReceived(barCodes.valueAt(0).displayValue);
-                    //cameraSource.release();
                     received = true;
                 }
             }
@@ -137,49 +131,8 @@ public class ScanQRCodeActivity extends Activity {
     }
 
     private void qrCodeReceived(final String qrCodeString) {
-        final String r = "Received: " + qrCodeString;
-        loadFromString(qrCodeString);
-
-    }
-
-    private void loadFromString(String qrCodeString) {
-
-        String[] fields = qrCodeString.split(";");
-
-        String costumerID = "";
-        ArrayList<ProductMenuItem> productMenuItems = new ArrayList<>();
-        ArrayList<Voucher> vouchers = new ArrayList<>();
-        for (int i = 0; i < fields.length; i++) {
-            String field = fields[i];
-            if (i == 0) {//costumerID
-                costumerID = field;
-            } else if (i == 1) {//products
-                String[] prods = field.split("\\|");
-                for (String prod : prods) {
-                    String[] prodFields = prod.split(",");
-                    Product product = new Product();
-                    product.setId(Integer.valueOf(prodFields[0]));
-                    ProductMenuItem productMenuItem = new ProductMenuItem(product);
-                    productMenuItem.setQuantity(Integer.valueOf(prodFields[1]));
-                    productMenuItems.add(productMenuItem);
-                }
-            } else if (i == 2) {//vouchers
-                String[] vcs = field.split("\\|");
-                for (String voucherString : vcs) {
-                    String[] voucherFields = voucherString.split(",");
-                    Voucher voucher = new Voucher();
-                    voucher.setId(Integer.valueOf(voucherFields[0]));
-                    voucher.setType(Integer.valueOf(voucherFields[1]));
-                    voucher.setSignature(voucherFields[2]);
-                    vouchers.add(voucher);
-                }
-            }
-        }
-
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(MainActivity.PRODUCTS_KEY, productMenuItems);
-        resultIntent.putExtra(MainActivity.VOUCHERS_KEY, vouchers);
-        resultIntent.putExtra(MainActivity.COSTUMER_KEY, costumerID);
+        resultIntent.putExtra(MainActivity.ENCODED_STRING_KEY, qrCodeString);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }

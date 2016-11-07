@@ -9,6 +9,7 @@
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="true" />
+
     <uses-permission android:name="android.permission.NFC" />
 
     <meta-data
@@ -24,17 +25,22 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="application/nfc.feup.apm.message.type1" />
-            </intent-filter>
-            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ui.ScanQRCodeActivity" />
         <activity android:name=".ui.ProcessRequestActivity" />
+        <activity android:name=".ui.ListenNFC">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
