@@ -1,7 +1,10 @@
 package pt.up.fe.cmov16.cafe.cafeapp;
 
 import android.content.Intent;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -21,17 +24,20 @@ import io.swagger.client.model.Products;
 import pt.up.fe.cmov16.cafe.cafeapp.database.ProductContract;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ScanQRCodeActivity;
+import pt.up.fe.cmov16.cafe.cafeapp.util.NfcApp;
 
 public class MainActivity extends AppCompatActivity {
     private static int QR_CODE_CODE = 1;
     public static final String PRODUCTS_KEY = "PRODUCTS";
     public static final String VOUCHERS_KEY = "VOUCHERS";
     public static final String COSTUMER_KEY = "COSTUMERID";
+    private NfcApp app;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        app = (NfcApp) getApplication();
 
         ApiInvoker.initializeInstance();
         loadProducts();
@@ -56,6 +62,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+            processIntent(getIntent());
+        }
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        setIntent(intent);
+    }
+
+    void processIntent(Intent intent) {
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        NdefMessage msg = (NdefMessage) rawMsgs[0];
+        app.reply = new String(msg.getRecords()[0].getPayload());
+        Log.e("Main", app.reply);
     }
 
     private void loadProducts() {
