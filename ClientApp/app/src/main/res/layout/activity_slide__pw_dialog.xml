@@ -3,10 +3,20 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:layout_gravity="center">
 
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/username_dialog_text"
+        android:hint="Username"
+        android:text=""/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/username_dialog_text"
         android:layout_centerHorizontal="true"
         android:id="@+id/pw_dialog_text"
         android:hint="Password"

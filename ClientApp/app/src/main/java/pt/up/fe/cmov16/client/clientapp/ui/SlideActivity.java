@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import pt.up.fe.cmov16.client.clientapp.MainActivity;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
@@ -31,6 +30,7 @@ import pt.up.fe.cmov16.client.clientapp.ui.slides.HistoricFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.NamedFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.ProductsFragment;
 import pt.up.fe.cmov16.client.clientapp.ui.slides.VouchersFragment;
+import pt.up.fe.cmov16.client.clientapp.util.RequestEncode;
 
 public class SlideActivity extends FragmentActivity {
 
@@ -120,7 +120,7 @@ public class SlideActivity extends FragmentActivity {
                 Intent i = new Intent(SlideActivity.this, CartActivity.class);
                 ArrayList<ProductMenuItem> ps = ((ProductsFragment) fragments[0]).getProducts();
 
-                i.putExtra(CartActivity.PRODUCTS_ARRAY_KEY, ps);
+                i.putExtra(RequestEncode.PRODUCTS_ARRAY_KEY, ps);
                 startActivity(i);
             }
         });
@@ -150,10 +150,14 @@ public class SlideActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    public boolean userValidation(String pw) {
+    public boolean userValidation(String username, String pw) {
 
-        if (!pwInserted && User.getInstance(this).getPassword().compareTo(pw) != 0)
-            Toast.makeText(this, "Invalid password", Toast.LENGTH_SHORT).show();
+
+        String storedUsername = User.getInstance(this).getUsername();
+        String storedPw = User.getInstance(this).getPassword();
+        if (!pwInserted && storedPw.compareTo(pw) != 0 ||
+                storedUsername.compareTo(username) != 0)
+            Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show();
         else
             pwInserted = true;
         return pwInserted;
@@ -164,7 +168,8 @@ public class SlideActivity extends FragmentActivity {
     }
 
     public static class MyPwDialogFragment extends DialogFragment {
-        EditText text;
+        EditText pwText;
+        EditText userText;
 
         public static MyPwDialogFragment newInstance(String title) {
             MyPwDialogFragment frag = new MyPwDialogFragment();
@@ -185,14 +190,15 @@ public class SlideActivity extends FragmentActivity {
             super.onCreateView(inflater, container, savedInstanceState);
             View v = inflater.inflate(R.layout.activity_slide__pw_dialog, container, false);
 
-            text = (EditText) v.findViewById(R.id.pw_dialog_text);
+            pwText = (EditText) v.findViewById(R.id.pw_dialog_text);
+            userText = (EditText) v.findViewById(R.id.username_dialog_text);
 
             Button okButton = (Button) v.findViewById(R.id.pw_dialog_ok_btn);
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     SlideActivity activity = (SlideActivity) getActivity();
-                    if (!activity.userValidation(text.getText().toString()))
+                    if (!activity.userValidation(userText.getText().toString() ,pwText.getText().toString()))
                         return;
 
                     activity.refreshReqHistory();

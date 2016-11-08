@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: "0.0.1"
+  version: "0.1.0"
   title: Acme Cafe App
 # during dev, should point to your local machine
 host: localhost:8080
@@ -50,12 +50,36 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/Costumers"
+            type: array
+            items:
+              $ref: "#/definitions/CostumersResponse"
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-    put:
+  /costumers/login:
+    x-swagger-router-controller: costumers
+    post:
+      description: Login
+      operationId: logMe
+      parameters:
+        - name: loginParam
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/LoginParam'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /costumers/register:
+    x-swagger-router-controller: costumers
+    post:
       description: Creation of new user
       operationId: createUser
       parameters:
@@ -73,20 +97,22 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /costumers/requests:
+    x-swagger-router-controller: costumers
     post:
-      description: Login
-      operationId: logMe
+      description: Returns a request collection of a costumer given its uuid and pin
+      operationId: getCostumerRequests
       parameters:
-        - name: loginParam
+        - name: pinLogin
           in: body
           required: true
           schema:
-            $ref: '#/definitions/LoginParam'
+            $ref: '#/definitions/PinLoginParam'
       responses:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/Costumer"
+            $ref: '#/definitions/Consult'
         default:
           description: Error
           schema:
@@ -109,7 +135,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-    put:
+    post:
       description: Creates a product
       operationId: createProduct
       parameters:
@@ -129,24 +155,6 @@ paths:
   /requests:
     x-swagger-router-controller: requests
     post:
-      description: Returns a request collection of a costumer given its uuid and pin
-      operationId: getCostumerRequests
-      parameters:
-        - name: pinLogin
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/PinLoginParam'
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: '#/definitions/Consult'
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-    put:
       description: Creates a new request for a costumer
       operationId: createRequest
       parameters:
@@ -159,19 +167,19 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/Request'
+            $ref: '#/definitions/RequestResponse'
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /requestlines:
+  /requestlines/{requestId}:
     x-swagger-router-controller: requestlines
     get:
       description: Return the requestlines of a request
       operationId: getRequestlines
       parameters:
         - name: requestId
-          in: query
+          in: path
           required: true
           type: integer
           format: int32
@@ -198,7 +206,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-    put:
+    post:
       description: Adds a costumer to the blacklist
       operationId: addToBlacklist
       parameters:
@@ -357,27 +365,6 @@ definitions:
       type:
         type: integer
         format: int32
-  Request:
-    type: object
-    properties:
-      costumerUuid:
-        type: string
-      pin:
-        type: string
-      id:
-        type: integer
-        format: int32
-      number:
-        type: integer
-        format: int32
-      vouchers:
-        type: array
-        items:
-          $ref: '#/definitions/Voucher'
-      requestlines:
-        type: array
-        items:
-          $ref: '#/definitions/Requestline'
   Blacklist:
     type: object
     required:
@@ -398,14 +385,21 @@ definitions:
         type: string
       myPass:
         type: string
-  Costumers:
+  CostumersResponse:
     required:
-      - costumers
+      - username
+      - uuid
+      - name
     properties:
-      costumers:
-        type: array
-        items:
-          $ref: '#/definitions/Costumer'
+      username:
+        type: string
+      uuid:
+        type: string
+      name:
+        type: string
+      creditcarddate:
+        type: string
+        format: date-time
   Products:
     required:
       - products
@@ -425,7 +419,7 @@ definitions:
       requests:
         type: array
         items:
-          $ref: '#/definitions/Request'
+          $ref: '#/definitions/RequestResponse'
       vouchers:
         type: array
         items:
@@ -445,6 +439,24 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/VoucherParam'
+  RequestResponse:
+    properties:
+      id:
+        type: integer
+        format: int32
+      number:
+        type: integer
+        format: int32
+      requestLines:
+        type: array
+        items:
+          $ref: '#/definitions/Requestline'
+      requestVouchers:
+        type: array
+        items:
+          $ref: '#/definitions/VoucherParam'
+      createdAt:
+        type: string
   LinesVouchersResponse:
     required:
       - requestlines

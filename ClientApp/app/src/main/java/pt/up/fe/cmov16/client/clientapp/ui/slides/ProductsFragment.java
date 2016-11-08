@@ -100,7 +100,6 @@ public class ProductsFragment extends NamedFragment {
         final Context context = getContext();
         if (context == null)
             return;
-        final ProductContract productContract = new ProductContract();
         //if updatedAt was saved before, the skip this step and use its value in lastDate
         String lastUpdated = ProductContract.lastUpdatedProductDate(context);
         boolean stored = !lastUpdated.isEmpty();

@@ -24,18 +24,33 @@
 
 package io.swagger.client.model;
 
+import java.util.Date;
 
 import io.swagger.annotations.*;
 import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class PinLoginParam  {
+public class CostumersResponse  {
   
+  @SerializedName("username")
+  private String username = null;
   @SerializedName("uuid")
   private String uuid = null;
-  @SerializedName("pin")
-  private String pin = null;
+  @SerializedName("name")
+  private String name = null;
+  @SerializedName("creditcarddate")
+  private Date creditcarddate = null;
+
+  /**
+   **/
+  @ApiModelProperty(required = true, value = "")
+  public String getUsername() {
+    return username;
+  }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
   /**
    **/
@@ -50,11 +65,21 @@ public class PinLoginParam  {
   /**
    **/
   @ApiModelProperty(required = true, value = "")
-  public String getPin() {
-    return pin;
+  public String getName() {
+    return name;
   }
-  public void setPin(String pin) {
-    this.pin = pin;
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public Date getCreditcarddate() {
+    return creditcarddate;
+  }
+  public void setCreditcarddate(Date creditcarddate) {
+    this.creditcarddate = creditcarddate;
   }
 
 
@@ -66,26 +91,32 @@ public class PinLoginParam  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    PinLoginParam pinLoginParam = (PinLoginParam) o;
-    return (uuid == null ? pinLoginParam.uuid == null : uuid.equals(pinLoginParam.uuid)) &&
-        (pin == null ? pinLoginParam.pin == null : pin.equals(pinLoginParam.pin));
+    CostumersResponse costumersResponse = (CostumersResponse) o;
+    return (username == null ? costumersResponse.username == null : username.equals(costumersResponse.username)) &&
+        (uuid == null ? costumersResponse.uuid == null : uuid.equals(costumersResponse.uuid)) &&
+        (name == null ? costumersResponse.name == null : name.equals(costumersResponse.name)) &&
+        (creditcarddate == null ? costumersResponse.creditcarddate == null : creditcarddate.equals(costumersResponse.creditcarddate));
   }
 
   @Override
   public int hashCode() {
     int result = 17;
+    result = 31 * result + (username == null ? 0: username.hashCode());
     result = 31 * result + (uuid == null ? 0: uuid.hashCode());
-    result = 31 * result + (pin == null ? 0: pin.hashCode());
+    result = 31 * result + (name == null ? 0: name.hashCode());
+    result = 31 * result + (creditcarddate == null ? 0: creditcarddate.hashCode());
     return result;
   }
 
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class PinLoginParam {\n");
+    sb.append("class CostumersResponse {\n");
     
+    sb.append("  username: ").append(username).append("\n");
     sb.append("  uuid: ").append(uuid).append("\n");
-    sb.append("  pin: ").append(pin).append("\n");
+    sb.append("  name: ").append(name).append("\n");
+    sb.append("  creditcarddate: ").append(creditcarddate).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

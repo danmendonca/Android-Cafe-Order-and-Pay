@@ -5,6 +5,7 @@
 /ClientApp/*/build/
 /ClientApp/build/
 
+/CommLib/CommLibrary/build
 
 # Crashlytics configuations
 /CafeApp/com_crashlytics_export_strings.xml
@@ -51,6 +52,15 @@
 /ClientApp/*.iml
 /ClientApp/*/*.iml
 
+
+#Common
+/Common/Android/android-client/gradle
+/CommLib/.idea
+CommLib/CommLibrary/CommLibrary.iml
+...iml
+CommLib/CommLib.iml
+
+
 # OS-specific files
 /CafeApp/.DS_Store
 /CafeApp/.DS_Store?
@@ -67,16 +77,10 @@
 /ClientApp/.Trashes
 /ClientApp/ehthumbs.db
 /ClientApp/Thumbs.db
+
+
+#server
 /acme_remote/node_modules/
 /acme_remote/config/config.json
 acme_remote/config/config.json
 AcmeRemote/node_modules/
-/Common/Android/android-client/gradle
-CommLib/.idea/compiler.xml
-CommLib/.idea/copyright/profiles_settings.xml
-CommLib/.idea/misc.xml
-CommLib/.idea/vcs.xml
-CommLib/.idea/workspace.xml
-CommLib/CommLibrary/CommLibrary.iml
-...iml
-CommLib/CommLib.iml
