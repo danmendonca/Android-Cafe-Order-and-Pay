@@ -3,6 +3,7 @@ package pt.up.fe.cmov16.client.clientapp.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.swagger.client.model.Voucher;
+import pt.up.fe.cmov16.client.clientapp.R;
 
 public class VoucherContract {
 
@@ -23,7 +25,20 @@ public class VoucherContract {
 
     }
 
-    public static void saveVoucherInDB(Context context, List<Voucher> vouchers) {
+    public static void saveVoucherInDB(Context context, List<Voucher> vouchers, int newRequestSize) {
+        /*This sharedprefs var blocks user from use the
+        same voucher multiple times when the server is offline*/
+
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        int lastRequest = sharedPref.getInt("lastRequest", -1);
+        if (lastRequest == newRequestSize) {
+            //Log.e(TAG, "Vouchers already updated");
+            return;
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("lastRequest", newRequestSize);
+        editor.apply();
         if (context == null) {
             Log.e(TAG, "NULL CONTEXT UPDATING VOUCHERS DB");
             return;
@@ -41,8 +56,7 @@ public class VoucherContract {
 
         for (Voucher voucher : vouchers) {
 
-            if (isVoucherStored(context, db, voucher.getId()))
-            {
+            if (isVoucherStored(context, db, voucher.getId())) {
                 Log.v("VOUCHER_ALREADY_S", "voucher is stored");
                 continue;
             }

@@ -2,11 +2,13 @@ package pt.up.fe.cmov16.client.clientapp.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +29,15 @@ import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
 import pt.up.fe.cmov16.client.clientapp.logic.VoucherMenuItem;
+import pt.up.fe.cmov16.client.clientapp.util.RequestEncode;
 
 public class CartActivity extends AppCompatActivity {
-    public static final String PRODUCTS_ARRAY_KEY = "PRODUCTS_KEY";
-    public static final String VOUCHERS_ARRAY_KEY = "VOUCHERS_KEY";
+    private static final String TAG = CartActivity.class.toString();
     private boolean isDiscountSelected = false;
     private short commonVouchersSelected = 0;
 
     private ArrayList<ProductMenuItem> prods = new ArrayList<>();
     private ArrayList<VoucherMenuItem> voucherMenuItems = new ArrayList<>();
-    private RecyclerView rv;
     private ItemsRvAdapter adapter;
     private double totalPrice;
     private TextView totalPriceTV;
@@ -47,17 +48,17 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
         totalPrice = 0;
         Bundle b = getIntent().getExtras();
-        if (b.get(PRODUCTS_ARRAY_KEY) == null) {
+        if (b.get(RequestEncode.PRODUCTS_ARRAY_KEY) == null) {
             finish();
             return;
         }
-        for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(PRODUCTS_ARRAY_KEY)) {
+        for (ProductMenuItem pmi : (ArrayList<ProductMenuItem>) b.get(RequestEncode.PRODUCTS_ARRAY_KEY)) {
             prods.add(pmi);
             totalPrice += pmi.getUnitPrice() * pmi.getQuantity();
         }
         totalPriceTV = (TextView) findViewById(R.id.total_price);
         totalPriceTV.setText(doubleToDecimalString(totalPrice));
-        rv = (RecyclerView) findViewById(R.id.cart_items_rv);
+        RecyclerView rv = (RecyclerView) findViewById(R.id.cart_items_rv);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
         adapter = new ItemsRvAdapter();
@@ -137,11 +138,11 @@ public class CartActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // get user input and set it to result
-                                // edit text
+                                // edit pwText
                                 if (userInput.getText().toString()
                                         .equals(User.getInstance(CartActivity.this)
                                                 .getPIN())) {
-                                    makeQRCodeRequest();
+                                    makeRequest();
                                 } else {
                                     Toast.makeText(CartActivity.this, "Invalid PIN", Toast.LENGTH_SHORT).show();
                                 }
@@ -161,17 +162,70 @@ public class CartActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void makeQRCodeRequest() {
+    private void makeRequest() {
+        NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        // Check for available NFC Adapter
+        if (mNfcAdapter == null || !mNfcAdapter.isEnabled()) {
+            Toast.makeText(getApplicationContext(), "NFC is not available/enabled on this device.", Toast.LENGTH_LONG).show();
+            makeRequest("QRCode");
+        } else {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                    CartActivity.this);
+
+            // set dialog message
+            alertDialogBuilder
+                    .setTitle("Choose method")
+                    .setCancelable(true)
+                    .setPositiveButton("QRCode",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    makeRequest("QRCode");
+                                }
+                            })
+                    .setNeutralButton("Cancel",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            })
+                    .setNegativeButton("NFC",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    makeRequest("NFC");
+                                }
+                            });
+
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            // show it
+            alertDialog.show();
+        }
+    }
+
+
+    private void makeRequest(String type) {
         ArrayList<Voucher> vouchers = new ArrayList<>();
         for (VoucherMenuItem v : voucherMenuItems) {
             if (v.isChecked)
                 vouchers.add(v.voucher);
         }
-        Intent i = new Intent(CartActivity.this, QRCodeActivity.class);
-        i.putExtra(PRODUCTS_ARRAY_KEY, prods);
-        i.putExtra(VOUCHERS_ARRAY_KEY, vouchers);
+        Intent i;
+        switch (type) {
+            case "QRCode":
+                i = new Intent(CartActivity.this, QRCodeActivity.class);
+                VoucherContract.deleteVouchersFromDB(CartActivity.this, vouchers);
+                break;
+            case "NFC":
+                i = new Intent(CartActivity.this, NFCActivity.class);
+                break;
+            default:
+                Log.e(TAG, "Wrong type for request encoding");
+                return;
+        }
+        i.putExtra(RequestEncode.PRODUCTS_ARRAY_KEY, prods);
+        i.putExtra(RequestEncode.VOUCHERS_ARRAY_KEY, vouchers);
         startActivity(i);
-        VoucherContract.deleteVouchersFromDB(CartActivity.this, vouchers);
         finish();
     }
 

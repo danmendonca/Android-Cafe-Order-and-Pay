@@ -1,7 +1,10 @@
 package pt.up.fe.cmov16.client.clientapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +32,7 @@ import pt.up.fe.cmov16.client.clientapp.ui.SlideActivity;
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     public static final String FINISH_ACTIVITY_KEY = "isFinish";
+    private static final String TAG = MainActivity.class.toString();
     private Button dateTextView;
     private DefaultApi api;
 
@@ -50,7 +54,17 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         else
             startSlideActivity();
 
-        //startActivity(new Intent(this, QRCodeActivity.class));
+        Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_LONG).show();
+
+        NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
+        NfcAdapter adapter = manager.getDefaultAdapter();
+        if (adapter == null) {
+            Log.e(TAG, "Device haven't NFC ");
+        } else if (!adapter.isEnabled()) {
+            Log.e(TAG, "NFC isn't enabled ");
+        } else {
+            Log.i(TAG, "NFC is ready to use");
+        }
     }
 
     private void setFirstTimeScreen() {
@@ -177,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 response.getPassword(), response.getCreditcardnumber(),
                 response.getCreditcarddate(), response.getPin(),
                 response.getUuid(), this);
-        Log.e("MainActivity", "created user: " + response.toString());
+        Log.i("MainActivity", "created user: " + response.toString());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("PIN: " + response.getPin() + "\n Don't forget this pin!")
