@@ -23,60 +23,8 @@ var publicKey = pair.public;
 const sign = crypto.createSign('sha1');
 
 module.exports = {
-    getCostumerRequests: getCostumerRequests,
     createRequest: createRequest
 };
-
-function getCostumerRequests(req, res) {
-    var pinLogin = req.swagger.params.pinLogin.value;
-    var cUuid = pinLogin.uuid;
-    var cPin = pinLogin.pin;
-    if (cUuid && cPin) {
-        var isValid = false;
-        Costumer.count({
-            where: {
-                uuid: cUuid,
-                pin: cPin
-            }
-        }).then(function (c) {
-            if (c == 1) {
-                Request.findAll({
-                    where: {
-                        costumerUuid: cUuid
-                    }
-                }).then(function (requests) {
-                    Voucher.findAll({
-                        attributes: ['id', 'type', 'isused']
-                        ,
-                        where: {
-                            costumerUuid: cUuid,
-                            isused: false
-                        }
-                    }).then(function (unusedVouchers) {
-                        var Consult = {};
-                        Consult['requests'] = requests;
-                        if (unusedVouchers && unusedVouchers.length > 0)
-                            Consult['vouchers'] = unusedVouchers;
-                        res.json(Consult);
-                        //console.log(JSON.stringify(Consult));
-                    })
-                });
-            }
-            else {
-                var ErrorResponse = {};
-                ErrorResponse.message = "Invalid User";
-                res.statusCode = 403;
-                res.json(ErrorResponse);
-            }
-        })
-    }
-    else {
-        var error = {};
-        error.message = "Invalid User";
-        res.statusCode = 403;
-        res.end(JSON.stringify(error));
-    }
-}
 
 /**
  * Route call to create a new Request

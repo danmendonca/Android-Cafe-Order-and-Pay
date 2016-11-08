@@ -30,7 +30,6 @@ function getRequestlines(req, res){
             ans.requestlines = requestlines;
             ans.vouchers = vouchers;
             var ansJson = JSON.stringify(ans);
-            console.log(ansJson);
             res.json(ans);
         })
     });
