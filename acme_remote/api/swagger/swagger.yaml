@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: "0.1.0"
+  version: "0.1.1"
   title: Acme Cafe App
 # during dev, should point to your local machine
 host: localhost:8080
@@ -220,6 +220,20 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Blacklist'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /publickey:
+    x-swagger-router-controller: requests
+    get:
+      description: Returns the public key of the service
+      operationId: getPublicKey
+      responses:
+        "200":
+          description: Success
+          schema:
+              type: string
         default:
           description: Error
           schema:

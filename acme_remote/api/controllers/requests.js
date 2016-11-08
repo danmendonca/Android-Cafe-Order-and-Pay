@@ -23,7 +23,8 @@ var publicKey = pair.public;
 const sign = crypto.createSign('sha1');
 
 module.exports = {
-    createRequest: createRequest
+    createRequest: createRequest,
+    getPublicKey: getPublicKey
 };
 
 /**
@@ -405,4 +406,9 @@ function createDiscountVoucher(cUuid) {
             signature: getVoucherSignature(v)
         })
     });
+}
+
+
+function getPublicKey(req, res){
+    sendResponse(res, publicKey, 200);
 }
