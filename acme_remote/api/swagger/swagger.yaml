@@ -159,7 +159,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: '#/definitions/Request'
+            $ref: '#/definitions/RequestResponse'
         default:
           description: Error
           schema:
@@ -442,6 +442,19 @@ definitions:
         items:
           $ref: '#/definitions/RequestlineParam'
       requestvouchers:
+        type: array
+        items:
+          $ref: '#/definitions/VoucherParam'
+  RequestResponse:
+    properties:
+      requestNumber:
+        type: integer
+        format: int32
+      requestLines:
+        type: array
+        items:
+          $ref: '#/definitions/Requestline'
+      requestVouchers:
         type: array
         items:
           $ref: '#/definitions/VoucherParam'
