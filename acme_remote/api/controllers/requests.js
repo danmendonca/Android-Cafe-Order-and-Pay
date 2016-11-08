@@ -11,6 +11,15 @@ var BlackList = models.blacklist;
 
 var voucherType3Price = 100;
 
+//Signatures
+var crypto = require('crypto');
+var keypair = require('keypair');
+var pair = keypair(368);
+console.log(pair);
+var privateKey = pair.private;
+var publicKey = pair.public;
+const sign = crypto.createSign('sha1');
+
 module.exports = {
     getCostumerRequests: getCostumerRequests,
     createRequest: createRequest
@@ -297,6 +306,18 @@ function voucherCreation(cUuid, oldLines, newLines) {
     if (spentSinceLast100 > voucherType3Price) createDiscountVoucher(cUuid);
 }
 
+function getVoucherSignature(v)
+{
+	sign.update(v.id + ' ' + v.cUuid + ' ' + v.type, 'sha1');
+	return sign.sign(privateKey);
+}
+
+function verifyVoucherSignature(v)
+{
+	var verifier = crypto.createVerify('sha1');
+	verifier.update(v.id + ' ' + v.cUuid + ' ' + v.type, 'sha1')
+	return verifier.verify(publicKey, v.signature);
+}
 
 /**
  * creates a voucher of type 1 or 2
@@ -304,15 +325,16 @@ function voucherCreation(cUuid, oldLines, newLines) {
  * @param {any} cUuid - costumer uuid to associate the voucher with
  */
 function createRandomVoucher(cUuid) {
-    var vKey = Math.random().toString();
-    var vType = getRandomizer(1, 2);
-    //var byteA = getInt32Bytes(vType);
     Voucher.create({
         costumerUuid: cUuid,
-        type: vType,
-        signature: vKey,
+        type: getRandomizer(1, 2),
+        signature: "",
         isused: false
-    });
+	}).then((v) => {
+		v.update({
+			signature: getVoucherSignature(v)
+		})
+	});
 }
 
 /**
@@ -321,11 +343,14 @@ function createRandomVoucher(cUuid) {
  * @param {any} cUuid - costumer uuid to associate the voucher with
  */
 function createDiscountVoucher(cUuid) {
-    var vKey = Math.random().toString();
     Voucher.create({
         costumerUuid: cUuid,
         type: 3,
-        signature: vKey,
+        signature: "",
         isused: false
-    })
+    }).then((v) => {
+		v.update({
+			signature: getVoucherSignature(v)
+		})
+	});
 }
