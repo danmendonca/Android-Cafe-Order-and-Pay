@@ -14,21 +14,40 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:gravity="center"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <TextView
-                android:id="@+id/frag_tittle"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:fontFamily="sans-serif-light"
-                android:textStyle="normal"
-                android:textSize="17dp"
-                android:paddingTop="10dp"/>
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/frag_tittle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="left"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="left"
+                    android:paddingTop="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="17dp"
+                    android:textStyle="normal" />
+
+                <ImageButton
+                    android:id="@+id/cartButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_shop"
+                    android:contentDescription="@string/cart"
+                    android:foregroundGravity="right"
+                    android:gravity="end" />
+            </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
@@ -48,8 +67,6 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabButton"
         android:layout_width="wrap_content"
@@ -57,6 +74,7 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:scaleType="fitXY"
+        android:src="@drawable/ic_loop_white_18dp"
         app:borderWidth="0dp"
         app:backgroundTint="@android:color/holo_green_light"/>
 

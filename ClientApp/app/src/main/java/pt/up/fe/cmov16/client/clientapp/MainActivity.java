@@ -1,7 +1,10 @@
 package pt.up.fe.cmov16.client.clientapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +20,7 @@ import com.android.volley.VolleyError;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.util.Calendar;
+
 import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Costumer;
@@ -27,6 +31,8 @@ import pt.up.fe.cmov16.client.clientapp.ui.SlideActivity;
 
 public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    public static final String FINISH_ACTIVITY_KEY = "isFinish";
+    private static final String TAG = MainActivity.class.toString();
     private Button dateTextView;
     private DefaultApi api;
 
@@ -34,15 +40,31 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ApiInvoker.initializeInstance();
-        api = new DefaultApi();
-
-        if (User.getInstance(this).isFirstTime()) {
-            setFirstTimeScreen();
-        } else {
-            startSlideActivity();
+        if (getIntent().getBooleanExtra(FINISH_ACTIVITY_KEY, false)) {
+            finish();
+            return;
         }
 
+        ApiInvoker.initializeInstance();
+
+        api = new DefaultApi();
+
+        if (User.getInstance(this).isFirstTime())
+            setFirstTimeScreen();
+        else
+            startSlideActivity();
+
+        Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_LONG).show();
+
+        NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
+        NfcAdapter adapter = manager.getDefaultAdapter();
+        if (adapter == null) {
+            Log.e(TAG, "Device haven't NFC ");
+        } else if (!adapter.isEnabled()) {
+            Log.e(TAG, "NFC isn't enabled ");
+        } else {
+            Log.i(TAG, "NFC is ready to use");
+        }
     }
 
     private void setFirstTimeScreen() {
@@ -134,18 +156,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 } else if (!Character.isDigit(dateTextView.getText().toString().charAt(0))) {
                     Toast.makeText(MainActivity.this, "Insert credit card expiration date", Toast.LENGTH_SHORT).show();
                 } else {
-                    String cardDate = "";
-                    // 01-01-2019
-                    String dateInput = dateTextView.getText().subSequence(6,10).toString() + "-";
-                    dateInput += dateTextView.getText().subSequence(3,5).toString() + "-";
-                    dateInput+= dateTextView.getText().subSequence(0,2).toString();
+                    String dateInput = dateTextView.getText().subSequence(6, 10).toString() + "-";
+                    dateInput += dateTextView.getText().subSequence(3, 5).toString() + "-";
+                    dateInput += dateTextView.getText().subSequence(0, 2).toString();
                     dateInput = dateInput.replace('/', '-');
-//                    cardDate += dateInput.split("/")[2];
-//                    cardDate += "-";
-//                    cardDate += dateInput.split("/")[1];
-//                    cardDate += "-";
-//                    cardDate += dateInput.split("/")[0];
-//                    cardDate += "T23:59:59.000Z";
 
                     RegisterParam registerParam = new RegisterParam();
                     registerParam.setUsername(username);
@@ -177,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 response.getPassword(), response.getCreditcardnumber(),
                 response.getCreditcarddate(), response.getPin(),
                 response.getUuid(), this);
-        Log.e("MainActivity", "created user: " + response.toString());
+        Log.i("MainActivity", "created user: " + response.toString());
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("PIN: " + response.getPin() + "\n Don't forget this pin!")
@@ -209,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private void startSlideActivity() {
         Intent i = new Intent(this, SlideActivity.class);
         startActivity(i);
+        finish();
     }
 
 }
