@@ -2,11 +2,9 @@ package pt.up.fe.cmov16.cafe.cafeapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcManager;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,16 +20,17 @@ import java.text.SimpleDateFormat;
 
 import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
+import io.swagger.client.model.HelloWorldResponse;
 import io.swagger.client.model.Products;
 import pt.up.fe.cmov16.cafe.cafeapp.database.ProductContract;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ScanQRCodeActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.toString();
     public static final String ENCODED_STRING_KEY = "ENCODED_STRING";
-    private static int QR_CODE_CODE = 1;
+    private static final String TAG = MainActivity.class.toString();
     private static final int NFC_CODE = 2;
+    private static int QR_CODE_CODE = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_SHORT).show();
+
+        DefaultApi api = new DefaultApi();
+        api.hello("Acme Power!", new Response.Listener<HelloWorldResponse>() {
+                    @Override
+                    public void onResponse(HelloWorldResponse response) {
+                        Toast.makeText(getApplicationContext(), "ACME POWER - Connected", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
         NfcAdapter adapter = manager.getDefaultAdapter();

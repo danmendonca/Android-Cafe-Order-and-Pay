@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.swagger.client.api.DefaultApi;
-import io.swagger.client.model.Request;
 import io.swagger.client.model.RequestParam;
+import io.swagger.client.model.RequestResponse;
 import io.swagger.client.model.RequestlineParam;
 import io.swagger.client.model.Voucher;
 import io.swagger.client.model.VoucherParam;
@@ -75,9 +75,9 @@ public class ProcessRequestActivity extends AppCompatActivity {
 
         textView.append("\nSending request to server");
         DefaultApi api = new DefaultApi();
-        api.createRequest(requestParam, new Response.Listener<Request>() {
+        api.createRequest(requestParam, new Response.Listener<RequestResponse>() {
             @Override
-            public void onResponse(Request response) {
+            public void onResponse(RequestResponse response) {
                 textView.append("\nServer responde: " + response.toString());
             }
         }, new Response.ErrorListener() {

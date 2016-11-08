@@ -82,9 +82,11 @@ function createRequest(req, res) {
                                     Promise.all(voucherPromises).then(() => {
                                         Promise.all(linesPromises).then(() => {
                                             voucherCreation(cUuid, oldLines, insertedLines);
-                                            RequestResponse.requestNumber = request.number;
+                                            RequestResponse.id = request.id;
+                                            RequestResponse.number = request.number;
                                             RequestResponse.requestLines = insertedLines;
                                             RequestResponse.requestVouchers = insertedVouchers;
+                                            RequestResponse.createdAt = request.createdAt;
                                             sendResponse(res, RequestResponse, 200);
                                         })
                                     })
