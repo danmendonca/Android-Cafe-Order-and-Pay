@@ -183,18 +183,20 @@ function costumerValidation(cUuid) {
             }
         }).then((c) => {
             if (c) {
-                //TODO
-                //if valid creditcardDate
-                resolve(c);
-                //else
-                //reject("Invalid credit card");
+                if (c.creditcarddate >= new Date())
+                    resolve(c);
+                else {
+                    BlackList.create({
+                        costumerUuid: cUuid
+                    }).then(() => { reject("Invalid credit card"); })
+                }
             }
             else
                 reject("Costumer not found");
         })
-        .catch((e)=>{
-            reject("Invalid Costumer uuid");
-        })
+            .catch((e) => {
+                reject("Invalid Costumer uuid");
+            })
     });
 }
 
@@ -319,8 +321,7 @@ function makeRequestLine(request, rls, addedLines) {
                                 resolve(added);
                             })
                     }
-                    else
-                        reject(value);
+                    else reject(value);
                 });
         });
     });
@@ -386,7 +387,7 @@ function voucherCreation(cUuid, oldLines, newLines) {
     }, 0);
 
     //random voucher creation
-    if (totalCost > 20) createRandomVoucher(cUuid);
+    if (totalCost >= 20) createRandomVoucher(cUuid);
 
     var spentBefore = oldLines.reduce(function (acc, cur) {
         return acc + cur.quantity * cur.unitprice;
@@ -394,7 +395,7 @@ function voucherCreation(cUuid, oldLines, newLines) {
     var spentSinceLast100 = spentBefore % voucherType3Price;
     spentSinceLast100 += totalCost;
 
-    if (spentSinceLast100 > voucherType3Price) createDiscountVoucher(cUuid);
+    if (spentSinceLast100 >= voucherType3Price) createDiscountVoucher(cUuid);
 }
 
 /**
