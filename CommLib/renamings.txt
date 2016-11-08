@@ -1,3 +1,7 @@
+Replace only the content of subfolder: ....\Android-Cafe-Order-and-Pay\CommLib\CommLibrary\src\main\java
+for the equivalent in the swagger generated code
+
+
 import org.apache.http.HttpEntity;
 import cz.msebera.android.httpclient.HttpEntity;
 
@@ -16,6 +20,10 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 
 Don't forget to make model classes implements Serializable
 
-    //String basePath = "http://10.0.2.2:8080/api";
-    String basePath = "https://cmov1.herokuapp.com/api";
-    //String basePath = "localhost:8080/api";
+Substitute in DefaultApi class the basePath:
+String basePath = "http://localhost:8080/api";
+for:{
+String basePath = "http://10.0.2.2:8080/api"; //google emulator
+//String basePath = "https://cmov1.herokuapp.com/api"; //herokuapp
+//String basePath = "http://192.168.1.66:8080/api"; //danielm home
+}

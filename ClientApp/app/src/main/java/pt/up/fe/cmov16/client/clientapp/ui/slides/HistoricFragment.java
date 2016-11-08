@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.Consult;
 import io.swagger.client.model.PinLoginParam;
-import io.swagger.client.model.Request;
+import io.swagger.client.model.RequestResponse;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.database.VoucherContract;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
@@ -29,7 +29,7 @@ import pt.up.fe.cmov16.client.clientapp.ui.RequestDetailActivity;
 public class HistoricFragment extends NamedFragment {
 
     private static final String STATE_REQUESTS = "REQUESTS_KEY";
-    private ArrayList<Request> requestsMade = new ArrayList<>();
+    private ArrayList<RequestResponse> requestsMade = new ArrayList<>();
     private RVAdapter adapter = new RVAdapter();
 
     public static HistoricFragment newInstance(int page) {
@@ -69,7 +69,7 @@ public class HistoricFragment extends NamedFragment {
 
         if (savedInstanceState != null) {
             // Restore value of members from saved state
-            requestsMade = (ArrayList<Request>) savedInstanceState.getSerializable(STATE_REQUESTS);
+            requestsMade = (ArrayList<RequestResponse>) savedInstanceState.getSerializable(STATE_REQUESTS);
             adapter.notifyDataSetChanged();
         }
 
@@ -90,6 +90,7 @@ public class HistoricFragment extends NamedFragment {
                             requestsMade.addAll(response.getRequests());
                             if (adapter != null)
                                 adapter.notifyDataSetChanged();
+                            //response.getRequests().get(0).
                             VoucherContract.saveVoucherInDB(context, response.getVouchers(),
                                     response.getRequests().size());
                         }
@@ -137,9 +138,9 @@ public class HistoricFragment extends NamedFragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof RequestOverviewViewHolder) {
-                Request request = requestsMade.get(position);
-                ((RequestOverviewViewHolder) holder).header.setText(String.valueOf(request.getId()));
-                ((RequestOverviewViewHolder) holder).info.setText(request.getCostumerUuid());
+                RequestResponse request = requestsMade.get(position);
+                ((RequestOverviewViewHolder) holder).header.setText(String.valueOf(request.getCreatedAt()));
+                ((RequestOverviewViewHolder) holder).info.setText(String.valueOf(request.getRequestNumber()));
                 ((RequestOverviewViewHolder) holder).mItem = request;
             }
         }
@@ -151,7 +152,7 @@ public class HistoricFragment extends NamedFragment {
 
         private class RequestOverviewViewHolder extends RecyclerView.ViewHolder {
             TextView header, info;
-            Request mItem;
+            RequestResponse mItem;
 
             RequestOverviewViewHolder(View view) {
                 super(view);

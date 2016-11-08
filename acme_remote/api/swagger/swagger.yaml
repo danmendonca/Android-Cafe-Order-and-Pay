@@ -365,27 +365,6 @@ definitions:
       type:
         type: integer
         format: int32
-  Request:
-    type: object
-    properties:
-      costumerUuid:
-        type: string
-      pin:
-        type: string
-      id:
-        type: integer
-        format: int32
-      number:
-        type: integer
-        format: int32
-      vouchers:
-        type: array
-        items:
-          $ref: '#/definitions/Voucher'
-      requestlines:
-        type: array
-        items:
-          $ref: '#/definitions/Requestline'
   Blacklist:
     type: object
     required:
@@ -440,7 +419,7 @@ definitions:
       requests:
         type: array
         items:
-          $ref: '#/definitions/Request'
+          $ref: '#/definitions/RequestResponse'
       vouchers:
         type: array
         items:
@@ -462,7 +441,10 @@ definitions:
           $ref: '#/definitions/VoucherParam'
   RequestResponse:
     properties:
-      requestNumber:
+      id:
+        type: integer
+        format: int32
+      number:
         type: integer
         format: int32
       requestLines:
