@@ -23,6 +23,7 @@ import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.HelloWorldResponse;
 import io.swagger.client.model.Products;
 import pt.up.fe.cmov16.cafe.cafeapp.database.ProductContract;
+import pt.up.fe.cmov16.cafe.cafeapp.logic.Request;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ScanQRCodeActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.util.RequestsThread;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         ApiInvoker.initializeInstance();
         api = new DefaultApi();
         loadProducts();
+        loadPublicKey();
+//      Request.isValid(MainActivity.this,"");
         findViewById(R.id.scanQRCode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e(TAG,error.getMessage());
+                        Log.e(TAG, error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -78,6 +81,23 @@ public class MainActivity extends AppCompatActivity {
         }
         RequestsThread requestsThread = new RequestsThread(MainActivity.this);
         requestsThread.start();
+    }
+
+    private void loadPublicKey() {
+        if (!Request.hasPublicKey(MainActivity.this)) {
+            api.getPublicKey(new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Request.savePublicKey(MainActivity.this, response);
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "Unable to get public key from server");
+                    throw new RuntimeException("Unable to get public key from server");
+                }
+            });
+        }
     }
 
     @Override

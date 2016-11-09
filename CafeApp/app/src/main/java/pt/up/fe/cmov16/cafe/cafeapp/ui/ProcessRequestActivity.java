@@ -14,6 +14,7 @@ import io.swagger.client.model.RequestParam;
 import io.swagger.client.model.RequestResponse;
 import pt.up.fe.cmov16.cafe.cafeapp.MainActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.R;
+import pt.up.fe.cmov16.cafe.cafeapp.database.BlackListContract;
 import pt.up.fe.cmov16.cafe.cafeapp.database.PendingRequestContract;
 import pt.up.fe.cmov16.cafe.cafeapp.logic.Request;
 
@@ -65,6 +66,8 @@ public class ProcessRequestActivity extends AppCompatActivity {
     }
 
     private void offlineRequest(String encoded) {
-        PendingRequestContract.savePendingRequest(ProcessRequestActivity.this, encoded);
+        if (Request.isValid(ProcessRequestActivity.this, encoded))
+            PendingRequestContract.savePendingRequest(ProcessRequestActivity.this, encoded);
+        else BlackListContract.blockUser(ProcessRequestActivity.this, encoded.split(";")[0]);
     }
 }
