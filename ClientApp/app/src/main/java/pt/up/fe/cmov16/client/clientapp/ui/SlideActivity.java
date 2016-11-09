@@ -13,6 +13,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.transition.Slide;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +23,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import java.util.ArrayList;
 
+import io.swagger.client.api.DefaultApi;
+import io.swagger.client.model.HelloWorldResponse;
+import pt.up.fe.cmov16.client.clientapp.MainActivity;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
@@ -124,6 +132,23 @@ public class SlideActivity extends FragmentActivity {
                 startActivity(i);
             }
         });
+
+        DefaultApi api = new DefaultApi();
+        api.hello(User.getInstance(getApplicationContext()).getUsername(),
+                new Response.Listener<HelloWorldResponse>() {
+                    @Override
+                    public void onResponse(HelloWorldResponse response) {
+                        Toast.makeText(getApplicationContext(), response.getMessage() , Toast.LENGTH_LONG).show();
+                        Log.d("CONN_VERIFICATION" ,response.getMessage());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "Connection Failed" , Toast.LENGTH_LONG).show();
+                        Log.d("CONN_VERIFICATION" , "Connection Failed");
+                    }
+                });
     }
 
     @Override
