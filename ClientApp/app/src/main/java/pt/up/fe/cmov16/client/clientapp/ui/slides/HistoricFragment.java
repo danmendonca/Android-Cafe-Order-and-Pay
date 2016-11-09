@@ -139,7 +139,8 @@ public class HistoricFragment extends NamedFragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof RequestOverviewViewHolder) {
                 RequestResponse request = requestsMade.get(position);
-                ((RequestOverviewViewHolder) holder).header.setText(String.valueOf(request.getCreatedAt()));
+                String rDate = request.getCreatedAt().split("T")[0];
+                ((RequestOverviewViewHolder) holder).header.setText(rDate);
                 ((RequestOverviewViewHolder) holder).info.setText(String.valueOf(request.getNumber()));
                 ((RequestOverviewViewHolder) holder).mItem = request;
             }
