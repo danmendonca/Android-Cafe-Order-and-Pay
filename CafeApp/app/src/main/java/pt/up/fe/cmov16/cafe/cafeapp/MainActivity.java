@@ -25,6 +25,7 @@ import io.swagger.client.model.Products;
 import pt.up.fe.cmov16.cafe.cafeapp.database.ProductContract;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ScanQRCodeActivity;
+import pt.up.fe.cmov16.cafe.cafeapp.util.RequestsThread;
 
 public class MainActivity extends AppCompatActivity {
     public static final String ENCODED_STRING_KEY = "ENCODED_STRING";
@@ -32,12 +33,15 @@ public class MainActivity extends AppCompatActivity {
     private static final int NFC_CODE = 2;
     private static int QR_CODE_CODE = 1;
 
+    DefaultApi api;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ApiInvoker.initializeInstance();
+        api = new DefaultApi();
         loadProducts();
         findViewById(R.id.scanQRCode).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_SHORT).show();
 
-        DefaultApi api = new DefaultApi();
-        api.hello("Acme Power!", new Response.Listener<HelloWorldResponse>() {
+        api.hello("Acme", new Response.Listener<HelloWorldResponse>() {
                     @Override
                     public void onResponse(HelloWorldResponse response) {
                         Toast.makeText(getApplicationContext(), "ACME POWER - Connected", Toast.LENGTH_SHORT).show();
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG,error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -72,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.i(TAG, "NFC is ready to use");
         }
+        RequestsThread requestsThread = new RequestsThread(MainActivity.this);
+        requestsThread.start();
     }
 
     @Override
@@ -88,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadProducts() {
-        DefaultApi api = new DefaultApi();
         //if updatedAt was saved before, the skip this step and use its value in lastDate
         String lastUpdated = ProductContract.lastUpdatedProductDate(this);
         boolean stored = !lastUpdated.isEmpty();

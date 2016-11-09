@@ -99,7 +99,7 @@ public final class ProductContract {
             c.close();
         }
         db.close();
-        Log.e(TAG, "UPDATED: " + updatedProducts + " and NEW: " + newProducts + " products");
+        //Log.e(TAG, "UPDATED: " + updatedProducts + " and NEW: " + newProducts + " products");
         if (!updatedAt.isEmpty())
             saveUpdatedProductDate(context, updatedAt);
     }

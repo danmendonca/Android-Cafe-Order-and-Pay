@@ -2,24 +2,20 @@ package pt.up.fe.cmov16.cafe.cafeapp.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.RequestParam;
 import io.swagger.client.model.RequestResponse;
-import io.swagger.client.model.RequestlineParam;
-import io.swagger.client.model.Voucher;
-import io.swagger.client.model.VoucherParam;
 import pt.up.fe.cmov16.cafe.cafeapp.MainActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.R;
-import pt.up.fe.cmov16.cafe.cafeapp.logic.ProductMenuItem;
-import pt.up.fe.cmov16.cafe.cafeapp.util.RequestDecode;
+import pt.up.fe.cmov16.cafe.cafeapp.database.PendingRequestContract;
+import pt.up.fe.cmov16.cafe.cafeapp.logic.Request;
 
 public class ProcessRequestActivity extends AppCompatActivity {
 
@@ -36,56 +32,39 @@ public class ProcessRequestActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             String encoded = (String) bundle.get(MainActivity.ENCODED_STRING_KEY);
-
-            ArrayList<ProductMenuItem> productMenuItems = new ArrayList<>();
-            ArrayList<Voucher> vouchers = new ArrayList<>();
-            String costumerID = RequestDecode.decode(encoded, productMenuItems, vouchers);
-            sendRequest(productMenuItems, vouchers, costumerID);
+            sendRequest(encoded);
         }
     }
 
-    private void sendRequest(ArrayList<ProductMenuItem> productMenuItems, ArrayList<Voucher> vouchers, String costumerID) {
-        textView.setText("Creating request");
-
-        RequestParam requestParam = new RequestParam();
-        requestParam.setCostumerUuid(costumerID);
-
-        textView.append("\nAdding requestLines");
-        List<RequestlineParam> requestLines = new ArrayList<>();
-        for (ProductMenuItem productMenuItem : productMenuItems) {
-            RequestlineParam requestline = new RequestlineParam();
-            requestline.setProductId(productMenuItem.getId());
-            requestline.setQuantity(productMenuItem.getQuantity());
-            requestLines.add(requestline);
-            textView.append("\n\t Prod: " + productMenuItem.getId() + " #: " + productMenuItem.getQuantity());
-        }
-        requestParam.setRequestlines(requestLines);
-
-        textView.append("\nAdding vouchers");
-        List<VoucherParam> requestVouchers = new ArrayList<>();
-        for (Voucher voucher : vouchers) {
-            VoucherParam voucherParam = new VoucherParam();
-            voucherParam.setId(voucher.getId());
-            voucherParam.setType(voucher.getType());
-            voucherParam.setSignature(voucher.getSignature());
-            requestVouchers.add(voucherParam);
-            textView.append("\n\t Voucher: " + voucher.getType() + " type: " + voucher.getType());
-        }
-        requestParam.setRequestvouchers(requestVouchers);
+    private void sendRequest(final String encoded) {
+        RequestParam requestParam = Request.generateRequestParam(encoded);
 
         textView.append("\nSending request to server");
         DefaultApi api = new DefaultApi();
         api.createRequest(requestParam, new Response.Listener<RequestResponse>() {
             @Override
             public void onResponse(RequestResponse response) {
+                onlineRequestFinished(response);
                 textView.append("\nServer responde: " + response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error instanceof NoConnectionError) {
+                    offlineRequest(encoded);
+                }
                 textView.append("\nError responde: " + error.toString());
             }
         });
         textView.append("\nWaiting response");
+    }
+
+    private void onlineRequestFinished(RequestResponse response) {
+        //TODO
+        Log.e(TAG, response.toString());
+    }
+
+    private void offlineRequest(String encoded) {
+        PendingRequestContract.savePendingRequest(ProcessRequestActivity.this, encoded);
     }
 }
