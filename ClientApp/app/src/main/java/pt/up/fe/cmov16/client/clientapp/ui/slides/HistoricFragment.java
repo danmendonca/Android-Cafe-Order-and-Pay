@@ -140,7 +140,7 @@ public class HistoricFragment extends NamedFragment {
             if (holder instanceof RequestOverviewViewHolder) {
                 RequestResponse request = requestsMade.get(position);
                 ((RequestOverviewViewHolder) holder).header.setText(String.valueOf(request.getCreatedAt()));
-                ((RequestOverviewViewHolder) holder).info.setText(String.valueOf(request.getRequestNumber()));
+                ((RequestOverviewViewHolder) holder).info.setText(String.valueOf(request.getNumber()));
                 ((RequestOverviewViewHolder) holder).mItem = request;
             }
         }

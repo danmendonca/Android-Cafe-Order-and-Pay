@@ -60,6 +60,7 @@ public class DefaultApi {
     String basePath = "http://10.0.2.2:8080/api"; //google emulator
     //String basePath = "https://cmov1.herokuapp.com/api"; //herokuapp
     //String basePath = "http://192.168.1.66:8080/api"; //danielm home
+    //String basePath = "http://172.30.21.16:8080/api"; //danielm feup
     ApiInvoker apiInvoker = ApiInvoker.getInstance();
 
     public void addHeader(String key, String value) {

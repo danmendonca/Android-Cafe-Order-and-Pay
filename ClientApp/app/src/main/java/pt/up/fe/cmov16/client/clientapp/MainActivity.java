@@ -39,22 +39,20 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ApiInvoker.initializeInstance();
+
+        api = new DefaultApi();
 
         if (getIntent().getBooleanExtra(FINISH_ACTIVITY_KEY, false)) {
             finish();
             return;
         }
 
-        ApiInvoker.initializeInstance();
-
-        api = new DefaultApi();
-
         if (User.getInstance(this).isFirstTime())
             setFirstTimeScreen();
         else
             startSlideActivity();
-
-        Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_LONG).show();
 
         NfcManager manager = (NfcManager) this.getSystemService(Context.NFC_SERVICE);
         NfcAdapter adapter = manager.getDefaultAdapter();
