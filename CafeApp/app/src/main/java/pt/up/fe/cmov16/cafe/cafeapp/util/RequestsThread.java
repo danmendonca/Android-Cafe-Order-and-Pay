@@ -28,7 +28,6 @@ public class RequestsThread extends Thread {
 
     @Override
     public void run() {
-        Log.e("Thread", "Start");
         DefaultApi api = new DefaultApi();
         while (true) {
             ArrayList<Request> requests = PendingRequestContract.getPendingRequests(context);
@@ -55,7 +54,6 @@ public class RequestsThread extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Log.e("Thread", "End");
         }
     }
 }
