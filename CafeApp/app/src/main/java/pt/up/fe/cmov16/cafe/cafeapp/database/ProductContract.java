@@ -13,6 +13,7 @@ import java.util.List;
 
 import io.swagger.client.model.Product;
 import pt.up.fe.cmov16.cafe.cafeapp.R;
+import pt.up.fe.cmov16.cafe.cafeapp.logic.ProductMenuItem;
 
 /**
  * Product model and related db operations
@@ -197,6 +198,51 @@ public final class ProductContract {
         }
 
 
+    }
+
+    public static double loadMoreInfoFomLocalDB(Context context, ArrayList<ProductMenuItem> prods) {
+        double total = 0;
+        if (context == null) {
+            Log.e(TAG, "NULL CONTEXT loadMoreInfoFomLocalDB()");
+            return 0;
+        }
+
+        DbHelper mDbHelper = new DbHelper(context);
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        if (db == null) {
+            Log.e(TAG, "NULL DB loadMoreInfoFomLocalDB()");
+            return 0;
+        }
+
+        for (ProductMenuItem productMenuItem : prods) {
+            Cursor cursor = db.rawQuery(selectByProductIDQuery(productMenuItem.getId()), null);
+            // if Cursor is contains results
+            if (cursor != null) {
+                // move cursor to first row
+                if (cursor.moveToFirst()) {
+
+                    // Get version from Cursor
+                    String name = cursor.getString(cursor.getColumnIndex(
+                            ProductEntry.COLUMN_NAME_NAME));
+
+                    String unitPrice = cursor.getString(cursor.getColumnIndex(
+                            ProductEntry.COLUMN_NAME_UNIT_PRICE));
+
+                    productMenuItem.setUnitPrice(Double.valueOf(unitPrice));
+                    productMenuItem.setName(name);
+                    total += productMenuItem.getQuantity() * productMenuItem.getUnitPrice();
+                } else {
+                    productMenuItem.setUnitPrice((double) 0);
+                    productMenuItem.setName("Unavailable");
+                }
+                cursor.close();
+            } else {
+                productMenuItem.setUnitPrice((double) 0);
+                productMenuItem.setName("Unavailable");
+            }
+        }
+        db.close();
+        return total;
     }
 
     /* Inner class that defines the table contents */

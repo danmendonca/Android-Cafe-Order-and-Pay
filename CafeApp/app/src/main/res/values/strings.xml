@@ -3,4 +3,9 @@
     <string name="nothing_to_read">Nothing to read</string>
     <string name="preference_file_key">pt.up.fe.cmov16.cafe.cafeapp</string>
     <string name="acme_connection_welcome">Acme Power - Connected</string>
+    <string name="hashtag">#</string>
+    <string name="product">Product</string>
+    <string name="price">Price</string>
+    <string name="total">Total</string>
+    <string name="request_number">Request Number</string>
 </resources>

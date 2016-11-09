@@ -44,7 +44,7 @@ public class BlackListContract {
             newBlock++;
 
         db.close();
-        Log.e(TAG, "NEW: " + newBlock);
+        Log.e(TAG, "NEW USER BLACLISTED: " + newBlock);
     }
 
     public static boolean isUserBlocked(Context context, String costumerUUID) {
