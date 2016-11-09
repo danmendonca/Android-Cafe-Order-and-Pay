@@ -61,14 +61,13 @@ public class BlackListContract {
 
         Cursor cursor = db.rawQuery(selectByCostumerUUID(costumerUUID), null);
         // if Cursor is contains results
+        boolean blacklisted = false;
         if (cursor != null) {
-            boolean blacklisted = cursor.moveToFirst();
+            blacklisted = cursor.moveToFirst();
             cursor.close();
-            db.close();
-            return blacklisted;
         }
         db.close();
-        return false;
+        return blacklisted;
     }
 
     private static String selectByCostumerUUID(String costumerUUID) {

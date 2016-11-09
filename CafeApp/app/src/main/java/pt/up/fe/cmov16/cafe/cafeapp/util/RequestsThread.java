@@ -2,6 +2,7 @@ package pt.up.fe.cmov16.cafe.cafeapp.util;
 
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
@@ -35,7 +36,7 @@ public class RequestsThread extends Thread {
                 api.createRequest(requestParam, new Response.Listener<RequestResponse>() {
                     @Override
                     public void onResponse(RequestResponse response) {
-
+                        Log.i("RequestsThread", "Successful request number: " + response.getNumber());
                     }
                 }, new Response.ErrorListener() {
                     @Override
