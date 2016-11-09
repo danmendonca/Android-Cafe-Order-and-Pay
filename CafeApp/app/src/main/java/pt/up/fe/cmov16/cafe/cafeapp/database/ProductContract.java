@@ -200,7 +200,14 @@ public final class ProductContract {
 
     }
 
-    public static double loadMoreInfoFomLocalDB(Context context, ArrayList<ProductMenuItem> prods) {
+    /**
+     *
+     * @param context
+     * @param prods updates this array with name and unitprice
+     * @param justName if true, don't load unit price
+     * @return total price calculated
+     */
+    public static double loadMoreInfoFomLocalDB(Context context, ArrayList<ProductMenuItem> prods, boolean justName) {
         double total = 0;
         if (context == null) {
             Log.e(TAG, "NULL CONTEXT loadMoreInfoFomLocalDB()");
@@ -228,7 +235,8 @@ public final class ProductContract {
                     String unitPrice = cursor.getString(cursor.getColumnIndex(
                             ProductEntry.COLUMN_NAME_UNIT_PRICE));
 
-                    productMenuItem.setUnitPrice(Double.valueOf(unitPrice));
+                    if (!justName)
+                        productMenuItem.setUnitPrice(Double.valueOf(unitPrice));
                     productMenuItem.setName(name);
                     total += productMenuItem.getQuantity() * productMenuItem.getUnitPrice();
                 } else {

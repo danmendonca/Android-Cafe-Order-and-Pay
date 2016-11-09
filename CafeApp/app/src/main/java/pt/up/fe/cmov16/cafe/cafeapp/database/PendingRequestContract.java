@@ -99,6 +99,6 @@ public class PendingRequestContract {
             newReq++;
 
         db.close();
-        //Log.e(TAG, "NEW: " + newReq + " requests");
+        Log.e(TAG, "NEW: " + newReq + " request");
     }
 }

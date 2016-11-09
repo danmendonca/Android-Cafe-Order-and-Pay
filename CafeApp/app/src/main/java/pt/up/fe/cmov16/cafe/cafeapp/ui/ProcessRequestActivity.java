@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -17,12 +19,16 @@ import com.android.volley.VolleyError;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import io.swagger.client.api.DefaultApi;
+import io.swagger.client.model.Product;
 import io.swagger.client.model.RequestParam;
 import io.swagger.client.model.RequestResponse;
+import io.swagger.client.model.Requestline;
 import io.swagger.client.model.Voucher;
+import io.swagger.client.model.VoucherParam;
 import pt.up.fe.cmov16.cafe.cafeapp.MainActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.R;
 import pt.up.fe.cmov16.cafe.cafeapp.database.BlackListContract;
@@ -74,21 +80,49 @@ public class ProcessRequestActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 if (error instanceof NoConnectionError)
                     offlineRequest(encoded);
-                else Log.e(TAG, error.getMessage());
+                else if (error instanceof AuthFailureError) {
+                    Toast.makeText(ProcessRequestActivity.this, "This user is blacklisted", Toast.LENGTH_LONG).show();
+                    BlackListContract.blockUser(ProcessRequestActivity.this, encoded.split(";")[0]);
+                } else Log.e(TAG, error.getCause().getMessage());
             }
         });
     }
 
     private void onlineRequestFinished(RequestResponse response) {
-        //TODO
-        Log.e(TAG, response.toString());
+        List<Requestline> requestLines = response.getRequestLines();
+        List<VoucherParam> requestVouchers = response.getRequestVouchers();
+
+        for (Requestline requestline : requestLines) {
+            Product prod = new Product();
+            prod.setId(requestline.getProductId());
+            prod.setUnitprice(Double.valueOf(requestline.getUnitprice()));
+            ProductMenuItem productMenuItem = new ProductMenuItem(prod);
+            productMenuItem.setQuantity(requestline.getQuantity());
+            prods.add(productMenuItem);
+        }
+        totalPrice = ProductContract.loadMoreInfoFomLocalDB(ProcessRequestActivity.this, prods, true);
+
+        for (VoucherParam voucherParam : requestVouchers) {
+            Voucher voucher = new Voucher();
+            voucher.setId(voucherParam.getId());
+            voucher.setType(voucherParam.getType());
+            if (voucherParam.getType() == 3)
+                discount = true;
+            vouchers.add(voucher);
+        }
+        double total = totalPrice;
+        if (discount)
+            total = totalPrice * 0.95;
+        totalTV.setText(doubleToDecimalString(total));
+        numberTV.setText(String.valueOf(response.getNumber()));
+        adapter.notifyDataSetChanged();
     }
 
     private void offlineRequest(String encoded) {
         if (Request.isValid(ProcessRequestActivity.this, encoded)) {
             PendingRequestContract.savePendingRequest(ProcessRequestActivity.this, encoded);
             RequestDecode.decode(encoded, prods, vouchers);
-            totalPrice = ProductContract.loadMoreInfoFomLocalDB(ProcessRequestActivity.this, prods);
+            totalPrice = ProductContract.loadMoreInfoFomLocalDB(ProcessRequestActivity.this, prods, false);
             numberTV.setText("Pending...");
             double total = totalPrice;
             for (Voucher v : vouchers) {

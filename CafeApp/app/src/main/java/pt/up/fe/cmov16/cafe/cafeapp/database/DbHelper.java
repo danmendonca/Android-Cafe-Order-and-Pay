@@ -11,12 +11,12 @@ import pt.up.fe.cmov16.cafe.cafeapp.database.BlackListContract.BlackListEntry;
 /**
  * Database model
  */
-class DbHelper extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "acme_cafe.db";
 
-    DbHelper(Context context) {
+    public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

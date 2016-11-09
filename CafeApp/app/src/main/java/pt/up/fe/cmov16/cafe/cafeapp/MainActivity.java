@@ -2,6 +2,8 @@ package pt.up.fe.cmov16.cafe.cafeapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcManager;
 import android.os.Bundle;
@@ -22,6 +24,8 @@ import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.HelloWorldResponse;
 import io.swagger.client.model.Products;
+import pt.up.fe.cmov16.cafe.cafeapp.database.BlackListContract;
+import pt.up.fe.cmov16.cafe.cafeapp.database.DbHelper;
 import pt.up.fe.cmov16.cafe.cafeapp.database.ProductContract;
 import pt.up.fe.cmov16.cafe.cafeapp.logic.Request;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
@@ -65,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (error == null)
+                        if (error == null || error.getMessage() == null || error.getMessage().isEmpty())
                             return;
                         Log.e(TAG, error.getMessage());
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -83,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
         }
         RequestsThread requestsThread = new RequestsThread(MainActivity.this);
         requestsThread.start();
+
+//        DbHelper dbHelper = new DbHelper(MainActivity.this);
+//        SQLiteDatabase db = dbHelper.getWritableDatabase();
+//
+//        db.execSQL("DELETE FROM "+BlackListContract.BlackListEntry.TABLE_NAME);
+//        Cursor c = db.rawQuery("SELECT * FROM " + BlackListContract.BlackListEntry.TABLE_NAME, null, null);
+//        Log.e(TAG,c.getCount()+"");
+//        c.close();
+//        db.close();
     }
 
     private void loadPublicKey() {

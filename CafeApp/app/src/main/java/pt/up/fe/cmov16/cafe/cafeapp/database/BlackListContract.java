@@ -17,8 +17,8 @@ public class BlackListContract {
     }
 
     /* Inner class that defines the table contents */
-    static abstract class BlackListEntry implements BaseColumns {
-        static final String TABLE_NAME = "blacklist";
+    public static abstract class BlackListEntry implements BaseColumns {
+        public static final String TABLE_NAME = "blacklist";
         static final String COLUMN_NAME_ID = "id";
         static final String COLUMN_NAME_COSTUMER_UUID = "costumer_uuid";
     }
@@ -39,9 +39,9 @@ public class BlackListContract {
 
         ContentValues values = new ContentValues();
         values.put(BlackListEntry.COLUMN_NAME_COSTUMER_UUID, costumerUUID);
-
-        if (db.insert(BlackListEntry.TABLE_NAME, null, values) != -1)
-            newBlock++;
+        if (!isUserBlocked(context, costumerUUID))
+            if (db.insertWithOnConflict(BlackListEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_ABORT) != -1)
+                newBlock++;
 
         db.close();
         Log.e(TAG, "NEW USER BLACLISTED: " + newBlock);
@@ -73,6 +73,6 @@ public class BlackListContract {
 
     private static String selectByCostumerUUID(String costumerUUID) {
         return "SELECT * FROM " + BlackListEntry.TABLE_NAME
-                + " WHERE " + BlackListEntry.COLUMN_NAME_COSTUMER_UUID + " = '" + costumerUUID+"'";
+                + " WHERE " + BlackListEntry.COLUMN_NAME_COSTUMER_UUID + " = '" + costumerUUID + "'";
     }
 }
