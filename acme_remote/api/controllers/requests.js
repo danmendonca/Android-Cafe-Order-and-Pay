@@ -67,7 +67,7 @@ function createRequest(req, res) {
     //aux
     var oldLines = [];
 
-    if (reqVouchers.length >= 3) {
+    if (reqVouchers.length > 3) {
         //too many vouchers
         ErrorResponse.message = "Too many vouchers";
         sendResponse(res, ErrorResponse, 403);
