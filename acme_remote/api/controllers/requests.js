@@ -3,6 +3,9 @@
 var models = require('../../models');
 var Sequelize = require('sequelize');
 var fs = require('fs');
+//Signatures
+var crypto = require('crypto');
+
 var env = process.env.NODE_ENV || "development";
 
 var Costumer = models.costumer;
@@ -85,8 +88,8 @@ function createRequest(req, res) {
                             })
                                 .then((request) => {
                                     var voucherPromises = useVouchers(request, reqVouchers, insertedVouchers);
-                                    var linesPromises = makeRequestLine(request, reqLines, insertedLines);
-                                    Promise.all(voucherPromises).then(() => {
+                                    Promise.all(voucherPromises).then(valuesVPromises => {
+                                        var linesPromises = makeRequestLine(request, reqLines, insertedLines);
                                         Promise.all(linesPromises).then(() => {
                                             voucherCreation(cUuid, oldLines, insertedLines);
                                             RequestResponse.id = request.id;
@@ -96,10 +99,16 @@ function createRequest(req, res) {
                                             RequestResponse.createdAt = request.createdAt;
                                             sendResponse(res, RequestResponse, 200);
                                         })
+                                    }, reason => {
+                                        ErrorResponse.message = "Invalid voucher - blacklisted";
+                                        sendResponse(res, ErrorResponse, 403);
                                     })
+                                        .catch(() => {
+                                            ErrorResponse.message = "Invalid voucher - blacklisted";
+                                            sendResponse(res, ErrorResponse, 403);
+                                        })
                                 })
                         })
-
                     }
                     else {
                         //blacklisted
@@ -303,6 +312,7 @@ function useVouchers(request, rvs, insertedVouchers) {
                 }
             }).then(function(validVoucher) {
                 if (validVoucher && verifyVoucherSignature(validVoucher.dataValues)) {
+
                     validVoucher.update({
                         isused: true,
                         requestId: request.id
@@ -316,15 +326,11 @@ function useVouchers(request, rvs, insertedVouchers) {
                     })
                 }
                 else {
-                    //ignore voucher
-                    resolve(false);
+                    reject("NotFound");
                     //blacklist
-                    // BlackList.create({
-                    //     costumerUuid: request.costumerUuid
-                    // }).then(function (blacklist) {
-                    //     reject(blacklist);
-                    //     //throw "Invalid Voucher usage causes ban";
-                    // })
+                    BlackList.create({
+                        costumerUuid: request.costumerUuid
+                    }).then((b) => { });
                 }
             })
         })
