@@ -2,6 +2,10 @@
 
 var models = require('../../models');
 var Sequelize = require('sequelize');
+var fs = require('fs');
+//Signatures
+var crypto = require('crypto');
+
 var env = process.env.NODE_ENV || "development";
 
 var Costumer = models.costumer;
@@ -13,18 +17,22 @@ var BlackList = models.blacklist;
 
 var voucherType3Price = 100;
 
-//Signatures
-var crypto = require('crypto');
-var keypair = require('keypair');
-var pair = keypair(368);
-console.log(pair);
-var privateKey = pair.private;
-var publicKey = pair.public;
+
+/*var keypair = require('keypair');
+var pair = keypair(368, 65537);*/
+var privateKey;// = /*pair.private;*/ '-----BEGIN RSA PUBLIC KEY-----\r\nMIGJAoGBAM3CosR73CBNcJsLv5E90NsFt6qN1uziQ484gbOoule8leXHFbyIzPQRozgEpSpi\r\nwhr6d2/c0CfZHEJ3m5tV0klxfjfM7oqjRMURnH/rmBjcETQ7qzIISZQ/iptJ3p7Gi78X5ZMh\r\nLNtDkUFU9WaGdiEb+SnC39wjErmJSfmGb7i1AgMBAAE=\r\n-----END RSA PUBLIC KEY-----\n';
+var publicKey; /*= '-----BEGIN RSA PRIVATE KEY-----\r\nMIICXAIBAAKBgQDNwqLEe9wgTXCbC7+RPdDbBbeqjdbs4kOPOIGzqLpXvJXlxxW8iMz0EaM4\r\nBKUqYsIa+ndv3NAn2RxCd5ubVdJJcX43zO6Ko0TFEZx/65gY3BE0O6syCEmUP4qbSd6exou/\r\nF+WTISzbQ5FBVPVmhnYhG/kpwt/cIxK5iUn5hm+4tQIDAQABAoGBAI+8xiPoOrA+KMnG/T4j\r\nJsG6TsHQcDHvJi7o1IKC/hnIXha0atTX5AUkRRce95qSfvKFweXdJXSQ0JMGJyfuXgU6dI0T\r\ncseFRfewXAa/ssxAC+iUVR6KUMh1PE2wXLitfeI6JLvVtrBYswm2I7CtY0q8n5AGimHWVXJP\r\nLfGV7m0BAkEA+fqFt2LXbLtyg6wZyxMA/cnmt5Nt3U2dAu77MzFJvibANUNHE4HPLZxjGNXN\r\n+a6m0K6TD4kDdh5HfUYLWWRBYQJBANK3carmulBwqzcDBjsJ0YrIONBpCAsXxk8idXb8jL9a\r\nNIg15Wumm2enqqObahDHB5jnGOLmbasizvSVqypfM9UCQCQl8xIqy+YgURXzXCN+kwUgHinr\r\nutZms87Jyi+D8Br8NY0+Nlf+zHvXAomD2W5CsEK7C+8SLBr3k/TsnRWHJuECQHFE9RA2OP8W\r\noaLPuGCyFXaxzICThSRZYluVnWkZtxsBhW2W8z1b8PvWUE7kMy7TnkzeJS2LSnaNHoyxi7Ia\r\nPQUCQCwWU4U+v4lD7uYBw00Ga/xt+7+UqFPlPVdz1yyr4q24Zxaw0LgmuEvgU5dycq8N7Jxj\r\nTubX0MIRR+G9fmDBBl8=\r\n-----END RSA PRIVATE KEY-----\n';
+*/
 const sign = crypto.createSign('sha1');
+
+privateKey = fs.readFileSync(process.argv[1] + '/../keys/private.pem', 'utf8');
+publicKey = fs.readFileSync(process.argv[1] + '/../keys/public.pem', 'utf8');
+
 
 module.exports = {
     createRequest: createRequest,
-    getPublicKey: getPublicKey
+    getPublicKey: getPublicKey,
+    testSignature: testSignature
 };
 
 /**
@@ -79,8 +87,8 @@ function createRequest(req, res) {
                             })
                                 .then((request) => {
                                     var voucherPromises = useVouchers(request, reqVouchers, insertedVouchers);
-                                    var linesPromises = makeRequestLine(request, reqLines, insertedLines);
-                                    Promise.all(voucherPromises).then(() => {
+                                    Promise.all(voucherPromises).then(valuesVPromises => {
+                                        var linesPromises = makeRequestLine(request, reqLines, insertedLines);
                                         Promise.all(linesPromises).then(() => {
                                             voucherCreation(cUuid, oldLines, insertedLines);
                                             RequestResponse.id = request.id;
@@ -90,10 +98,16 @@ function createRequest(req, res) {
                                             RequestResponse.createdAt = request.createdAt;
                                             sendResponse(res, RequestResponse, 200);
                                         })
+                                    }, reason => {
+                                        ErrorResponse.message = "Invalid voucher - blacklisted";
+                                        sendResponse(res, ErrorResponse, 403);
                                     })
+                                        .catch(() => {
+                                            ErrorResponse.message = "Invalid voucher - blacklisted";
+                                            sendResponse(res, ErrorResponse, 403);
+                                        })
                                 })
                         })
-
                     }
                     else {
                         //blacklisted
@@ -127,7 +141,7 @@ function createRequest(req, res) {
  * @returns Promise
  */
 function costumerValidation(cUuid) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
         Costumer.findOne({
             where: {
                 uuid: cUuid
@@ -181,7 +195,7 @@ function sendResponse(res, varToJson, responseCode) {
  */
 function getAllReqAndLines(cUuid, oldLines, reqNumberWrapper) {
     reqNumberWrapper.requestNumber = 0;
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
         Request.findAll({
             where: {
                 costumerUuid: cUuid
@@ -223,13 +237,13 @@ function getRandomizer(bottom, top) {
  * @returns Promise array
  */
 function getOldRequestLines(oldRequests, oldLines) {
-    return oldRequests.map(function (oldR) {
-        return new Promise(function (resolve, reject) {
+    return oldRequests.map(function(oldR) {
+        return new Promise(function(resolve, reject) {
             RequestLine.findAll({
                 where: {
                     requestId: oldR.id
                 }
-            }).then(function (rls) {
+            }).then(function(rls) {
                 for (var i = 0; i < rls.length; i++) {
                     oldLines.push(rls[i]);
                 }
@@ -248,9 +262,9 @@ function getOldRequestLines(oldRequests, oldLines) {
  * @returns Promise array
  */
 function makeRequestLine(request, rls, addedLines) {
-    return rls.map(function (rl) {
+    return rls.map(function(rl) {
 
-        return new Promise(function (resolve, reject) {
+        return new Promise(function(resolve, reject) {
 
             Product.findOne({
                 where: {
@@ -258,7 +272,7 @@ function makeRequestLine(request, rls, addedLines) {
                     active: true
                 }
             })
-                .then(function (value) {
+                .then(function(value) {
                     if (value) {
                         var prdct = value.dataValues;
                         RequestLine.create({
@@ -287,16 +301,17 @@ function makeRequestLine(request, rls, addedLines) {
  * @returns
  */
 function useVouchers(request, rvs, insertedVouchers) {
-    return rvs.map(function (rvoucher) {
-        return new Promise(function (resolve, reject) {
+    return rvs.map(function(rvoucher) {
+        return new Promise(function(resolve, reject) {
             Voucher.findOne({
                 where: {
                     costumerUuid: request.costumerUuid,
                     isused: false,
                     id: rvoucher.id
                 }
-            }).then(function (validVoucher) {
-                if (validVoucher) {
+            }).then(function(validVoucher) {
+                if (validVoucher && verifyVoucherSignature(validVoucher.dataValues)) {
+
                     validVoucher.update({
                         isused: true,
                         requestId: request.id
@@ -310,15 +325,11 @@ function useVouchers(request, rvs, insertedVouchers) {
                     })
                 }
                 else {
-                    //ignore voucher
-                    resolve(false);
+                    reject("NotFound");
                     //blacklist
-                    // BlackList.create({
-                    //     costumerUuid: request.costumerUuid
-                    // }).then(function (blacklist) {
-                    //     reject(blacklist);
-                    //     //throw "Invalid Voucher usage causes ban";
-                    // })
+                    BlackList.create({
+                        costumerUuid: request.costumerUuid
+                    }).then((b) => { });
                 }
             })
         })
@@ -333,14 +344,14 @@ function useVouchers(request, rvs, insertedVouchers) {
  * @param {any} newLines - the lines of the recent added request
  */
 function voucherCreation(cUuid, oldLines, newLines) {
-    var totalCost = newLines.reduce(function (acc, cur) {
+    var totalCost = newLines.reduce(function(acc, cur) {
         return acc + cur.quantity * cur.unitprice;
     }, 0);
 
     //random voucher creation
     if (totalCost >= 20) createRandomVoucher(cUuid);
 
-    var spentBefore = oldLines.reduce(function (acc, cur) {
+    var spentBefore = oldLines.reduce(function(acc, cur) {
         return acc + cur.quantity * cur.unitprice;
     }, 0);
     var spentSinceLast100 = spentBefore % voucherType3Price;
@@ -355,9 +366,19 @@ function voucherCreation(cUuid, oldLines, newLines) {
  * @param {any} v
  * @returns
  */
+function voucherString(v) {
+    return v.id + ' ' + v.type;
+}
+
+/**
+ * 
+ * 
+ * @param {any} v
+ * @returns
+ */
 function getVoucherSignature(v) {
-    sign.update(v.id + ' ' + v.cUuid + ' ' + v.type, 'sha1');
-    return sign.sign(privateKey);
+    sign.update(voucherString(v), 'sha1');
+    return sign.sign(privateKey, 'base64');
 }
 
 /**
@@ -368,8 +389,9 @@ function getVoucherSignature(v) {
  */
 function verifyVoucherSignature(v) {
     var verifier = crypto.createVerify('sha1');
-    verifier.update(v.id + ' ' + v.cUuid + ' ' + v.type, 'sha1')
-    return verifier.verify(publicKey, v.signature);
+    verifier.update(voucherString(v), 'sha1');
+    var temp = verifier.verify(publicKey, v.signature, 'base64')
+    return temp;
 }
 
 /**
@@ -409,6 +431,55 @@ function createDiscountVoucher(cUuid) {
 }
 
 
-function getPublicKey(req, res){
+/**
+ * 
+ * 
+ * @param {any} req
+ * @param {any} res
+ */
+function getPublicKey(req, res) {
     sendResponse(res, publicKey, 200);
+}
+
+
+/**
+ * 
+ * 
+ * @param {any} req
+ * @param {any} res
+ */
+function testSignature(req, res) {
+    var ErrorResponse = {};
+    var cUuid = "487d7210-9882-11e6-9d39-f7b6026b4be5";
+    var rnd = Math.random().toString();
+
+    var aPromise = new Promise((resolve, reject) => {
+        Voucher.create({
+            costumerUuid: cUuid,
+            type: getRandomizer(1, 3),
+            signature: rnd,
+            isused: false
+        }).then((v) => {
+            v.update({
+                signature: getVoucherSignature(v)
+            }).then((v2) => {
+                if (verifyVoucherSignature(v2))
+                {
+                    resolve(v2.signature);
+                }
+                else
+                    reject("invalid");
+            });
+        });
+    })
+
+    aPromise
+        .then(value => {
+            ErrorResponse.message = value;
+            sendResponse(res, ErrorResponse, 200);
+        }, reason => {
+            ErrorResponse.message = reason;
+            sendResponse(res, ErrorResponse, 403);
+        }
+        )
 }
