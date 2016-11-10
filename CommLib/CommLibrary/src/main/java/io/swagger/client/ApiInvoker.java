@@ -55,55 +55,45 @@ import cz.msebera.android.httpclient.Consts;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.ContentType;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import io.swagger.client.auth.ApiKeyAuth;
 import io.swagger.client.auth.Authentication;
+import io.swagger.client.auth.ApiKeyAuth;
 import io.swagger.client.auth.HttpBasicAuth;
-import io.swagger.client.request.DeleteRequest;
 import io.swagger.client.request.GetRequest;
-import io.swagger.client.request.PatchRequest;
 import io.swagger.client.request.PostRequest;
 import io.swagger.client.request.PutRequest;
+import io.swagger.client.request.DeleteRequest;
+import io.swagger.client.request.PatchRequest;
 
 public class ApiInvoker {
+  private static ApiInvoker INSTANCE;
+  private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
+
+  private RequestQueue mRequestQueue;
+
+  private Map<String, Authentication> authentications;
+
+  private int connectionTimeout;
+
   /** Content type "text/plain" with UTF-8 encoding. */
   public static final ContentType TEXT_PLAIN_UTF8 = ContentType.create("text/plain", Consts.UTF_8);
+
   /**
    * ISO 8601 date time format.
    * @see https://en.wikipedia.org/wiki/ISO_8601
    */
   public static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
   /**
    * ISO 8601 date format.
    * @see https://en.wikipedia.org/wiki/ISO_8601
    */
   public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    private static ApiInvoker INSTANCE;
 
   static {
     // Use UTC as the default time zone.
     DATE_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
     DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
   }
-
-    private Map<String, String> defaultHeaderMap = new HashMap<String, String>();
-    private RequestQueue mRequestQueue;
-    private Map<String, Authentication> authentications;
-    private int connectionTimeout;
-
-    private ApiInvoker(Cache cache, Network network, int threadPoolSize, ResponseDelivery delivery, int connectionTimeout) {
-        if (cache == null) cache = new NoCache();
-        if (network == null) {
-            HttpStack stack = new HurlStack();
-            network = new BasicNetwork(stack);
-        }
-
-        if (delivery == null) {
-            initConnectionRequest(cache, network);
-        } else {
-            initConnectionRequest(cache, network, threadPoolSize, delivery);
-        }
-        this.connectionTimeout = connectionTimeout;
-    }
 
   public static void setUserAgent(String userAgent) {
     INSTANCE.addDefaultHeader("User-Agent", userAgent);
@@ -226,8 +216,31 @@ public class ApiInvoker {
      INSTANCE.authentications = Collections.unmodifiableMap(INSTANCE.authentications);
   }
 
+  private ApiInvoker(Cache cache, Network network, int threadPoolSize, ResponseDelivery delivery, int connectionTimeout) {
+     if(cache == null) cache = new NoCache();
+     if(network == null) {
+        HttpStack stack = new HurlStack();
+        network = new BasicNetwork(stack);
+     }
+
+     if(delivery == null) {
+        initConnectionRequest(cache, network);
+     } else {
+        initConnectionRequest(cache, network, threadPoolSize, delivery);
+     }
+     this.connectionTimeout = connectionTimeout;
+  }
+
   public static ApiInvoker getInstance() {
     return INSTANCE;
+  }
+
+  public void addDefaultHeader(String key, String value) {
+    defaultHeaderMap.put(key, value);
+  }
+
+  public String escapeString(String str) {
+    return str;
   }
 
   public static Object deserialize(String json, String containerType, Class cls) throws ApiException {
@@ -261,14 +274,6 @@ public class ApiInvoker {
       throw new ApiException(500, e.getMessage());
     }
   }
-
-    public void addDefaultHeader(String key, String value) {
-        defaultHeaderMap.put(key, value);
-    }
-
-    public String escapeString(String str) {
-        return str;
-    }
 
   /**
     * Get authentications (key: authentication name, value: authentication).
@@ -339,12 +344,12 @@ public class ApiInvoker {
     throw new RuntimeException("No API key authentication configured!");
   }
 
-  public int getConnectionTimeout() {
-     return connectionTimeout;
+  public void setConnectionTimeout(int connectionTimeout){
+     this.connectionTimeout = connectionTimeout;
   }
 
-    public void setConnectionTimeout(int connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
+  public int getConnectionTimeout() {
+     return connectionTimeout;
   }
 
   /**

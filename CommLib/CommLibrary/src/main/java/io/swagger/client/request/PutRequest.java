@@ -31,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -42,8 +43,10 @@ import cz.msebera.android.httpclient.HttpEntity;
 
 public class PutRequest extends Request<String> {
 
-    private final Response.Listener<String> mListener;
     HttpEntity entity;
+
+    private final Response.Listener<String> mListener;
+
     String contentType;
     Map<String, String> apiHeaders;
     public PutRequest(String url, Map<String, String> apiHeaders, String contentType, HttpEntity entity, Response.Listener<String> listener, Response.ErrorListener errorListener) {
