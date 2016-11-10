@@ -107,7 +107,7 @@ function restartDb() {
     where: {}
   }).then(() => {
     var cUuid = '487d7210-9882-11e6-9d39-f7b6026b4be7';
-    insertDefaultBlackListed();
+    insertDefaultBlackListed(cUuid);
   })
 
 }
