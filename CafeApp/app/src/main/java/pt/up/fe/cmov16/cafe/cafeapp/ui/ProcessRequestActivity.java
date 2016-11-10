@@ -16,8 +16,12 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -70,7 +74,12 @@ public class ProcessRequestActivity extends AppCompatActivity {
     private void sendRequest(final String encoded) {
         RequestParam requestParam = Request.generateRequestParam(encoded);
         DefaultApi api = new DefaultApi();
-        api.createRequest(requestParam, new Response.Listener<RequestResponse>() {
+
+        String lastDate = Request.lastUpdatedBlackListDate(ProcessRequestActivity.this);
+        if (lastDate.isEmpty())
+            lastDate = getDefaultTimestamp();
+
+        api.createRequest(requestParam, lastDate, new Response.Listener<RequestResponse>() {
             @Override
             public void onResponse(RequestResponse response) {
                 onlineRequestFinished(response);
@@ -116,11 +125,15 @@ public class ProcessRequestActivity extends AppCompatActivity {
         totalTV.setText(doubleToDecimalString(total));
         numberTV.setText(String.valueOf(response.getNumber()));
         adapter.notifyDataSetChanged();
+
+        if (response.getLastBlacklisteds().size() > 0)
+            BlackListContract.blockUsers(ProcessRequestActivity.this, response.getLastBlacklisteds(),
+                    response.getCreatedAt());
     }
 
     private void offlineRequest(String encoded) {
+        PendingRequestContract.savePendingRequest(ProcessRequestActivity.this, encoded);
         if (Request.isValid(ProcessRequestActivity.this, encoded)) {
-            PendingRequestContract.savePendingRequest(ProcessRequestActivity.this, encoded);
             RequestDecode.decode(encoded, prods, vouchers);
             totalPrice = ProductContract.loadMoreInfoFomLocalDB(ProcessRequestActivity.this, prods, false);
             numberTV.setText("Pending...");
@@ -195,5 +208,22 @@ public class ProcessRequestActivity extends AppCompatActivity {
                 total = (TextView) itemView.findViewById(R.id.item_total);
             }
         }
+    }
+
+    public static String getDefaultTimestamp() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        java.util.Date date;
+        Timestamp ts;
+        try {
+            date = dateFormat.parse("1900/01/01");
+            long time = date.getTime();
+            ts = new Timestamp(time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            ts = new Timestamp(0);
+        }
+
+
+        return ts.toString().replace(' ', 'T');
     }
 }

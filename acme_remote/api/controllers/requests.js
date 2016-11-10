@@ -422,7 +422,7 @@ function createRandomVoucher(cUuid) {
     Voucher.create({
         costumerUuid: cUuid,
         type: getRandomizer(1, 2),
-        signature: "",
+        signature: ''+getRandomizer(1,999999),
         isused: false
     }).then((v) => {
         v.update({
@@ -440,7 +440,7 @@ function createDiscountVoucher(cUuid) {
     Voucher.create({
         costumerUuid: cUuid,
         type: 3,
-        signature: "",
+        signature: ''+getRandomizer(1,999999),
         isused: false
     }).then((v) => {
         v.update({
