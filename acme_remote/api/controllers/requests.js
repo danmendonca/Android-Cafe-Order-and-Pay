@@ -17,8 +17,7 @@ var BlackList = models.blacklist;
 
 var voucherType3Price = 100;
 
-//Signatures
-var crypto = require('crypto');
+
 /*var keypair = require('keypair');
 var pair = keypair(368, 65537);*/
 var privateKey;// = /*pair.private;*/ '-----BEGIN RSA PUBLIC KEY-----\r\nMIGJAoGBAM3CosR73CBNcJsLv5E90NsFt6qN1uziQ484gbOoule8leXHFbyIzPQRozgEpSpi\r\nwhr6d2/c0CfZHEJ3m5tV0klxfjfM7oqjRMURnH/rmBjcETQ7qzIISZQ/iptJ3p7Gi78X5ZMh\r\nLNtDkUFU9WaGdiEb+SnC39wjErmJSfmGb7i1AgMBAAE=\r\n-----END RSA PUBLIC KEY-----\n';
