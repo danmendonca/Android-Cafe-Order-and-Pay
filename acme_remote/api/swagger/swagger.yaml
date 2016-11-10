@@ -172,6 +172,14 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+    get:
+      description: test signature validation
+      operationId: testSignature
+      responses:
+        default:
+          description: Response
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /requestlines/{requestId}:
     x-swagger-router-controller: requestlines
     get:
