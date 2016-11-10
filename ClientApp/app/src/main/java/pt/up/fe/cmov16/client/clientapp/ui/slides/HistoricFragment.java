@@ -91,8 +91,7 @@ public class HistoricFragment extends NamedFragment {
                             if (adapter != null)
                                 adapter.notifyDataSetChanged();
                             //response.getRequests().get(0).
-                            VoucherContract.saveVoucherInDB(context, response.getVouchers(),
-                                    response.getRequests().size());
+                            VoucherContract.saveVoucherInDB(context, response.getVouchers());
                         }
                     },
                     new Response.ErrorListener() {
