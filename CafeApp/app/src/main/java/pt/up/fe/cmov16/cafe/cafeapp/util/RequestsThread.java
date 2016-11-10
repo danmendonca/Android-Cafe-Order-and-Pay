@@ -16,6 +16,7 @@ import io.swagger.client.model.RequestResponse;
 import pt.up.fe.cmov16.cafe.cafeapp.database.BlackListContract;
 import pt.up.fe.cmov16.cafe.cafeapp.database.PendingRequestContract;
 import pt.up.fe.cmov16.cafe.cafeapp.logic.Request;
+import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
 
 public class RequestsThread extends Thread {
     private static final String TAG = RequestsThread.class.toString();
@@ -33,7 +34,10 @@ public class RequestsThread extends Thread {
             ArrayList<Request> requests = PendingRequestContract.getPendingRequests(context);
             for (final Request request : requests) {
                 RequestParam requestParam = Request.generateRequestParam(request.getRequest());
-                api.createRequest(requestParam, new Response.Listener<RequestResponse>() {
+                String lastDate = Request.lastUpdatedBlackListDate(context);
+                if (lastDate.isEmpty())
+                    lastDate = ProcessRequestActivity.getDefaultTimestamp();
+                api.createRequest(requestParam, lastDate, new Response.Listener<RequestResponse>() {
                     @Override
                     public void onResponse(RequestResponse response) {
                         Log.i("RequestsThread", "Successful request number: " + response.getNumber());
