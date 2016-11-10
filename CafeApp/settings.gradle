@@ -1,1 +1,1 @@
-include ':app', '..:CommLib:CommLibrary'
+include ':app', '..:CommLib:CommLibrary', ':bcprov-jdk15on-155'
