@@ -158,6 +158,9 @@ paths:
       description: Creates a new request for a costumer
       operationId: createRequest
       parameters:
+        - name: lastUpdatedAt
+          in: query
+          type: string
         - name: request
           in: body
           required: true
@@ -479,6 +482,11 @@ definitions:
           $ref: '#/definitions/VoucherParam'
       createdAt:
         type: string
+      lastBlacklisteds:
+        type: array
+        items:
+          $ref : '#/definitions/Blacklist'
+
   LinesVouchersResponse:
     required:
       - requestlines
