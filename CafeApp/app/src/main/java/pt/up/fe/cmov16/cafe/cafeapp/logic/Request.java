@@ -5,12 +5,10 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
 
-
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -22,7 +20,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import io.swagger.client.model.RequestParam;
 import io.swagger.client.model.RequestlineParam;
@@ -33,6 +30,7 @@ import pt.up.fe.cmov16.cafe.cafeapp.database.BlackListContract;
 import pt.up.fe.cmov16.cafe.cafeapp.util.RequestDecode;
 
 public class Request {
+    private static final String TAG = Request.class.toString();
     private int id;
     private String request;
 
@@ -75,15 +73,17 @@ public class Request {
         ArrayList<Voucher> vouchers = new ArrayList<>();
         String costumerUUID = RequestDecode.decode(encoded, productMenuItems, vouchers);
 
-        if (BlackListContract.isUserBlocked(context, costumerUUID))
+        if (BlackListContract.isUserBlocked(context, costumerUUID)) {
+            Log.d(TAG, "This user is blacklisted");
             return false;
+        }
 
         if (vouchers.size() > 0)
             try {
 
                 String original = Request.getPublicKey(context);
-                String keyStr = original.replace("\\r","");
-                keyStr = keyStr.replace("\\n","\n");
+                String keyStr = original.replace("\\r", "");
+                keyStr = keyStr.replace("\\n", "\n");
                 PemReader pemReader = new PemReader(new StringReader(keyStr));
                 PemObject pemObject = pemReader.readPemObject();
                 KeyFactory keyFactory = KeyFactory.getInstance("RSA");
@@ -99,17 +99,14 @@ public class Request {
                     sig.update(vKey.getBytes());
                     sigBytes = Base64.decode(voucher.getSignature(), Base64.DEFAULT);
                     if (!sig.verify(sigBytes)) {
-                        Log.d("SIGNATURE","Signature verification failed");
+                        Log.d(TAG, "Signature verification failed");
                         return false;
                     }
                 }
-            } catch (NoSuchAlgorithmException | InvalidKeySpecException | SignatureException | InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException
+                    | SignatureException | InvalidKeyException | IOException e) {
                 e.printStackTrace();
             }
-
-
         return true;
     }
 
@@ -131,6 +128,20 @@ public class Request {
         SharedPreferences sharedPref = context.getSharedPreferences(
                 context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         return sharedPref.getString("public_key", "");
+    }
+
+    public static void saveUpdatedBlackListDate(Context context, String date) {
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("lastUpdatedBlackListDate", date);
+        editor.apply();
+    }
+
+    public static String lastUpdatedBlackListDate(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(
+                context.getResources().getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        return sharedPref.getString("lastUpdatedBlackListDate", "");
     }
 
     public int getID() {
