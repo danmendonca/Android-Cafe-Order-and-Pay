@@ -154,17 +154,15 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                 } else if (!Character.isDigit(dateTextView.getText().toString().charAt(0))) {
                     Toast.makeText(MainActivity.this, "Insert credit card expiration date", Toast.LENGTH_SHORT).show();
                 } else {
-                    String dateInput = dateTextView.getText().subSequence(6, 10).toString() + "-";
-                    dateInput += dateTextView.getText().subSequence(3, 5).toString() + "-";
-                    dateInput += dateTextView.getText().subSequence(0, 2).toString();
-                    dateInput = dateInput.replace('/', '-');
+                    String [] dateInput = dateTextView.getText().toString().split("/");
+                    String creditDate = dateInput[2] + "-" + dateInput[1] + "-" + dateInput[0];
 
                     RegisterParam registerParam = new RegisterParam();
                     registerParam.setUsername(username);
                     registerParam.setName(name);
                     registerParam.setPassword(password);
                     registerParam.setCreditcardnumber(cardNum);
-                    registerParam.setCreditcarddate(dateInput);
+                    registerParam.setCreditcarddate(creditDate);
                     api.createUser(registerParam,
                             new Response.Listener<Costumer>() {
                                 @Override
