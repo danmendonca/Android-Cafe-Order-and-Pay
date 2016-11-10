@@ -1,0 +1,14 @@
+wrote puK:
+5804c943031e4d6e7c95f4ed9cb69ec037c4bef249b1fb1a1adc7ee1116e343845fe573499a4651682a4091c7e2482446b145b36ade5b6142fd44616f92b71dc7e8d04a2fddd05e9e7e84e5086bf8170a7badd637c44402299bfdb29829dd0912f213b0ef5133a0b39e6a903616e1bee41be87855345f3a604294a2263e9dbb3
+wrote prK:
+696f99413b7e8a8f5ef1f4160e3f1e3d57cc37081099789dd6d874ce4ca4b2448ff83905578dd1038cd7208f4199dc7030014485fd77304f36260667a6b058bdb5787ebfa6f41dc2a16f00b6b283a3b0266e2760b6756625e1e282abde4434ef26a826ade1bd6243178275d3fe0c36739d43b07ab56d45aacf6332868b5b53ec
+
+
+hashes available:
+DSA,  DSA-SHA,    DSA-SHA1, DSA-SHA1-old, RSA-MD4, RSA-MD5, RSA-MDC2, RSA-RIPEMD160, RSA-SHA, RSA-SHA1, RSA-SHA1-2, RSA-SHA224
+, RSA-SHA256, RSA-SHA384, RSA-SHA512, dsaEncryption, dsaWithSHA, dsaWithSHA1, dss1, ecdsa-with-SHA1, md4
+, md4WithRSAEncryption, md5, md5WithRSAEncryption, mdc2, mdc2WithRSA, ripemd, ripemd160, ripemd160WithRSA, rmd160, sha
+, sha1, sha1WithRSAEncryption, sha224, sha224WithRSAEncryption, sha256, sha256WithRSAEncryption, sha384
+, sha384WithRSAEncryption, sha512, sha512WithRSAEncryption, shaWithRSAEncryption, ssl2-md5, ssl3-md5, ssl3-sha1, whirlpool
+
+using: RSA-SHA1
