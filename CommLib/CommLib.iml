@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":..:CommLib" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/../CafeApp" external.system.id="GRADLE" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":..:CommLib" external.linked.project.path="$MODULE_DIR$" external.root.project.path="$MODULE_DIR$/../ClientApp" external.system.id="GRADLE" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>

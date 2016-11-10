@@ -235,7 +235,7 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private String doubleToDecimalString(double d) {
-        return new DecimalFormat("0.00####",
+        return new DecimalFormat("0.00",
                 DecimalFormatSymbols.getInstance(Locale.ENGLISH)).format(d);
     }
 
