@@ -360,6 +360,12 @@ function voucherCreation(cUuid, oldLines, newLines) {
     if (spentSinceLast100 >= voucherType3Price) createDiscountVoucher(cUuid);
 }
 
+/**
+ * 
+ * 
+ * @param {any} v
+ * @returns
+ */
 function voucherString(v) {
     return v.id + ' ' + v.type;
 }
@@ -372,7 +378,7 @@ function voucherString(v) {
  */
 function getVoucherSignature(v) {
     sign.update(voucherString(v), 'sha1');
-    return sign.sign(privateKey);
+    return sign.sign(privateKey, 'base64');
 }
 
 /**
@@ -384,7 +390,7 @@ function getVoucherSignature(v) {
 function verifyVoucherSignature(v) {
     var verifier = crypto.createVerify('sha1');
     verifier.update(voucherString(v), 'sha1');
-    var temp = verifier.verify(publicKey, v.signature)
+    var temp = verifier.verify(publicKey, v.signature, 'base64')
     return temp;
 }
 
@@ -425,11 +431,23 @@ function createDiscountVoucher(cUuid) {
 }
 
 
+/**
+ * 
+ * 
+ * @param {any} req
+ * @param {any} res
+ */
 function getPublicKey(req, res) {
     sendResponse(res, publicKey, 200);
 }
 
 
+/**
+ * 
+ * 
+ * @param {any} req
+ * @param {any} res
+ */
 function testSignature(req, res) {
     var ErrorResponse = {};
     var cUuid = "487d7210-9882-11e6-9d39-f7b6026b4be5";
@@ -438,7 +456,7 @@ function testSignature(req, res) {
     var aPromise = new Promise((resolve, reject) => {
         Voucher.create({
             costumerUuid: cUuid,
-            type: 3,
+            type: getRandomizer(1, 3),
             signature: rnd,
             isused: false
         }).then((v) => {
@@ -446,7 +464,9 @@ function testSignature(req, res) {
                 signature: getVoucherSignature(v)
             }).then((v2) => {
                 if (verifyVoucherSignature(v2))
-                    resolve("Valid");
+                {
+                    resolve(v2.signature);
+                }
                 else
                     reject("invalid");
             });
