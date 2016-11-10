@@ -24,17 +24,18 @@
 
 package io.swagger.client.model;
 
-import com.google.gson.annotations.SerializedName;
+import io.swagger.client.model.RequestResponse;
+import io.swagger.client.model.Voucher;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.*;
+import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class Consult  implements Serializable {
+public class Consult  implements Serializable{
   
   @SerializedName("requests")
   private List<RequestResponse> requests = null;

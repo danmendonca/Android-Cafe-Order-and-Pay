@@ -25,16 +25,14 @@
 package io.swagger.client.model;
 
 
+import io.swagger.annotations.*;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 
 @ApiModel(description = "")
-public class Blacklist implements Serializable {
+public class Blacklist  implements Serializable{
   
   @SerializedName("costumerUuid")
   private String costumerUuid = null;

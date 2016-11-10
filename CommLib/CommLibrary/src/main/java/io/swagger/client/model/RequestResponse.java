@@ -24,17 +24,19 @@
 
 package io.swagger.client.model;
 
-import com.google.gson.annotations.SerializedName;
+import io.swagger.client.model.Blacklist;
+import io.swagger.client.model.Requestline;
+import io.swagger.client.model.VoucherParam;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.*;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.*;
+import com.google.gson.annotations.SerializedName;
 
 
 @ApiModel(description = "")
-public class RequestResponse implements Serializable {
+public class RequestResponse  implements Serializable{
   
   @SerializedName("id")
   private Integer id = null;
@@ -46,6 +48,8 @@ public class RequestResponse implements Serializable {
   private List<VoucherParam> requestVouchers = null;
   @SerializedName("createdAt")
   private String createdAt = null;
+  @SerializedName("lastBlacklisteds")
+  private List<Blacklist> lastBlacklisteds = null;
 
   /**
    **/
@@ -63,7 +67,6 @@ public class RequestResponse implements Serializable {
   public Integer getNumber() {
     return number;
   }
-
   public void setNumber(Integer number) {
     this.number = number;
   }
@@ -98,6 +101,16 @@ public class RequestResponse implements Serializable {
     this.createdAt = createdAt;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  public List<Blacklist> getLastBlacklisteds() {
+    return lastBlacklisteds;
+  }
+  public void setLastBlacklisteds(List<Blacklist> lastBlacklisteds) {
+    this.lastBlacklisteds = lastBlacklisteds;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -112,7 +125,8 @@ public class RequestResponse implements Serializable {
         (number == null ? requestResponse.number == null : number.equals(requestResponse.number)) &&
         (requestLines == null ? requestResponse.requestLines == null : requestLines.equals(requestResponse.requestLines)) &&
         (requestVouchers == null ? requestResponse.requestVouchers == null : requestVouchers.equals(requestResponse.requestVouchers)) &&
-        (createdAt == null ? requestResponse.createdAt == null : createdAt.equals(requestResponse.createdAt));
+        (createdAt == null ? requestResponse.createdAt == null : createdAt.equals(requestResponse.createdAt)) &&
+        (lastBlacklisteds == null ? requestResponse.lastBlacklisteds == null : lastBlacklisteds.equals(requestResponse.lastBlacklisteds));
   }
 
   @Override
@@ -123,6 +137,7 @@ public class RequestResponse implements Serializable {
     result = 31 * result + (requestLines == null ? 0: requestLines.hashCode());
     result = 31 * result + (requestVouchers == null ? 0: requestVouchers.hashCode());
     result = 31 * result + (createdAt == null ? 0: createdAt.hashCode());
+    result = 31 * result + (lastBlacklisteds == null ? 0: lastBlacklisteds.hashCode());
     return result;
   }
 
@@ -136,6 +151,7 @@ public class RequestResponse implements Serializable {
     sb.append("  requestLines: ").append(requestLines).append("\n");
     sb.append("  requestVouchers: ").append(requestVouchers).append("\n");
     sb.append("  createdAt: ").append(createdAt).append("\n");
+    sb.append("  lastBlacklisteds: ").append(lastBlacklisteds).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

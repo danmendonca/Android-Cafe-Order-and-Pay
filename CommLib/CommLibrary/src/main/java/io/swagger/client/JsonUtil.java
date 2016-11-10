@@ -27,31 +27,9 @@ package io.swagger.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.List;
-
-import io.swagger.client.model.Blacklist;
-import io.swagger.client.model.BlacklistParam;
-import io.swagger.client.model.Blacklists;
-import io.swagger.client.model.Consult;
-import io.swagger.client.model.Costumer;
-import io.swagger.client.model.CostumersResponse;
-import io.swagger.client.model.ErrorResponse;
-import io.swagger.client.model.HelloWorldResponse;
-import io.swagger.client.model.LinesVouchersResponse;
-import io.swagger.client.model.LoginParam;
-import io.swagger.client.model.PinLoginParam;
-import io.swagger.client.model.Product;
-import io.swagger.client.model.ProductParam;
-import io.swagger.client.model.Products;
-import io.swagger.client.model.RegisterParam;
-import io.swagger.client.model.RequestParam;
-import io.swagger.client.model.RequestResponse;
-import io.swagger.client.model.Requestline;
-import io.swagger.client.model.RequestlineParam;
-import io.swagger.client.model.Voucher;
-import io.swagger.client.model.VoucherParam;
+import io.swagger.client.model.*;
 
 public class JsonUtil {
   public static GsonBuilder gsonBuilder;
@@ -258,4 +236,4 @@ public class JsonUtil {
     return new TypeToken<Object>(){}.getType();
   }
 
-}
+};

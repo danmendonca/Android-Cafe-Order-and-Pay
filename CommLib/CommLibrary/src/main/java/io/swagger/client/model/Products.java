@@ -24,12 +24,11 @@
 
 package io.swagger.client.model;
 
+import io.swagger.client.model.Product;
+import java.util.*;
+
+import io.swagger.annotations.*;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
