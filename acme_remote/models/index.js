@@ -60,48 +60,7 @@ sequelize
           uuid: '487d7210-9882-11e6-9d39-f7b6026b4be5',
           creditcardnumber: '12345678',
           creditcarddate: '2016-12-19T00:00:00.000Z',
-        }).then((costumer) => {
-          sequelize.models.product.create({
-            active: true,
-            name: 'Popcorn',
-            unitprice: 1.5
-          }).then((prdct) => {
-            sequelize.models.request.create({
-              costumerUuid: costumer.uuid,
-              number: 0
-            }).then((rq) => {
-              //create requestline for request
-              sequelize.models.requestline.create({
-                quantity: 101,
-                unitprice: prdct.unitprice,
-                productId: prdct.id,
-                requestId: rq.id
-              }).then(() => {
-
-              })
-
-              sequelize.models.voucher.create({
-                costumerUuid: costumer.uuid,
-                type: 1,
-                signature: "1",
-                isused: false
-              }).then((v) => {
-                v.update({
-                  isused: true,
-                  requestId: rq.id
-                })
-               })
-
-              sequelize.models.voucher.create({
-                costumerUuid: costumer.uuid,
-                type: 3,
-                signature: "2",
-                isused: false
-              }).then(() => { })
-
-            })
-          });
-        });
+        }).then((costumer) => { });
         sequelize.models.costumer.create({
           username: 'mnunes',
           name: 'Miguel',
@@ -131,6 +90,11 @@ sequelize
           active: true,
           name: 'Coffee',
           unitprice: 0.8
+        }).then(() => { });
+        sequelize.models.product.create({
+          active: true,
+          name: 'Popcorn',
+          unitprice: 1.5
         }).then(() => { });
         sequelize.models.product.create({
           active: true,
