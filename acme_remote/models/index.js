@@ -48,96 +48,30 @@ sequelize
 
     if (env.localeCompare("development") == 0) {
       sequelize.sync({
-        force: true,
+        //force: true,
         // logging: console.log
       }).then((result) => {
-        //costumers
-        sequelize.models.costumer.create({
-          username: 'dmendonca',
-          name: 'Daniel',
-          pin: '0000',
-          password: 'admin',
-          uuid: '487d7210-9882-11e6-9d39-f7b6026b4be5',
-          creditcardnumber: '12345678',
-          creditcarddate: '2016-12-19T00:00:00.000Z',
-        }).then((costumer) => { });
-        sequelize.models.costumer.create({
-          username: 'mnunes',
-          name: 'Miguel',
-          pin: '0000',
-          password: 'admin',
-          uuid: '487d7210-9882-11e6-9d39-f7b6026b4be6',
-          creditcardnumber: '12345678',
-          creditcarddate: '2016-10-30T00:00:00.000Z',
-        }).then(() => { });
-        sequelize.models.costumer.create({
-          username: 'listed',
-          name: 'Black',
-          pin: '0001',
-          password: 'admin',
-          uuid: '487d7210-9882-11e6-9d39-f7b6026b4be7',
-          creditcardnumber: '12345678',
-          creditcarddate: '2015-10-30T00:00:00.000Z',
-        }).then(() => {
-          //blacklist
-          sequelize.models.blacklist.create({
-            costumerUuid: '487d7210-9882-11e6-9d39-f7b6026b4be7',
-            //timestamp: '2016-01-01'
-          }).then(() => { });
-        });
-        //products
-        sequelize.models.product.create({
-          active: true,
-          name: 'Coffee',
-          unitprice: 0.8
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
-          name: 'Popcorn',
-          unitprice: 1.5
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
-          name: 'Francesinha',
-          unitprice: 10.0,
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
-          name: 'French Toast',
-          unitprice: 2.5,
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
-          name: 'Coke',
-          unitprice: 1.5,
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
-          name: 'Evian Water',
-          unitprice: 1,
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
-          name: 'Chocolate Cake',
-          unitprice: 3,
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
-          name: 'Cheesecake',
-          unitprice: 3.2,
-        }).then(() => { });
-        sequelize.models.product.create({
-          active: true,
-          name: 'Super Bock',
-          unitprice: 1.5,
-        }).then(() => { });
+        sequelize.models.product.count({
+          where: {}
+        }).then((c) => {
+          if (c < 6)
+          {
+            console.log("insert defaults"); 
+            insertDefaults(); 
+          }
+          else {
+            console.log("reset db");
+            restartDb();
+          }
+        })
       });
     }
     else {
       sequelize.sync({
         //force: true,
         // logging: console.log
-      }).then(() => { });
+      }).then(() => {
+      });
     }
 
   })
@@ -147,5 +81,125 @@ sequelize
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
+
+
+function insertDefaults() {
+  insertDefaultProducts();
+  insertDefaultCostumers();
+  insertDefaultBlackListed();
+}
+
+
+function restartDb() {
+  sequelize.models.requestline.destroy({
+    where: {}
+  }).then(() => {
+    sequelize.models.voucher.destroy({
+      where: {}
+    }).then(() => {
+      sequelize.models.request.destroy({
+        where: {}
+      })
+    })
+  });
+
+  sequelize.models.blacklist.destroy({
+    where: {}
+  }).then(() => {
+    var cUuid = '487d7210-9882-11e6-9d39-f7b6026b4be7';
+    insertDefaultBlackListed();
+  })
+
+}
+
+function insertDefaultProducts() {
+  //products
+  sequelize.models.product.create({
+    active: true,
+    name: 'Coffee',
+    unitprice: 0.8
+  }).then(() => { });
+  sequelize.models.product.create({
+    active: true,
+    name: 'Popcorn',
+    unitprice: 1.5
+  }).then(() => { });
+  sequelize.models.product.create({
+    active: true,
+    name: 'Francesinha',
+    unitprice: 10.0,
+  }).then(() => { });
+  sequelize.models.product.create({
+    active: true,
+    name: 'French Toast',
+    unitprice: 2.5,
+  }).then(() => { });
+  sequelize.models.product.create({
+    active: true,
+    name: 'Coke',
+    unitprice: 1.5,
+  }).then(() => { });
+  sequelize.models.product.create({
+    active: true,
+    name: 'Evian Water',
+    unitprice: 1,
+  }).then(() => { });
+  sequelize.models.product.create({
+    active: true,
+    name: 'Chocolate Cake',
+    unitprice: 3,
+  }).then(() => { });
+  sequelize.models.product.create({
+    active: true,
+    name: 'Cheesecake',
+    unitprice: 3.2,
+  }).then(() => { });
+  sequelize.models.product.create({
+    active: true,
+    name: 'Super Bock',
+    unitprice: 1.5,
+  }).then(() => { });
+}
+
+function insertDefaultCostumers() {
+  //costumers
+  sequelize.models.costumer.create({
+    username: 'dmendonca',
+    name: 'Daniel',
+    pin: '0000',
+    password: 'admin',
+    uuid: '487d7210-9882-11e6-9d39-f7b6026b4be5',
+    creditcardnumber: '12345678',
+    creditcarddate: '2016-12-19T00:00:00.000Z',
+  }).then((costumer) => { });
+  sequelize.models.costumer.create({
+    username: 'mnunes',
+    name: 'Miguel',
+    pin: '0000',
+    password: 'admin',
+    uuid: '487d7210-9882-11e6-9d39-f7b6026b4be6',
+    creditcardnumber: '12345678',
+    creditcarddate: '2016-10-30T00:00:00.000Z',
+  }).then(() => { });
+  sequelize.models.costumer.create({
+    username: 'listed',
+    name: 'Black',
+    pin: '0001',
+    password: 'admin',
+    uuid: '487d7210-9882-11e6-9d39-f7b6026b4be7',
+    creditcardnumber: '12345678',
+    creditcarddate: '2015-10-30T00:00:00.000Z',
+  }).then((c) => {
+    insertDefaultBlackListed(c.uuid);
+  })
+}
+
+function insertDefaultBlackListed(cUuid) {
+  //blacklist
+  sequelize.models.blacklist.create({
+    costumerUuid: cUuid,
+    //timestamp: '2016-01-01'
+  }).then(() => { });
+}
 
 module.exports = db;
