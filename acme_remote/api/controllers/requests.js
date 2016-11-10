@@ -25,8 +25,8 @@ var publicKey; /*= '-----BEGIN RSA PRIVATE KEY-----\r\nMIICXAIBAAKBgQDNwqLEe9wgT
 */
 
 if(process.env.HEROKU_PATH){
-    privateKey = fs.readFileSync('../acme_remote/keys/private.pem', 'utf8');
-    publicKey = fs.readFileSync('../acme_remote/keys/public.pem', 'utf8');
+    privateKey = fs.readFileSync('/app/acme_remote/keys/private.pem', 'utf8');
+    publicKey = fs.readFileSync('/app/acme_remote/keys/public.pem', 'utf8');
 }else{
     privateKey = fs.readFileSync(process.argv[1] + '/../keys/private.pem', 'utf8');
     publicKey = fs.readFileSync(process.argv[1] + '/../keys/public.pem', 'utf8');
