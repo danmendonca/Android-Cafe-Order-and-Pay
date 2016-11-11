@@ -38,7 +38,7 @@ public class HistoricFragment extends NamedFragment {
         //args.putInt(ARG_PAGE, page);
         HistoricFragment fragment = new HistoricFragment();
         fragment.setArguments(args);
-        fragment.title = "Historic";
+        fragment.title = "Payments";
         return fragment;
     }
 

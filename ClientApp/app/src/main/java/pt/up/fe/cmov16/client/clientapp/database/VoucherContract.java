@@ -28,17 +28,17 @@ public class VoucherContract {
             Log.e(TAG, "NULL CONTEXT UPDATING VOUCHERS DB");
             return;
         }
+        DbHelper dbHelper = new DbHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("DELETE FROM " + VoucherEntry.TABLE_NAME);
         if (vouchers == null || vouchers.isEmpty()) {
             Log.e(TAG, "empty array");
             return;
         }
-        DbHelper dbHelper = new DbHelper(context);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
         if (db == null) {
             Log.e(TAG, "NULL DB UPDATING VOUCHERS DB");
             return;
         }
-        db.execSQL("DELETE FROM " + VoucherEntry.TABLE_NAME);
         for (Voucher voucher : vouchers) {
             ContentValues values = new ContentValues();
             values.put(VoucherEntry.COLUMN_NAME_ID, voucher.getId());

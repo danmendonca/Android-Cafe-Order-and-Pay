@@ -6,7 +6,7 @@
     android:layout_marginBottom="3dp"
     android:layout_marginLeft="4dp"
     android:layout_marginRight="4dp"
-    card_view:cardElevation="2dp"
+    card_view:cardElevation="1dp"
     card_view:cardUseCompatPadding="false"
     card_view:contentPadding="10dp">
 
@@ -17,6 +17,7 @@
         android:weightSum="8">
 
         <TextView
+            android:textColor="@color/colorPrimary"
             android:id="@+id/item_quantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -24,6 +25,7 @@
             android:text="@string/hashtag" />
 
         <TextView
+            android:textColor="@color/colorPrimary"
             android:id="@+id/item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -31,6 +33,7 @@
             android:text="@string/product" />
 
         <TextView
+            android:textColor="@color/colorPrimary"
             android:id="@+id/item_total"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
