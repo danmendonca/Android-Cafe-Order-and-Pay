@@ -87,12 +87,12 @@ public class ProcessRequestActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error instanceof NoConnectionError || error instanceof VolleyError)
+                if (error instanceof NoConnectionError)
                     offlineRequest(encoded);
                 else if (error instanceof AuthFailureError) {
                     Toast.makeText(ProcessRequestActivity.this, "This user is blacklisted", Toast.LENGTH_LONG).show();
                     BlackListContract.blockUser(ProcessRequestActivity.this, encoded.split(";")[0]);
-                } else Log.e(TAG, error.toString());
+                } else if (error != null) Log.e(TAG, error.toString());
             }
         });
     }
