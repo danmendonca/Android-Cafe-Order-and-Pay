@@ -101,11 +101,13 @@ public class Request {
                     if (!sig.verify(sigBytes)) {
                         Log.d(TAG, "Signature verification failed");
                         return false;
-                    }
+                    }else Log.d(TAG, "Sig valid");
                 }
             } catch (NoSuchAlgorithmException | InvalidKeySpecException
                     | SignatureException | InvalidKeyException | IOException e) {
                 e.printStackTrace();
+                Log.d(TAG, "Signature verification failed");
+                return false;
             }
         return true;
     }
