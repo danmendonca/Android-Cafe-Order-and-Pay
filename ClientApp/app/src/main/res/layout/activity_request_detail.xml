@@ -11,37 +11,38 @@
     tools:context="pt.up.fe.cmov16.client.clientapp.ui.RequestDetailActivity">
 
     <LinearLayout
+        android:id="@+id/rv_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="7"
-        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:id="@+id/rv_header"
-        >
+        android:orientation="horizontal"
+        android:weightSum="7">
 
         <TextView
+            android:id="@+id/item_quantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="Quantity"
-            android:id="@+id/item_quantity"
-            />
+            android:textColor="@color/colorPrimary" />
+
         <TextView
+            android:id="@+id/item_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:text="Description"
-            android:id="@+id/item_description"
-            />
+            android:textColor="@color/colorPrimary" />
+
         <TextView
+            android:id="@+id/item_total"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="Total"
-            android:id="@+id/item_total"
-            />
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -50,36 +51,37 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        tools:listitem="@layout/requestdetail_list_item"
         android:layout_below="@+id/rv_header"
-        />
+        tools:listitem="@layout/requestdetail_list_item" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="7"
-        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/requestdetail_list"
-        >
+        android:orientation="horizontal"
+        android:weightSum="7">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"/>
+            android:layout_weight="3" />
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="Total"
-            />
+            android:textColor="@color/colorPrimary" />
+
         <TextView
+            android:id="@+id/requestdetail_total"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="€"
-            android:id="@+id/requestdetail_total"
-            />
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package pt.up.fe.cmov16.client.clientapp.ui.slides;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,9 @@ public class ProductsFragment extends NamedFragment {
     private ArrayList<ProductMenuItem> PRODUCTS = new ArrayList<>();
     private RVAdapter adapter;
     private boolean restoringState = false;
+    private Handler handler;
+    private ImageButton cartBtn;
+    private boolean cartBlinking = false;
 
     public static ProductsFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -63,6 +68,7 @@ public class ProductsFragment extends NamedFragment {
         super.onCreate(savedInstanceState);
         // retain this fragment
         setRetainInstance(true);
+        handler = new Handler();
     }
 
     @Override
@@ -82,7 +88,7 @@ public class ProductsFragment extends NamedFragment {
         adapter = new RVAdapter();
         rv.setAdapter(adapter);
         // Check whether we're recreating a previously destroyed instance
-
+        cartBtn = (ImageButton) getActivity().findViewById(R.id.cartButton);
         return rootView;
     }
 
@@ -219,6 +225,7 @@ public class ProductsFragment extends NamedFragment {
                         ((ProductViewHolder) holder).quantityTV.setText(String.valueOf(quantityActual));
                         product.setQuantity(quantityActual);
                         updateButtonsVisibility((ProductViewHolder) holder, quantityActual);
+                        blinkCartIcon();
                     }
                 });
                 ((ProductViewHolder) holder).subButton.setOnClickListener(new View.OnClickListener() {
@@ -268,5 +275,32 @@ public class ProductsFragment extends NamedFragment {
                 subButton = (Button) itemView.findViewById(R.id.subButton);
             }
         }
+    }
+
+    public void blinkCartIcon() {
+        if (cartBlinking)
+            return;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 8; i++) {
+                    final int finalI = i;
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (finalI % 2 == 0)
+                                cartBtn.setBackgroundResource(R.drawable.ic_shop_g);
+                            else cartBtn.setBackgroundResource(R.drawable.ic_shop);
+                        }
+                    });
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                cartBlinking = false;
+            }
+        }).start();
     }
 }
