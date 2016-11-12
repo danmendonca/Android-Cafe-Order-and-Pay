@@ -115,8 +115,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
     private void register() {
         setContentView(R.layout.form_register);
-        TextView info = (TextView) findViewById(R.id.infoView);
-        info.setText((new DefaultApi()).getBasePath());
 
         dateTextView = (Button) findViewById(R.id.cardVal);
 

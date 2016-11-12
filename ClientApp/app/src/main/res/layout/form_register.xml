@@ -11,6 +11,7 @@
     tools:context="pt.up.fe.cmov16.client.clientapp.MainActivity">
 
     <TextView
+        android:textColor="@color/colorPrimary"
         android:id="@+id/inscricao"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,6 +23,7 @@
         android:textStyle="normal|bold" />
 
     <EditText
+        android:textColor="@color/colorPrimary"
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,6 +38,7 @@
         android:textSize="18sp" />
 
     <EditText
+        android:textColor="@color/colorPrimary"
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -50,6 +53,7 @@
         android:textSize="18sp" />
 
     <EditText
+        android:textColor="@color/colorPrimary"
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,6 +68,7 @@
         android:textSize="18sp" />
 
     <EditText
+        android:textColor="@color/colorPrimary"
         android:id="@+id/cardNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,6 +83,7 @@
         android:textSize="18sp" />
 
     <Button
+        android:textColor="@color/colorPrimary"
         android:id="@+id/cardVal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -86,32 +92,20 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/cardNum"
-        android:background="#ffffff"
-        android:paddingTop="10dp"
+        android:background="@drawable/blue_border"
+        android:layout_marginBottom="10dp"
         android:text="@string/credit_card_expiration_date"
         android:textSize="18sp" />
 
     <Button
+        android:textColor="@color/colorPrimary"
         android:id="@+id/registerBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/cardVal"
-        android:background="#ffffff"
+        android:background="@drawable/blue_border"
         android:text="@string/register" />
-
-    <TextView
-        android:id="@+id/infoView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/registerBtn"
-        android:text="" />
-
 
 </RelativeLayout>
