@@ -57,6 +57,30 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /costumers/{uuid}:
+    x-swagger-router-controller: costumers
+    put:
+      description: Edits costumer
+      operationId: editCostumer
+      parameters:
+        - name: uuid
+          required: true
+          in: path
+          type: string
+        - name: registerParam
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RegisterParam'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Costumer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /costumers/login:
     x-swagger-router-controller: costumers
     post:
@@ -152,6 +176,30 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /products/{id}:
+    x-swagger-router-controller: products
+    put:
+      description: Edit a product
+      operationId: editProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          format: int32
+        - name: product
+          in: body
+          schema:
+            $ref: '#/definitions/ProductParam'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        default:
+          description: Error
+          schema:
+              $ref: "#/definitions/ErrorResponse"
   /requests:
     x-swagger-router-controller: requests
     post:
@@ -231,6 +279,25 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/Blacklist'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /blacklists/{cuuid}:
+    x-swagger-router-controller: blacklists
+    delete:
+      description: Removes costumer from blacklist
+      operationId: removeFromBl
+      parameters:
+        - name: cuuid
+          in: path
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseMessage'
         default:
           description: Error
           schema:
@@ -486,7 +553,6 @@ definitions:
         type: array
         items:
           $ref : '#/definitions/Blacklist'
-
   LinesVouchersResponse:
     required:
       - requestlines
@@ -507,6 +573,12 @@ definitions:
       message:
         type: string
   ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ResponseMessage:
     required:
       - message
     properties:
