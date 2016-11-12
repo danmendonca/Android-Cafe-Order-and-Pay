@@ -24,28 +24,25 @@
 
 package io.swagger.client.model;
 
+
+import io.swagger.annotations.*;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
-public class Products  {
+public class ResponseMessage  {
   
-  @SerializedName("products")
-  private List<Product> products = null;
+  @SerializedName("message")
+  private String message = null;
 
   /**
    **/
   @ApiModelProperty(required = true, value = "")
-  public List<Product> getProducts() {
-    return products;
+  public String getMessage() {
+    return message;
   }
-  public void setProducts(List<Product> products) {
-    this.products = products;
+  public void setMessage(String message) {
+    this.message = message;
   }
 
 
@@ -57,23 +54,23 @@ public class Products  {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Products products = (Products) o;
-    return (products == null ? products.products == null : products.equals(products.products));
+    ResponseMessage responseMessage = (ResponseMessage) o;
+    return (message == null ? responseMessage.message == null : message.equals(responseMessage.message));
   }
 
   @Override
   public int hashCode() {
     int result = 17;
-    result = 31 * result + (products == null ? 0: products.hashCode());
+    result = 31 * result + (message == null ? 0: message.hashCode());
     return result;
   }
 
   @Override
   public String toString()  {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Products {\n");
+    sb.append("class ResponseMessage {\n");
     
-    sb.append("  products: ").append(products).append("\n");
+    sb.append("  message: ").append(message).append("\n");
     sb.append("}\n");
     return sb.toString();
   }

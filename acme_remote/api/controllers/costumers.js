@@ -12,7 +12,8 @@ module.exports = {
     getCostumers: getCostumers,
     createUser: createUser,
     logMe: logMe,
-    getCostumerRequests: getCostumerRequests
+    getCostumerRequests: getCostumerRequests,
+    editCostumer: editCostumer
 };
 
 //sql costumer insertion INSERT INTO public.costumer VALUES ('daniel', 'dm', 'pass', '1234', '123456789', current_date, 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', now(), now());
@@ -138,6 +139,36 @@ function getCostumerRequests(req, res) {
         ErrorResponse.message = "Failed to verify";
         sendResponse(res, ErrorResponse, 403);
     }
+}
+
+
+/**
+ * 
+ * 
+ * @param {any} req
+ * @param {any} res
+ */
+function editCostumer(req, res) {
+    var myCostumer = req.swagger.params.registerParam.value;
+    var cUuid = req.swagger.params.uuid.value;
+    var ErrorResponse = {};
+
+    Costumer.findOne({
+        where: { uuid: cUuid }
+    }).then((c) => {
+        if (!c) {
+            ErrorResponse.message = "Costumer not found";
+            sendResponse(res, ErrorResponse, 404);
+            return;
+        }
+        c.update({
+            password: myCostumer.password,
+            creditcardnumber: myCostumer.creditcardnumber,
+            creditcarddate: myCostumer.creditcarddate
+        }).then((updated) => {
+            sendResponse(res, updated, 200);
+        });
+    })
 }
 
 /**
