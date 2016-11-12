@@ -47,6 +47,17 @@
                     android:contentDescription="@string/cart"
                     android:foregroundGravity="right"
                     android:gravity="end" />
+
+                <ImageButton
+                    android:id="@+id/edit_costumer_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/cartButton"
+                    android:background="@drawable/ic_edit_cstmr"
+                    android:contentDescription="@string/edit_costumer"
+                    android:foregroundGravity="right"
+                    android:gravity="end" />
+
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
@@ -55,9 +66,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
-            app:tabMode="fixed"
             app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="4dp"
+            app:tabMode="fixed"
             app:tabSelectedTextColor="@android:color/white"
             app:tabTextColor="@android:color/white" />
     </android.support.design.widget.AppBarLayout>
@@ -76,8 +87,8 @@
         android:layout_margin="16dp"
         android:scaleType="fitXY"
         android:src="@drawable/ic_loop_white_18dp"
-        app:borderWidth="0dp"
-        app:backgroundTint="@android:color/holo_green_light"/>
+        app:backgroundTint="@android:color/holo_green_light"
+        app:borderWidth="0dp" />
 
 </android.support.design.widget.CoordinatorLayout>
 

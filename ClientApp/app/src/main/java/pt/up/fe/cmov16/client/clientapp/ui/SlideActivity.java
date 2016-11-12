@@ -1,6 +1,7 @@
 package pt.up.fe.cmov16.client.clientapp.ui;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -13,24 +14,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.HelloWorldResponse;
-import pt.up.fe.cmov16.client.clientapp.MainActivity;
 import pt.up.fe.cmov16.client.clientapp.R;
 import pt.up.fe.cmov16.client.clientapp.logic.ProductMenuItem;
 import pt.up.fe.cmov16.client.clientapp.logic.User;
@@ -51,6 +55,11 @@ public class SlideActivity extends FragmentActivity {
     private ViewPager mPager;
     private TextView tittle;
     private FloatingActionButton floatingActionButton;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -133,22 +142,34 @@ public class SlideActivity extends FragmentActivity {
             }
         });
 
+        ImageButton editInfoBtn = (ImageButton) findViewById(R.id.edit_costumer_btn);
+        editInfoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SlideActivity.this, CostumerEdition.class);
+                startActivity(intent);
+            }
+        });
+
         DefaultApi api = new DefaultApi();
         api.hello(User.getInstance(getApplicationContext()).getUsername(),
                 new Response.Listener<HelloWorldResponse>() {
                     @Override
                     public void onResponse(HelloWorldResponse response) {
-                        Toast.makeText(getApplicationContext(), response.getMessage() , Toast.LENGTH_LONG).show();
-                        Log.d("CONN_VERIFICATION" ,response.getMessage());
+                        Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("CONN_VERIFICATION", response.getMessage());
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Connection Failed" , Toast.LENGTH_LONG).show();
-                        Log.d("CONN_VERIFICATION" , "Connection Failed");
+                        Toast.makeText(getApplicationContext(), "Connection Failed", Toast.LENGTH_LONG).show();
+                        Log.d("CONN_VERIFICATION", "Connection Failed");
                     }
                 });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -192,6 +213,42 @@ public class SlideActivity extends FragmentActivity {
         ((HistoricFragment) fragments[1]).refresh(SlideActivity.this);
     }
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Slide Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
+
     public static class MyPwDialogFragment extends DialogFragment {
         EditText pwText;
         EditText userText;
@@ -223,7 +280,7 @@ public class SlideActivity extends FragmentActivity {
                 @Override
                 public void onClick(View view) {
                     SlideActivity activity = (SlideActivity) getActivity();
-                    if (!activity.userValidation(userText.getText().toString() ,pwText.getText().toString()))
+                    if (!activity.userValidation(userText.getText().toString(), pwText.getText().toString()))
                         return;
 
                     activity.refreshReqHistory();

@@ -26,6 +26,7 @@ package io.swagger.client.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 import io.swagger.annotations.ApiModel;
@@ -33,7 +34,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
-public class RequestResponse {
+public class RequestResponse implements Serializable {
   
   @SerializedName("id")
   private Integer id = null;

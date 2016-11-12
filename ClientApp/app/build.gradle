@@ -42,4 +42,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.github.kenglxn.QRGen:android:2.1.0'
     compile project(path: ':..:CommLib:CommLibrary')
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }

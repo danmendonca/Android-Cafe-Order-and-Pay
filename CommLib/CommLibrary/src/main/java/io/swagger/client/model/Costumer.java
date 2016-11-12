@@ -27,12 +27,14 @@ package io.swagger.client.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 
 @ApiModel(description = "")
-public class Costumer {
+public class Costumer implements Serializable {
   
   @SerializedName("uuid")
   private String uuid = null;
