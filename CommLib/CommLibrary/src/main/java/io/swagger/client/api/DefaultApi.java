@@ -60,8 +60,8 @@ import io.swagger.client.model.RequestResponse;
 public class DefaultApi {
     //String basePath = "http://10.0.2.2:8080/api"; //google emulator
     // String basePath = "https://cmov1.herokuapp.com/api"; //herokuapp
-    //String basePath = "http://192.168.1.66:8080/api"; //danielm home
-    String basePath  = "http://192.168.10.5:8080/api";
+    String basePath = "http://192.168.1.66:8080/api"; //danielm home
+    //String basePath  = "http://192.168.10.5:8080/api";
 
     ApiInvoker apiInvoker = ApiInvoker.getInstance();
 
