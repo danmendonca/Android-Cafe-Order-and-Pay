@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
@@ -75,6 +76,7 @@ public class Request {
 
         if (BlackListContract.isUserBlocked(context, costumerUUID)) {
             Log.d(TAG, "This user is blacklisted");
+            Toast.makeText(context, "This user is blacklisted", Toast.LENGTH_LONG).show();
             return false;
         }
 
