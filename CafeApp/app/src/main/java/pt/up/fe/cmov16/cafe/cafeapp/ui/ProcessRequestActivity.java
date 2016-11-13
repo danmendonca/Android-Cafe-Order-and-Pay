@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -67,7 +65,10 @@ public class ProcessRequestActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             String encoded = (String) bundle.get(MainActivity.ENCODED_STRING_KEY);
-            sendRequest(encoded);
+            if (encoded != null) {
+                sendRequest(encoded);
+                getIntent().removeExtra(MainActivity.ENCODED_STRING_KEY);
+            }
         }
     }
 
@@ -87,12 +88,10 @@ public class ProcessRequestActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (error instanceof NoConnectionError)
-                    offlineRequest(encoded);
-                else if (error instanceof AuthFailureError) {
+                if (error instanceof AuthFailureError) {
                     Toast.makeText(ProcessRequestActivity.this, "This user is blacklisted", Toast.LENGTH_LONG).show();
                     BlackListContract.blockUser(ProcessRequestActivity.this, encoded.split(";")[0]);
-                } else if (error != null) Log.e(TAG, error.toString());
+                } else offlineRequest(encoded);
             }
         });
     }

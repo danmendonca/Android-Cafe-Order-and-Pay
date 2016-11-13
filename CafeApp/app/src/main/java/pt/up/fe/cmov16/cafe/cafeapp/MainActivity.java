@@ -2,8 +2,6 @@ package pt.up.fe.cmov16.cafe.cafeapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcManager;
 import android.os.Bundle;
@@ -24,10 +22,9 @@ import io.swagger.client.ApiInvoker;
 import io.swagger.client.api.DefaultApi;
 import io.swagger.client.model.HelloWorldResponse;
 import io.swagger.client.model.Products;
-import pt.up.fe.cmov16.cafe.cafeapp.database.BlackListContract;
-import pt.up.fe.cmov16.cafe.cafeapp.database.DbHelper;
 import pt.up.fe.cmov16.cafe.cafeapp.database.ProductContract;
 import pt.up.fe.cmov16.cafe.cafeapp.logic.Request;
+import pt.up.fe.cmov16.cafe.cafeapp.ui.ProductsActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ProcessRequestActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.ui.ScanQRCodeActivity;
 import pt.up.fe.cmov16.cafe.cafeapp.util.RequestsThread;
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         api = new DefaultApi();
         loadProducts();
         loadPublicKey();
-//      Request.isValid(MainActivity.this,"");
+
         findViewById(R.id.scanQRCode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +55,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Toast.makeText(this, "ALERT USING SERVER: " + (new DefaultApi()).getBasePath(), Toast.LENGTH_SHORT).show();
+        findViewById(R.id.editProducts).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, ProductsActivity.class);
+                startActivity(i);
+            }
+        });
 
         api.hello("Acme", new Response.Listener<HelloWorldResponse>() {
                     @Override
@@ -88,14 +91,6 @@ public class MainActivity extends AppCompatActivity {
         RequestsThread requestsThread = new RequestsThread(MainActivity.this);
         requestsThread.start();
 
-//        DbHelper dbHelper = new DbHelper(MainActivity.this);
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//
-//        db.execSQL("DELETE FROM "+BlackListContract.BlackListEntry.TABLE_NAME);
-//        Cursor c = db.rawQuery("SELECT * FROM " + BlackListContract.BlackListEntry.TABLE_NAME, null, null);
-//        Log.e(TAG,c.getCount()+"");
-//        c.close();
-//        db.close();
     }
 
     private void loadPublicKey() {

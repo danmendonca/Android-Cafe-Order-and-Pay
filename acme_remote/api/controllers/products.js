@@ -54,10 +54,6 @@ function createProduct(req, res) {
         res.status(403);
         throw "invalid product name";
     }
-    if (!active) {
-        res.status(403);
-        throw "active param not set";
-    }
     if (!uprice) {
         res.status(403);
         throw "invalid unitprice param";
