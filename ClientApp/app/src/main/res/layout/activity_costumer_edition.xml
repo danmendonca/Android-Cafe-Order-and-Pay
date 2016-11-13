@@ -23,21 +23,6 @@
         android:textStyle="normal|bold" />
 
     <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/username"
-        android:hint="new password?"
-        android:inputType="textPassword|textNoSuggestions"
-        android:paddingTop="10dp"
-        android:textColor="@color/colorPrimary"
-        android:textSize="18sp" />
-
-    <EditText
         android:id="@+id/cardNum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
