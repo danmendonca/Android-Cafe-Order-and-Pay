@@ -8,4 +8,10 @@
     <string name="price">Price</string>
     <string name="total">Total</string>
     <string name="request_number">Request Number</string>
+    <string name="edit_products">Edit products</string>
+    <string name="scan_qrcode">Scan QRCODE</string>
+    <string name="prod_name">Product Name</string>
+    <string name="active">Active</string>
+    <string name="save">Save</string>
+    <string name="edit_product">Edit Product</string>
 </resources>

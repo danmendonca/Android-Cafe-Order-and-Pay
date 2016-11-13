@@ -26,6 +26,9 @@ public final class ProductContract {
             "SELECT * FROM " + ProductEntry.TABLE_NAME
                     + " where " + ProductEntry.COLUMN_NAME_ACTIVE + " = 1"
                     + " order by " + ProductEntry.COLUMN_NAME_NAME + " asc";
+    private static final String SELECT_ALL_PRODUCTS =
+            "SELECT * FROM " + ProductEntry.TABLE_NAME
+                    + " order by " + ProductEntry.COLUMN_NAME_NAME + " asc";
 
     public ProductContract() {
     }
@@ -100,7 +103,7 @@ public final class ProductContract {
             c.close();
         }
         db.close();
-        //Log.e(TAG, "UPDATED: " + updatedProducts + " and NEW: " + newProducts + " products");
+        Log.e(TAG, "UPDATED: " + updatedProducts + " and NEW: " + newProducts + " products");
         if (!updatedAt.isEmpty())
             saveUpdatedProductDate(context, updatedAt);
     }
@@ -114,15 +117,19 @@ public final class ProductContract {
 
         ArrayList<Product> products = new ArrayList<>();
 
-        if (context == null)
+        if (context == null) {
+            Log.e(TAG, "NULL CONTEXT PRODUCTS DB");
             return products;
+        }
 
         DbHelper mDbHelper = new DbHelper(context);
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        if (db == null)
+        if (db == null) {
+            Log.e(TAG, "NULL DB");
             return products;
+        }
 
-        Cursor cursor = db.rawQuery(ProductContract.SELECT_ALL_ACTIVE_PRODUCTS, null);
+        Cursor cursor = db.rawQuery(ProductContract.SELECT_ALL_PRODUCTS, null);
         // if Cursor is contains results
         if (cursor != null) {
             // move cursor to first row
@@ -130,6 +137,9 @@ public final class ProductContract {
                 do {
                     int id = cursor.getInt(cursor.getColumnIndex(
                             ProductEntry.COLUMN_NAME_ID));
+
+                    boolean active = cursor.getString(cursor.getColumnIndex(
+                            ProductEntry.COLUMN_NAME_ACTIVE)).equals("1");
 
                     // Get version from Cursor
                     String name = cursor.getString(cursor.getColumnIndex(
@@ -142,6 +152,7 @@ public final class ProductContract {
                     prod.setUnitprice(Double.valueOf(unitPrice));
                     prod.setName(name);
                     prod.setId(id);
+                    prod.setActive(active);
                     products.add(prod);
                     // move to next row
                 } while (cursor.moveToNext());
@@ -201,9 +212,8 @@ public final class ProductContract {
     }
 
     /**
-     *
      * @param context
-     * @param prods updates this array with name and unitprice
+     * @param prods    updates this array with name and unitprice
      * @param justName if true, don't load unit price
      * @return total price calculated
      */
