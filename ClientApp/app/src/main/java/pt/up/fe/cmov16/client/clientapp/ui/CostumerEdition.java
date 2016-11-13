@@ -26,7 +26,6 @@ public class CostumerEdition extends AppCompatActivity implements DatePickerDial
 
 
     // UI references.
-    private EditText mPasswordView;
     private EditText mCreditCardNr;
     private Button mDateTextView;
     private Button mConfirmEdit;
@@ -36,7 +35,6 @@ public class CostumerEdition extends AppCompatActivity implements DatePickerDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_costumer_edition);
 
-        mPasswordView = (EditText) findViewById(R.id.password);
         mCreditCardNr = (EditText) findViewById(R.id.cardNum);
         mDateTextView = (Button) findViewById(R.id.cardVal);
         mDateTextView.setOnClickListener(new View.OnClickListener() {
@@ -54,14 +52,12 @@ public class CostumerEdition extends AppCompatActivity implements DatePickerDial
         });
 
         final User myUsr = User.getInstance(getApplicationContext());
-        mPasswordView.setText(myUsr.getPassword());
         mDateTextView.setText(myUsr.getCreditCardDate());
 
         mConfirmEdit = (Button) findViewById(R.id.confirm_edit_btn);
         mConfirmEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String password = mPasswordView.getText().toString();
                 String cardNum = mCreditCardNr.getText().toString();
                 String[] dateInput = mDateTextView.getText().toString().split("/");
 
@@ -75,7 +71,7 @@ public class CostumerEdition extends AppCompatActivity implements DatePickerDial
                         (creditDate.compareTo("") != 0) ? creditDate : myUsr.getCreditCardDate());
                 registerParam.setCreditcardnumber(
                         (cardNum.compareTo("") != 0) ? cardNum : myUsr.getCreditCardNum());
-                registerParam.setPassword(password);
+                registerParam.setPassword(myUsr.getPassword());
                 registerParam.setName(myUsr.getName());
                 registerParam.setUsername(myUsr.getUsername());
 
